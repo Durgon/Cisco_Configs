@@ -1,0 +1,146 @@
+
+!
+! Last configuration change at 13:10:43 UTC Thu Jan 14 2016
+!
+version 15.6
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname B1-R6-P10
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$sfEs$Cuq55hptFCdvv2DEiA7AY1
+!
+no aaa new-model
+ethernet lmi ce
+memory-size iomem 5
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+ip dhcp excluded-address 192.168.10.200
+ip dhcp excluded-address 192.168.10.253
+!
+ip dhcp pool DATA1
+ network 192.168.10.0 255.255.255.0
+ default-router 171.1.194.10
+!
+!
+!
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+license udi pid CISCO2901/K9 sn FGL162423PN
+license boot module c2900 technology-package uck9
+license boot module c2900 technology-package datak9
+!
+!
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Embedded-Service-Engine0/0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/0
+ ip address 192.168.10.200 255.255.255.0
+ duplex auto
+ speed auto
+ ipv6 address 2001:192:168:10::200/64
+!
+interface GigabitEthernet0/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+!
+interface Serial0/0/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/1/0
+ no ip address
+ shutdown
+!
+interface Serial0/1/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+access-list 1 permit 192.168.10.1
+!
+control-plane
+!
+!
+!
+line con 0
+line aux 0
+line 2
+ no activation-character
+ no exec
+ transport preferred none
+ transport output lat pad telnet rlogin lapb-ta mop udptn v120 ssh
+ stopbits 1
+line vty 0 4
+ access-class 1 in
+ password cisco
+ login
+ transport input telnet
+!
+scheduler allocate 20000 1000
+!
+end
