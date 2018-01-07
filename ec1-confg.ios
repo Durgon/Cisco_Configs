@@ -1,0 +1,112 @@
+Current configuration : 1401 bytes
+!
+version 15.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname EC1-R1
+!
+!
+!
+enable secret 5 $1$mERr$9cTjUIEqNGurQiFU.ZeCi1
+!
+!
+!
+!
+!
+!
+ip cef
+ipv6 unicast-routing
+!
+no ipv6 cef
+!
+!
+!
+!
+license udi pid CISCO2901/K9 sn FTX1524STCU
+!
+!
+!
+!
+!
+!
+!
+!
+!
+no ip domain-lookup
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+key chain CS0
+ key 1
+  key-string CISCO
+!
+interface Loopback0
+ ip address 171.1.192.200 255.255.255.0
+ ipv6 address FE80::200 link-local
+ ipv6 address 2001:DB8:ACAD:192::200/64
+ ipv6 eigrp 200
+!
+interface GigabitEthernet0/0
+ ip address 171.1.193.254 255.255.255.0
+ duplex auto
+ speed auto
+ ipv6 address FE80::254 link-local
+ ipv6 address 2001:DB8:ACAD:193::254/64
+ ipv6 eigrp 200
+ shutdown
+!
+interface GigabitEthernet0/1
+ ip address 171.1.194.254 255.255.255.0
+ ip authentication mode eigrp 100 md5
+ ip authentication key-chain eigrp 100 CS0
+ duplex auto
+ speed auto
+ ipv6 address FE80::254 link-local
+ ipv6 address 2001:DB8:ACAD:194::254/64
+ ipv6 eigrp 200
+ shutdown
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+router eigrp 100
+ network 171.1.0.0
+
+!
+ipv6 router eigrp 200
+ no shutdown
+!
+ip classless
+!
+ip flow-export version 9
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ exec-timeout 0 0
+ logging synchronous
+!
+line aux 0
+!
+line vty 0 4
+ exec-timeout 0 0
+ password cisco
+ logging synchronous
+ login
+ transport input telnet
+!
+!
+!
+end
