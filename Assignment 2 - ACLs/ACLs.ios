@@ -1,0 +1,56 @@
+ip access-list extended SUBNET_DENY
+  remark deny VM1 subnet from reaching Lo0-Rtr2 subnet
+  deny ip 10.10.20.0 0.0.0.255 142.232.2.128 0.0.0.63
+  remark allow out all other networks
+  permit ip any any
+  (apply in Rtr1 g0/0/0 out)
+
+ip access-list extended HOST_DENY
+  remark deny VM2 access too Lo2-Rtr1 network
+  deny ip host 10.10.20.6 142.232.1.64 0.0.0.63
+  remark permit LAN access to all other LANs
+  permit ip any any
+  (apply on Rtr2, g0/0/1 in)
+
+ip access-list extended SVR_TELNET
+  remark permit VM1 telnet access to VM2
+  permit tcp host 10.10.20.2 host 10.10.20.6 eq telnet
+  remark deny all other hosts telnet access to VM2
+  deny tcp any host 10.10.20.6 eq telnet
+  remark permit LAN access out
+  permit ip any any
+  (apply on Rtr1 g0/0/1 in)
+
+
+ip access-list standard MANAGEMENT
+  remark Allow VM3 telnet access into Rtr2
+  permit host 10.10.20.10
+  remark Deny all other hosts
+  deny any host
+(apply on vty lines on Rtr2 IN)
+
+ipv6 access-list MAIL_ACCESS (Rtr3-Lo2 in)
+  remark deny six hosts from accessing mail services on VM4
+  deny tcp host 2001:DB8:CAFE:3:C::10 host 2001:DB8:ACAD:10:10:20:4:2 eq 25
+  deny tcp host 2001:DB8:CAFE:3:C::11 host 2001:DB8:ACAD:10:10:20:4:2 eq 25
+  deny tcp host 2001:DB8:CAFE:3:C::12 host 2001:DB8:ACAD:10:10:20:4:2 eq 25
+  deny tcp host 2001:DB8:CAFE:3:C::13 host 2001:DB8:ACAD:10:10:20:4:2 eq 25
+  deny tcp host 2001:DB8:CAFE:3:C::14 host 2001:DB8:ACAD:10:10:20:4:2 eq 25
+  deny tcp host 2001:DB8:CAFE:3:C::15 host 2001:DB8:ACAD:10:10:20:4:2 eq 25
+  remark permit the rest of the subnet access to mail services on VM4
+  permit tcp 2001:db8:CAFE:3:C::/80 host 2001:DB8:ACAD:10:10:20:4:2 eq 25
+  remark permit subnet access to rest of network
+  permit ip 2001:db8:CAFE:3:C::/80 any
+
+ipv6 access-list MAIL_WEB_ACCESS (Rtr3-Host intf out)
+  remark allow http server access for host
+  permit tcp host 2001:DB8:ACAD:10:10:20:4:2 host 2001:DB8:ACAD:10:10:20:3:2 eq 80
+  remark deny telnet server access for host
+  deny tcp host 2001:DB8:ACAD:10:10:20:2:2 host 2001:DB8:ACAD:10:10:20:3:2 eq 23
+  remark deny rest of subnet http access to server
+  deny tcp 2001:DB8:ACAD:10:10:20:4::/112 host 2001:DB8:ACAD:10:10:20:3:2 eq 80
+  permit tcp 2001:DB8:ACAD:10:10:20:2::/112 host 2001:DB8:ACAD:10:10:20:3:2 eq 23
+  permit tcp any host 2001:DB8:ACAD:10:10:20:3:2 eq 80
+  deny tcp any host 2001:DB8:ACAD:10:10:20:3:2 eq 23
+  deny tcp any host 2001:DB8:ACAD:10:10:20:3:2 eq 25
+  permit ipv6 any any

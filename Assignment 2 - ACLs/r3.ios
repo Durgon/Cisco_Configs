@@ -1,0 +1,106 @@
+hostname Rtr3
+!
+!
+!
+!
+no ip domain lookup
+ipv6 unicast-routing
+!
+!
+!
+interface Loopback0
+ ip address 142.232.3.1 255.255.255.192
+ ipv6 address FE80::3 link-local
+ ipv6 address 2001:DB8:CAFE:3:A::1/80
+!
+interface Loopback1
+ ip address 142.232.3.65 255.255.255.192
+ ipv6 address FE80::3 link-local
+ ipv6 address 2001:DB8:CAFE:3:B::1/80
+!
+interface Loopback2
+ ip address 142.232.3.129 255.255.255.192
+ ipv6 address FE80::3 link-local
+ ipv6 address 2001:DB8:CAFE:3:C::1/80
+!
+interface GigabitEthernet0/0
+ ip address 10.10.10.3 255.255.255.248
+ duplex auto
+ speed auto
+ ipv6 address FE80::3 link-local
+ ipv6 address 2001:DB8:ACAD:10:10:10:0:3/96
+!
+interface GigabitEthernet1/0
+ ip address 10.10.20.9 255.255.255.252
+ duplex auto
+ speed auto
+ ipv6 address FE80::3 link-local
+ ipv6 address 2001:DB8:ACAD:10:10:20:3:1/112
+!
+!
+!
+router eigrp DUAL_STACK
+ !
+ address-family ipv4 unicast autonomous-system 400
+  !
+  af-interface Loopback0
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Loopback1
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Loopback2
+   passive-interface
+  exit-af-interface
+  !
+  af-interface GigabitEthernet0/0
+   summary-address 142.232.3.0 255.255.255.0
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  network 10.0.0.0
+  network 142.232.0.0
+  eigrp router-id 3.3.3.3
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 600
+  !
+  af-interface Loopback0
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Loopback1
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Loopback2
+   passive-interface
+  exit-af-interface
+  !
+  af-interface GigabitEthernet0/0
+   summary-address 2001:DB8:CAFE:3::/76
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  eigrp router-id 3.3.3.3
+ exit-address-family
+!
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ password cisco
+ login
+ transport input telnet ssh
+line vty 5 14
+ password cisco
+ login
+ transport input telnet ssh
+ !
+!
+end
