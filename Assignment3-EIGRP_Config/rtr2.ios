@@ -1,0 +1,31 @@
+hostname rtr2
+ipv6 unicast-routing
+no ip domain-lookup
+
+int Loopback 0
+  ip address 172.16.1.65 255.255.255.240
+int Loopback1
+  ip address 172.16.1.81 255.255.255.240
+int Loopback2
+  ip address 172.16.1.97 255.255.255.240
+int Loopback10
+  ipv6 address BA15:2017:3310:4::1 /128
+int Loopback11
+  ipv6 address BA15:2017:3310:5::1 /128
+int Loopback12
+  ipv6 address BA15:2017:3310:6::1/128
+
+int g0/0
+ip address 172.16.1.2 255.255.255.248
+ipv6 address BA15:2017:3310:A::2/64
+no shutdown
+
+int g1/0
+ip address 172.16.1.10 255.255.255.252
+ipv6 address BA15:2017:3310:12::1 /64
+no shutdown
+
+int g2/0
+ip address 172.16.1.13 255.255.255.252
+ipv6 address BA15:2017:3310:23::1/64
+no shutdown

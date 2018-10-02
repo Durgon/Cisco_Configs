@@ -1,0 +1,17 @@
+hostname rtr3
+ipv6 unicast-routing
+no ip domain-lookup
+int Loopback0
+ip address 10.50.50.1 255.255.255.0
+
+int Loopback10
+ipv6 address BA15:2017:3310:7::1/128
+
+int g3/0
+ip address 192.168.0.1 255.255.255.252
+ipv6 address BA15:2017:3310:341::1/64
+no shutdown
+
+int g4/0
+ip address 192.168.0.5 255.255.255.252
+ipv6 address BA15:2017:3310:342::1/64
