@@ -9,7 +9,7 @@ no shutdown
 
 int g2/0
 ip address 172.16.1.14 255.255.255.252
-ipv6 address BA15:2017:3310:23::14 /64
+ipv6 address BA15:2017:3310:23::14/64
 no shutdown
 
 int g3/0
@@ -20,3 +20,15 @@ no shutdown
 int g4/0
 ip address 192.168.0.5 255.255.255.252
 ipv6 address BA15:2017:3310:342::1/64
+
+router eigrp DUAL_STACK
+address-family ipv4 unicast as 10
+  eigrp router-id 3.3.3.3
+  network 172.16.1.0
+  network 10.50.50.0
+  topology base
+    no auto-summary
+    exit-topology-base
+exit-address-family
+address-family ipv6 unicast as 16
+  eigrp router-id 3.3.3.3

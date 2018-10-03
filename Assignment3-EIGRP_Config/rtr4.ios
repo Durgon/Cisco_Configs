@@ -15,3 +15,19 @@ no shutdown
 int g4/0
 ip address 192.168.0.5 255.255.255.252
 ipv6 address BA15:2017:3310:342::1/64
+
+router eigrp DUAL_STACK
+address-family ipv4 unicast as 10
+  eigrp router-id 4.4.4.4
+  network 192.168.0.0
+  network 10.50.50.1
+  topology base
+    no auto-summary
+    exit-topology-base
+  af-interface Loopback0
+    passive-interface
+exit-address-family
+address-family ipv6 unicast as 16
+  eigrp router-id 4.4.4.4
+  af-interface Loopback10
+    passive-interface
