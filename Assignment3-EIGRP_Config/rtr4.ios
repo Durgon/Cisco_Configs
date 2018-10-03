@@ -1,4 +1,4 @@
-hostname rtr3
+hostname rtr4
 ipv6 unicast-routing
 no ip domain-lookup
 int Loopback0
@@ -7,13 +7,13 @@ ip address 10.50.50.1 255.255.255.0
 int Loopback10
 ipv6 address BA15:2017:3310:7::1/128
 
-int g3/0
-ip address 192.168.0.1 255.255.255.252
+int e2/2
+ip address 192.168.0.2 255.255.255.252
 ipv6 address BA15:2017:3310:341::1/64
 no shutdown
 
-int g4/0
-ip address 192.168.0.5 255.255.255.252
+int e2/3
+ip address 192.168.0.6 255.255.255.252
 ipv6 address BA15:2017:3310:342::1/64
 
 router eigrp DUAL_STACK

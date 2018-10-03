@@ -20,7 +20,7 @@ ip address 172.16.1.1 255.255.255.248
 ipv6 address BA15:2017:3310:A::1/64
 no shutdown
 
-int g1/0
+int e2/0
 ip address 172.16.1.9 255.255.255.252
 ipv6 address BA15:2017:3310:12::1/64
 no shutdown
@@ -38,12 +38,6 @@ address-family ipv4 unicast as 10
     passive-interface
   af-interface Loopback2
     passive-interface
-  af-interface Loopback10
-    no passive-interface
-  af-interface Loopback11
-    no passive-interface
-  af-interface Loopback12
-    no passive-interface
 exit-address-family
 address-family ipv6 unicast as 16
   eigrp router-id 1.1.1.1
