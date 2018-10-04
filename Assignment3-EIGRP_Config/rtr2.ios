@@ -47,7 +47,6 @@ interface GigabitEthernet1/0
 interface GigabitEthernet2/0
  ip address 172.16.1.10 255.255.255.252
  negotiation auto
- ipv6 address BA15:2017:3310:12::1/64
  ipv6 address BA15:2017:3310:12::2/64
 !
 !
