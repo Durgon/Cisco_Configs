@@ -1,49 +1,157 @@
 hostname rtr1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+no ip icmp rate-limit unreachable
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip cef
 ipv6 unicast-routing
-no ip domain-lookup
-
-int Loopback 0
-  ip address 172.16.1.17 255.255.255.240
-int Loopback1
-  ip address 172.16.1.33 255.255.255.240
-int Loopback2
-  ip address 172.16.1.49 255.255.255.240
-int Loopback10
-  ipv6 address BA15:2017:3310:1::1/128
-int Loopback11
-  ipv6 address BA15:2017:3310:2::1/128
-int Loopback12
-  ipv6 address BA15:2017:3310:3::1/128
-
-int g0/0
-ip address 172.16.1.1 255.255.255.248
-ipv6 address BA15:2017:3310:A::1/64
-no shutdown
-
-int e2/0
-ip address 172.16.1.9 255.255.255.252
-ipv6 address BA15:2017:3310:12::1/64
-no shutdown
-
+ipv6 cef
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip tcp synwait-time 5
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 172.16.1.17 255.255.255.240
+!
+interface Loopback1
+ ip address 172.16.1.33 255.255.255.240
+!
+interface Loopback2
+ ip address 172.16.1.49 255.255.255.240
+!
+interface Loopback10
+ no ip address
+ ipv6 address BA15:2017:3310:1::1/128
+!
+interface Loopback11
+ no ip address
+ ipv6 address BA15:2017:3310:2::1/128
+!
+interface Loopback12
+ no ip address
+ ipv6 address BA15:2017:3310:3::1/128
+!
+interface Ethernet0/0
+ no ip address
+ shutdown
+ duplex auto
+!
+interface GigabitEthernet0/0
+ ip address 172.16.1.1 255.255.255.248
+ media-type gbic
+ speed 1000
+ duplex full
+ negotiation auto
+ ipv6 address BA15:2017:3310:A::1/64
+!
+interface GigabitEthernet1/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet2/0
+ ip address 172.16.1.9 255.255.255.252
+ negotiation auto
+ ipv6 address BA15:2017:3310:12::1/64
+!
+!
 router eigrp DUAL_STACK
-address-family ipv4 unicast as 10
-  eigrp router-id 1.1.1.1
-  network 172.16.1.0
-  topology base
-    no auto-summary
-  exit-topology-base
+ !
+ address-family ipv4 unicast autonomous-system 10
+  !
   af-interface Loopback0
-    passive-interface
+   passive-interface
+  exit-af-interface
+  !
   af-interface Loopback1
-    passive-interface
+   passive-interface
+  exit-af-interface
+  !
   af-interface Loopback2
-    passive-interface
-exit-address-family
-address-family ipv6 unicast as 16
+   passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  network 172.16.0.0
   eigrp router-id 1.1.1.1
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 16
+  !
   af-interface Loopback10
-    passive-interface
+   passive-interface
+  exit-af-interface
+  !
   af-interface Loopback11
-    passive-interface
+   passive-interface
+  exit-af-interface
+  !
   af-interface Loopback12
-    passive-interface
+   passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  eigrp router-id 1.1.1.1
+ exit-address-family
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login
+!
+!
+end
