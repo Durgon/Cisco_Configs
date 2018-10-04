@@ -16,13 +16,6 @@ interface Loopback10
  no ip address
  ipv6 address BA15:2017:3310:7::1/128
 !
-interface GigabitEthernet0/0
- no ip address
- shutdown
- media-type gbic
- speed 1000
- duplex full
- negotiation auto
 !
 interface FastEthernet2/2
  bandwidth 100000
