@@ -9,12 +9,14 @@ ipv6 address BA15:2017:3310:7::1/128
 
 int e2/2
 ip address 192.168.0.2 255.255.255.252
-ipv6 address BA15:2017:3310:341::1/64
+ipv6 address BA15:2017:3310:341::2/64
 no shutdown
 
 int e2/3
 ip address 192.168.0.6 255.255.255.252
-ipv6 address BA15:2017:3310:342::1/64
+ipv6 address BA15:2017:3310:342::2/64
+no shutdown
+
 
 router eigrp DUAL_STACK
 address-family ipv4 unicast as 10
@@ -23,10 +25,10 @@ address-family ipv4 unicast as 10
   network 10.50.50.1
   topology base
     no auto-summary
-    exit-topology-base
+    exit
   af-interface Loopback0
     passive-interface
-exit-address-family
+exit
 address-family ipv6 unicast as 16
   eigrp router-id 4.4.4.4
   af-interface Loopback10

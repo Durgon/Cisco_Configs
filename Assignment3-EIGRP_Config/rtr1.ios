@@ -31,7 +31,7 @@ address-family ipv4 unicast as 10
   network 172.16.1.0
   topology base
     no auto-summary
-  exit-topology-base
+  exit
   af-interface Loopback0
     passive-interface
   af-interface Loopback1
