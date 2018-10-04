@@ -24,13 +24,13 @@ interface GigabitEthernet0/0
  duplex full
  negotiation auto
 !
-interface Ethernet2/2
+interface FastEthernet2/2
  bandwidth 100000
  ip address 192.168.0.2 255.255.255.252
  duplex full
  ipv6 address BA15:2017:3310:341::2/64
 !
-interface Ethernet2/3
+interface FastEthernet2/3
  bandwidth 10000
  ip address 192.168.0.6 255.255.255.252
  duplex full
