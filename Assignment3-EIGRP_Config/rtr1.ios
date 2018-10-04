@@ -20,7 +20,7 @@ ip address 172.16.1.1 255.255.255.248
 ipv6 address BA15:2017:3310:A::1/64
 no shutdown
 
-int e2/0
+int g2/0
 ip address 172.16.1.9 255.255.255.252
 ipv6 address BA15:2017:3310:12::1/64
 no shutdown
