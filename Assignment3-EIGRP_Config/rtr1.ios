@@ -1,43 +1,11 @@
 hostname rtr1
 !
-boot-start-marker
-boot-end-marker
-!
-!
-!
-no aaa new-model
-no ip icmp rate-limit unreachable
-!
-!
-!
-!
 !
 !
 no ip domain lookup
 ip cef
 ipv6 unicast-routing
 ipv6 cef
-!
-!
-multilink bundle-name authenticated
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-ip tcp synwait-time 5
-!
-!
-!
-!
-!
 !
 !
 !
@@ -62,11 +30,6 @@ interface Loopback11
 interface Loopback12
  no ip address
  ipv6 address BA15:2017:3310:3::1/128
-!
-interface Ethernet0/0
- no ip address
- shutdown
- duplex auto
 !
 interface GigabitEthernet0/0
  ip address 172.16.1.1 255.255.255.248
@@ -127,17 +90,6 @@ router eigrp DUAL_STACK
   exit-af-topology
   eigrp router-id 1.1.1.1
  exit-address-family
-!
-ip forward-protocol nd
-!
-!
-no ip http server
-no ip http secure-server
-!
-!
-!
-!
-control-plane
 !
 !
 line con 0

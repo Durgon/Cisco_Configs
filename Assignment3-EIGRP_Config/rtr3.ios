@@ -1,16 +1,5 @@
 hostname rtr3
 !
-boot-start-marker
-boot-end-marker
-!
-!
-!
-no aaa new-model
-no ip icmp rate-limit unreachable
-!
-!
-!
-!
 !
 !
 no ip domain lookup
@@ -19,33 +8,6 @@ ipv6 unicast-routing
 ipv6 cef
 !
 !
-multilink bundle-name authenticated
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-ip tcp synwait-time 5
-!
-!
-!
-!
-!
-!
-!
-!
-!
-interface Ethernet0/0
- no ip address
- shutdown
- duplex auto
 !
 interface GigabitEthernet0/0
  ip address 172.16.1.3 255.255.255.248
@@ -60,18 +22,8 @@ interface GigabitEthernet1/0
  negotiation auto
  ipv6 address BA15:2017:3310:23::3/64
 !
-interface Ethernet2/0
- no ip address
- shutdown
- duplex full
-!
-interface Ethernet2/1
- no ip address
- shutdown
- duplex full
-!
 interface Ethernet2/2
- bandwidth 10000
+ bandwidth 100000
  ip address 192.168.0.1 255.255.255.252
  duplex full
  ipv6 address BA15:2017:3310:341::1/64
@@ -100,17 +52,6 @@ router eigrp DUAL_STACK
   exit-af-topology
   eigrp router-id 3.3.3.3
  exit-address-family
-!
-ip forward-protocol nd
-!
-!
-no ip http server
-no ip http secure-server
-!
-!
-!
-!
-control-plane
 !
 !
 line con 0
