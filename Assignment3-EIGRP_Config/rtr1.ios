@@ -1,45 +1,74 @@
 hostname rtr1
 !
+boot-start-marker
+boot-end-marker
 !
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+!
+no aaa new-model
 !
 no ip domain lookup
-ip cef
-ipv6 unicast-routing
-ipv6 cef
-!
-!
 !
 !
 interface Loopback0
  ip address 172.16.1.17 255.255.255.240
+ ipv6 address FE80::1 link-local
 !
 interface Loopback1
  ip address 172.16.1.33 255.255.255.240
+ ipv6 address FE80::1 link-local
 !
 interface Loopback2
  ip address 172.16.1.49 255.255.255.240
+ ipv6 address FE80::1 link-local
 !
 interface Loopback10
  no ip address
+ ipv6 address FE80::1 link-local
  ipv6 address BA15:2017:3310:1::1/128
 !
 interface Loopback11
  no ip address
+ ipv6 address FE80::1 link-local
  ipv6 address BA15:2017:3310:2::1/128
 !
 interface Loopback12
  no ip address
+ ipv6 address FE80::1 link-local
  ipv6 address BA15:2017:3310:3::1/128
 !
 interface GigabitEthernet0/0/0
  ip address 172.16.1.1 255.255.255.248
+ negotiation auto
+ ipv6 address FE80::1 link-local
  ipv6 address BA15:2017:3310:A::1/64
- no shutdown
 !
 interface GigabitEthernet0/0/1
  ip address 172.16.1.9 255.255.255.252
- ipv6 address BA15:2017:3310:12::1/64
- no shutdown
+ negotiation auto
+ ipv6 address FE80::1 link-local
+ ipv6 address BA15:2017:3310:8::1/64
+!
+interface GigabitEthernet0/1/0
+ no ip address
+ negotiation auto
+!
+interface GigabitEthernet0/1/1
+ no ip address
+ negotiation auto
+!
+interface GigabitEthernet0
+ vrf forwarding Mgmt-intf
+ no ip address
+ negotiation auto
 !
 !
 router eigrp DUAL_STACK
@@ -83,11 +112,24 @@ router eigrp DUAL_STACK
   eigrp router-id 1.1.1.1
  exit-address-family
 !
+ip forward-protocol nd
+no ip http server
+ip http secure-server
+ip tftp source-interface GigabitEthernet0
+!
+!
+!
+!
+!
+!
+control-plane
+!
 !
 line con 0
  exec-timeout 0 0
  privilege level 15
  logging synchronous
+ transport input none
  stopbits 1
 line aux 0
  exec-timeout 0 0
