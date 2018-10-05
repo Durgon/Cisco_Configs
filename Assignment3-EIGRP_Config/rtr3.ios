@@ -1,5 +1,67 @@
 hostname rtr3
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip cef
 ipv6 unicast-routing
+ipv6 cef
+!
+!
+!
+!
+!
+!
+interface Embedded-Service-Engine0/0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/0
+ ip address 172.16.1.3 255.255.255.248
+ duplex auto
+ speed auto
+ ipv6 address FE80::3 link-local
+ ipv6 address BA15:2017:3310:A::3/64
+!
+interface GigabitEthernet0/1
+ ip address 172.16.1.14 255.255.255.252
+ duplex auto
+ speed auto
+ ipv6 address FE80::3 link-local
+ ipv6 address BA15:2017:3310:9::2/64
+!
+interface GigabitEthernet0/2
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/0/0
+ ip address 192.168.0.1 255.255.255.252
+ duplex auto
+ speed 100
+ ipv6 address FE80::3 link-local
+ ipv6 address BA15:2017:3310:341::1/64
+!
+interface FastEthernet0/0/1
+ ip address 192.168.0.5 255.255.255.252
+ duplex auto
+ speed 10
+ ipv6 address FE80::3 link-local
+ ipv6 address BA15:2017:3310:342::1/64
+!
+!
 no ip domain-lookup
 
 int g0/0
@@ -21,9 +83,48 @@ int e2/3
 ip address 192.168.0.5 255.255.255.252
 ipv6 address BA15:2017:3310:342::1/64
 
+
 router eigrp DUAL_STACK
-address-family ipv4 unicast as 10
+ !
+ address-family ipv4 unicast autonomous-system 10
+  !
+  af-interface FastEthernet0/0/0
+   summary-address 172.16.1.0 255.255.255.128
+  exit-af-interface
+  !
+  af-interface FastEthernet0/0/1
+   summary-address 172.16.1.0 255.255.255.128
+  exit-af-interface
+  !
+  topology base
+   variance 2
+  exit-af-topology
+  network 172.16.0.0
+  network 192.168.0.0
   eigrp router-id 3.3.3.3
+
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 16
+  !
+  af-interface FastEthernet0/0/0
+   summary-address BA15:2017:3310::/62
+   summary-address BA15:2017:3310:4::/63
+   summary-address BA15:2017:3310:6::/64
+   summary-address BA15:2017:3310:8::/62
+  exit-af-interface
+  !
+  af-interface FastEthernet0/0/1
+   summary-address BA15:2017:3310:8::/62
+   summary-address BA15:2017:3310:6::/64
+   summary-address BA15:2017:3310:4::/63
+   summary-address BA15:2017:3310::/62
+  exit-af-interface
+  !
+  topology base
+   variance 2
+  exit-af-topology
+=======
   network 172.16.1.0
   network 192.168.0.0
   topology base
@@ -31,4 +132,35 @@ address-family ipv4 unicast as 10
   exit
 exit
 address-family ipv6 unicast as 16
+
   eigrp router-id 3.3.3.3
+ exit-address-family
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line 2
+ no activation-character
+ no exec
+ transport preferred none
+ transport output pad telnet rlogin lapb-ta mop udptn v120 ssh
+ stopbits 1
+line vty 0 4
+ login
+ transport input all
+!
+end

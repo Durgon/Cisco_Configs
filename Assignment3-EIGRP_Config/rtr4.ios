@@ -1,5 +1,48 @@
 hostname rtr4
+!
+!
+no ip domain lookup
+ip cef
 ipv6 unicast-routing
+ipv6 cef
+!
+!
+!
+!
+interface Loopback0
+ ip address 10.50.50.1 255.255.255.0
+!
+interface Loopback10
+ no ip address
+ ipv6 address BA15:2017:3310:7::1/128
+!
+!
+interface FastEthernet2/2
+ bandwidth 100000
+ ip address 192.168.0.2 255.255.255.252
+ duplex full
+ ipv6 address BA15:2017:3310:341::2/64
+!
+interface FastEthernet2/3
+ bandwidth 10000
+ ip address 192.168.0.6 255.255.255.252
+ duplex full
+ ipv6 address BA15:2017:3310:342::2/64
+!
+!
+router eigrp DUAL_STACK
+ !
+ address-family ipv4 unicast autonomous-system 10
+  !
+  af-interface Loopback0
+   passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  network 10.0.0.0
+  network 192.168.0.0
+=======
 no ip domain-lookup
 int Loopback0
 ip address 10.50.50.1 255.255.255.0
@@ -31,5 +74,31 @@ address-family ipv4 unicast as 10
 exit
 address-family ipv6 unicast as 16
   eigrp router-id 4.4.4.4
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 16
+  !
   af-interface Loopback10
-    passive-interface
+   passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  eigrp router-id 4.4.4.4
+ exit-address-family
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login
+!
+!
+end
