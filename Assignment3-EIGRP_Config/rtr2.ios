@@ -1,14 +1,49 @@
 hostname rtr2
 !
+boot-start-marker
+boot-end-marker
 !
 !
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+!
+no aaa new-model
 !
 no ip domain lookup
-ip cef
+!
+subscriber templating
+!
+!
+!
+!
+!
 ipv6 unicast-routing
-ipv6 cef
 !
 !
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+license udi pid ISR4321/K9 sn FDO20080XHC
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+!
+!
+redundancy
+ mode none
 !
 interface Loopback0
  ip address 172.16.1.65 255.255.255.240
@@ -21,76 +56,50 @@ interface Loopback2
 !
 interface Loopback10
  no ip address
+ ipv6 address FE80::2 link-local
  ipv6 address BA15:2017:3310:4::1/128
 !
 interface Loopback11
  no ip address
+ ipv6 address FE80::2 link-local
  ipv6 address BA15:2017:3310:5::1/128
 !
 interface Loopback12
  no ip address
+ ipv6 address FE80::2 link-local
  ipv6 address BA15:2017:3310:6::1/128
 !
 interface GigabitEthernet0/0/0
  ip address 172.16.1.2 255.255.255.248
- media-type gbic
- speed 1000
- duplex full
  negotiation auto
+ ipv6 address FE80::2 link-local
  ipv6 address BA15:2017:3310:A::2/64
-!
-interface GigabitEthernet1/0/0
- ip address 172.16.1.13 255.255.255.252
- negotiation auto
- ipv6 address BA15:2017:3310:23::1/64
 !
 interface GigabitEthernet0/0/1
  ip address 172.16.1.10 255.255.255.252
  negotiation auto
- ipv6 address BA15:2017:3310:12::2/64
+ ipv6 address FE80::2 link-local
+ ipv6 address BA15:2017:3310:8::2/64
+!
+interface GigabitEthernet0/1/0
+ ip address 172.16.1.13 255.255.255.252
+ negotiation auto
+ ipv6 address FE80::2 link-local
+ ipv6 address BA15:2017:3310:9::1/64
+!
+interface GigabitEthernet0/1/1
+ no ip address
+ negotiation auto
+!
+interface GigabitEthernet0
+ vrf forwarding Mgmt-intf
+ no ip address
+ negotiation auto
 !
 !
 router eigrp DUAL_STACK
  !
  address-family ipv4 unicast autonomous-system 10
-  !
-no ip domain-lookup
-!
-int Loopback 0
-ip address 172.16.1.65 255.255.255.240
-int Loopback1
-ip address 172.16.1.81 255.255.255.240
-int Loopback2
-ip address 172.16.1.97 255.255.255.240
-int Loopback10
-ipv6 address BA15:2017:3310:4::1/128
-int Loopback11
-ipv6 address BA15:2017:3310:5::1/128
-int Loopback12
-ipv6 address BA15:2017:3310:6::1/128
-!
-int g0/0
-ip address 172.16.1.2 255.255.255.248
-ipv6 address BA15:2017:3310:A::2/64
-no shutdown
-!
-int g2/0
-ip address 172.16.1.10 255.255.255.252
-ipv6 address BA15:2017:3310:12::2/64
-no shutdown
-!
-int g1/0
-ip address 172.16.1.13 255.255.255.252
-ipv6 address BA15:2017:3310:23::1/64
-no shutdown
-!
-router eigrp DUAL_STACK
-address-family ipv4 unicast as 10
-  eigrp router-id 2.2.2.2
-  network 172.16.1.0
-  topology base
-    no auto-summary
-  exit
   !
   af-interface Loopback0
    passive-interface
@@ -129,19 +138,29 @@ address-family ipv4 unicast as 10
   eigrp router-id 2.2.2.2
  exit-address-family
 !
+ip forward-protocol nd
+no ip http server
+ip http secure-server
+ip tftp source-interface GigabitEthernet0
+!
+control-plane
+!
 !
 line con 0
- exec-timeout 0 0
- privilege level 15
- logging synchronous
+ transport input none
  stopbits 1
 line aux 0
- exec-timeout 0 0
- privilege level 15
- logging synchronous
  stopbits 1
 line vty 0 4
  login
+!
+wsma agent exec
+!
+wsma agent config
+!
+wsma agent filesys
+!
+wsma agent notify
 !
 !
 end

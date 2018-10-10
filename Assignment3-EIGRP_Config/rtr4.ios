@@ -1,33 +1,80 @@
 hostname rtr4
 !
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+memory-size iomem 5
+!
+dot11 syslog
+ip source-route
+!
+!
+ip cef
+!
+!
 !
 no ip domain lookup
-ip cef
 ipv6 unicast-routing
 ipv6 cef
 !
+multilink bundle-name authenticated
 !
+voice-card 0
 !
+crypto pki token default removal timeout 0
+!
+license udi pid CISCO2811 sn FHK1304F36K
+!
+redundancy
 !
 interface Loopback0
  ip address 10.50.50.1 255.255.255.0
 !
 interface Loopback10
  no ip address
+ ipv6 address FE80::4 link-local
  ipv6 address BA15:2017:3310:7::1/128
 !
-!
-interface FastEthernet2/2
- bandwidth 100000
+interface FastEthernet0/0
  ip address 192.168.0.2 255.255.255.252
- duplex full
+ duplex auto
+ speed 100
+ ipv6 address FE80::4 link-local
  ipv6 address BA15:2017:3310:341::2/64
 !
-interface FastEthernet2/3
- bandwidth 10000
+interface FastEthernet0/1
  ip address 192.168.0.6 255.255.255.252
- duplex full
+ duplex auto
+ speed 10
+ ipv6 address FE80::4 link-local
  ipv6 address BA15:2017:3310:342::2/64
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+ no fair-queue
+ clock rate 125000
+!
+interface Serial0/0/1
+ no ip address
+ shutdown
+ clock rate 125000
+!
+interface FastEthernet0/1/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
 !
 !
 router eigrp DUAL_STACK
@@ -39,40 +86,10 @@ router eigrp DUAL_STACK
   exit-af-interface
   !
   topology base
+   variance 101
   exit-af-topology
   network 10.0.0.0
   network 192.168.0.0
-=======
-no ip domain-lookup
-int Loopback0
-ip address 10.50.50.1 255.255.255.0
-
-int Loopback10
-ipv6 address BA15:2017:3310:7::1/128
-
-int e2/2
-ip address 192.168.0.2 255.255.255.252
-ipv6 address BA15:2017:3310:341::2/64
-no shutdown
-
-int e2/3
-ip address 192.168.0.6 255.255.255.252
-ipv6 address BA15:2017:3310:342::2/64
-no shutdown
-
-
-router eigrp DUAL_STACK
-address-family ipv4 unicast as 10
-  eigrp router-id 4.4.4.4
-  network 192.168.0.0
-  network 10.50.50.1
-  topology base
-    no auto-summary
-    exit
-  af-interface Loopback0
-    passive-interface
-exit
-address-family ipv6 unicast as 16
   eigrp router-id 4.4.4.4
  exit-address-family
  !
@@ -83,22 +100,24 @@ address-family ipv6 unicast as 16
   exit-af-interface
   !
   topology base
+   variance 101
   exit-af-topology
   eigrp router-id 4.4.4.4
  exit-address-family
 !
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+control-plane
+!
+mgcp profile default
+!
 line con 0
- exec-timeout 0 0
- privilege level 15
- logging synchronous
- stopbits 1
 line aux 0
- exec-timeout 0 0
- privilege level 15
- logging synchronous
- stopbits 1
 line vty 0 4
  login
+ transport input all
 !
-!
+scheduler allocate 20000 1000
 end
