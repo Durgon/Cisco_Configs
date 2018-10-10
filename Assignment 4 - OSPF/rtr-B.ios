@@ -1,0 +1,3 @@
+hostname RTR-B
+no ip domain-lookup
+ipv6 unicast routing
