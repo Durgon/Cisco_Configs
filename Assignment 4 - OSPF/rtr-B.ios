@@ -37,6 +37,7 @@ interface GigabitEthernet 0/0/1
   ip address 10.1.2.2 255.255.255.0
   ipv6 address BA15:3310:2017:2::2 /64
   ipv6 address FE80::2 link-local
+  ip ospf priority 10
   ospfv3 1 ipv4 area 0
   ospfv3 1 ipv6 area 0
   no shutdown
@@ -50,8 +51,14 @@ interface GigabitEthernet 0/1/1
 !
 router ospfv3 1
   address-family ipv4 unicast
+    area 0
+    area 10
+    area 51
     router-id 2.2.2.2
     default-information originate
   address-family ipv6 unicast
+    area 0
+    area 10
+    area 51
     router-id 2.2.2.2
     default-information originate
