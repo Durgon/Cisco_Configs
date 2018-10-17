@@ -3,6 +3,26 @@ hostname RTR-B
 no ip domain-lookup
 ipv6 unicast routing
 !
+interface LoopBack 0
+  ip address 192.168.1.65 255.255.255.240
+  ospfv3 1 ipv4 area 10
+!
+interface LoopBack 1
+  ip address 192.168.1.81 255.255.255.240
+  ospfv3 1 ipv4 area 10
+!
+interface LoopBack 2
+  ip address 192.168.1.97 255.255.255.240
+  ospfv3 1 ipv4 area 10
+!
+interface LoopBack 3
+  ip address 192.168.1.113 255.255.255.240
+  ospfv3 1 ipv4 area 10
+!
+interface LoopBack 6
+  ipv6 address BA15:3310:2017:10::1 /64
+  ospfv3 1 ipv6 area 10
+!
 !
 interface GigabitEthernet 0/0/0
   ip address 10.1.1.2 255.255.255.0

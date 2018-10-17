@@ -26,6 +26,9 @@ interface GigabitEthernet 0/1
   no shutdown
 !
 !
+ip route 0.0.0.0 0.0.0.0 LoopBack 0
+!
+!
 router ospfv3 1
   address-family ipv4 unicast
     router-id 1.1.1.1
