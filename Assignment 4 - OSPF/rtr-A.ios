@@ -1,42 +1,190 @@
-!
-!
 hostname RTR-A
-no ip domain-lookup
-ipv6 unicast routing
 !
-interface LoopBack 0
-  ip address 100.100.100.100 255.255.255.255
+boot-start-marker
+boot-end-marker
 !
 !
-interface GigabitEthernet 0/0
-  ip address 10.1.1.1 255.255.255.0
-  ipv6 address BA15:3310:2017:1::1 /64
-  ipv6 address FE80::1 link-local
-  ip ospf priority 5
-  ospfv3 1 ipv4 area 0
-  ospfv3 1 ipv6 area 0
-  no shutdown
+!
+no aaa new-model
+ethernet lmi ce
+memory-size iomem 10
 !
 !
-interface GigabitEthernet 0/1
-  ip address 10.1.2.1 255.255.255.0
-  ipv6 address BA15:3310:2017:1::1 /64
-  ipv6 address FE80::1 link-local
-  ip ospf priority 5
-  ospfv3 1 ipv4 area 0
-  ospfv3 1 ipv6 area 0
-  no shutdown
 !
 !
-ip route 0.0.0.0 0.0.0.0 LoopBack 0
 !
+!
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+voice-card 0
+!
+!
+!
+!
+!
+!
+!
+!
+vxml logging-tag
+license udi pid CISCO2911/K9 sn FGL181310NW
+license boot module c2900 technology-package uck9
+hw-module pvdm 0/0
+!
+!
+!
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 100.100.100.100 255.255.255.255
+!
+interface Embedded-Service-Engine0/0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/0
+ ip address 10.1.1.1 255.255.255.0
+ ip ospf priority 5
+ duplex auto
+ speed auto
+ ipv6 address FE80::1 link-local
+ ipv6 address BA15:3310:2017:1::1/64
+ ospfv3 priority 5
+ ospfv3 1 ipv4 area 0
+ ospfv3 1 ipv6 area 0
+!
+interface GigabitEthernet0/1
+ ip address 10.1.2.1 255.255.255.0
+ ip ospf priority 5
+ duplex auto
+ speed auto
+ ipv6 address FE80::1 link-local
+ ipv6 address BA15:3310:2017:2::1/64
+ ospfv3 priority 5
+ ospfv3 1 ipv6 area 0
+ ospfv3 1 ipv4 area 0
+!
+interface GigabitEthernet0/2
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/0/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/0/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
 !
 router ospfv3 1
-  address-family ipv4 unicast
-    area 0
-    router-id 1.1.1.1
-    default-information originate
-  address-family ipv6 unicast
-    area 0
-    router-id 1.1.1.1
-    default-information originate
+ !
+ address-family ipv4 unicast
+  default-information originate
+  router-id 1.1.1.1
+ exit-address-family
+ !
+ address-family ipv6 unicast
+  default-information originate
+  router-id 1.1.1.1
+ exit-address-family
+!
+router ospfv3 5
+ !
+ address-family ipv4 unicast
+ exit-address-family
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+ip route 0.0.0.0 0.0.0.0 Loopback0
+!
+!
+!
+!
+control-plane
+!
+!
+voice-port 0/2/0
+!
+voice-port 0/2/1
+!
+voice-port 0/3/0
+!
+voice-port 0/3/1
+ !
+ !
+ !
+ !
+!
+mgcp behavior rsip-range tgcp-only
+mgcp behavior comedia-role none
+mgcp behavior comedia-check-media-src disable
+mgcp behavior comedia-sdp-force disable
+!
+mgcp profile default
+!
+!
+!
+!
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+ vstack
+!
+line con 0
+line aux 0
+line 2
+ no activation-character
+ no exec
+ transport preferred none
+ transport output pad telnet rlogin lapb-ta mop udptn v120 ssh
+ stopbits 1
+line vty 0 4
+ login
+ transport input none
+!
+scheduler allocate 20000 1000
+!
+end

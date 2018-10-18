@@ -1,64 +1,193 @@
-!
 hostname RTR-B
-no ip domain-lookup
-ipv6 unicast routing
 !
-interface LoopBack 0
-  ip address 192.168.1.65 255.255.255.240
-  ospfv3 1 ipv4 area 10
-!
-interface LoopBack 1
-  ip address 192.168.1.81 255.255.255.240
-  ospfv3 1 ipv4 area 10
-!
-interface LoopBack 2
-  ip address 192.168.1.97 255.255.255.240
-  ospfv3 1 ipv4 area 10
-!
-interface LoopBack 3
-  ip address 192.168.1.113 255.255.255.240
-  ospfv3 1 ipv4 area 10
-!
-interface LoopBack 6
-  ipv6 address BA15:3310:2017:10::1 /64
-  ospfv3 1 ipv6 area 10
+boot-start-marker
+boot-end-marker
 !
 !
-interface GigabitEthernet 0/0/0
-  ip address 10.1.1.2 255.255.255.0
-  ipv6 address BA15:3310:2017:1::2 /64
-  ipv6 address FE80::2 link-local
-  ospfv3 1 ipv4 area 0
-  ospfv3 1 ipv6 area 0
-  no shutdown
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
 !
 !
-interface GigabitEthernet 0/0/1
-  ip address 10.1.2.2 255.255.255.0
-  ipv6 address BA15:3310:2017:2::2 /64
-  ipv6 address FE80::2 link-local
-  ip ospf priority 10
-  ospfv3 1 ipv4 area 0
-  ospfv3 1 ipv6 area 0
-  no shutdown
+no aaa new-model
 !
-interface GigabitEthernet 0/1/1
-  ip address 192.168.1.1 255.255.255.240
-  ipv6 address BA15:3310:2017:3::1 /64
-  ipv6 address FE80::2 link-local
-  opsfv3 1 ipv4 area 51
-  ospfv3 1 ipv6 area 51
+no ip domain lookup
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+!
+!
+!
+!
+vtp domain cisco
+vtp mode off
+!
+ipv6 unicast-routing
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+license udi pid ISR4321/K9 sn FDO20080XQY
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+!
+!
+redundancy
+ mode none
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 192.168.1.65 255.255.255.240
+ ipv6 address FE80::2 link-local
+ ipv6 enable
+ ospfv3 1 ipv4 area 10
+!
+interface Loopback1
+ ip address 192.168.1.81 255.255.255.240
+ ipv6 address FE80::2 link-local
+ ipv6 enable
+ ospfv3 1 ipv4 area 10
+!
+interface Loopback2
+ ip address 192.168.1.97 255.255.255.240
+ ipv6 address FE80::2 link-local
+ ipv6 enable
+ ospfv3 1 ipv4 area 10
+!
+interface Loopback3
+ ip address 192.168.1.113 255.255.255.240
+ ipv6 address FE80::2 link-local
+ ipv6 enable
+ ospfv3 1 ipv4 area 10
+!
+interface Loopback6
+ no ip address
+ ipv6 address FE80::2 link-local
+ ipv6 address BA15:3310:2017:10::1/64
+ ospfv3 1 ipv6 area 10
+!
+interface GigabitEthernet0/0/0
+ ip address 10.1.1.2 255.255.255.0
+ negotiation auto
+ ipv6 address FE80::2 link-local
+ ipv6 address BA15:3310:2017:1::2/64
+ ospfv3 1 ipv6 area 0
+ ospfv3 1 ipv4 area 0
+!
+interface GigabitEthernet0/0/1
+ ip address 10.1.2.2 255.255.255.0
+ ip ospf priority 10
+ negotiation auto
+ ipv6 address FE80::2 link-local
+ ipv6 address BA15:3310:2017:2::2/64
+ ospfv3 priority 255
+ ospfv3 1 ipv4 area 0
+ ospfv3 1 ipv6 area 0
+!
+interface GigabitEthernet0/1/0
+ no ip address
+ negotiation auto
+!
+interface GigabitEthernet0/1/1
+ ip address 192.168.1.1 255.255.255.240
+ negotiation auto
+ ipv6 address FE80::2 link-local
+ ipv6 address BA15:3310:2017:3::1/64
+ ospfv3 1 ipv4 area 51
+ ospfv3 1 ipv6 area 51
+!
+interface GigabitEthernet0
+ vrf forwarding Mgmt-intf
+ no ip address
+ negotiation auto
 !
 router ospfv3 1
-  address-family ipv4 unicast
-    area 0
-    area 10
-    area 51
-    router-id 2.2.2.2
-    default-information originate
-  address-family ipv6 unicast
-    area 0
-    area 10
-    area 51
-    router-id 2.2.2.2
-    default-information originate
+ !
+ address-family ipv4 unicast
+  default-information originate
+  router-id 2.2.2.2
+  area 10 range 192.168.1.64 255.255.255.192
+ exit-address-family
+ !
+ address-family ipv6 unicast
+  default-information originate
+  router-id 2.2.2.2
+ exit-address-family
+!
+router ospfv3 10
+ !
+ address-family ipv4 unicast
+ exit-address-family
+!
+ip forward-protocol nd
+no ip http server
+ip http secure-server
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ transport input none
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ login
+!
+wsma agent exec
+!
+wsma agent config
+!
+wsma agent filesys
+!
+wsma agent notify
+!
+!
+end
