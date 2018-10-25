@@ -4,13 +4,15 @@ ipv6 unicast-routing
 
 interface G0/0/0.100
 encapsulation dot1q 100
-ip address 142.232.197.125 255.255.255.128
+ip address 142.232.197.124 255.255.255.128
 ipv6 address C15A:6b69:726b:100::252/64
+ipv6 address FE80::C link-local
 
-interface G0/0/0.200
-encapsulation dot1q 200
-ip address 142.232.197.252 255.255.255.128
-ipv6 address C15A:6b69:726b:200::252/64
+interface G0/0/0.203
+encapsulation dot1q 203
+ip address 142.232.3.254 255.255.255.0
+ipv6 address C15A:6b69:726b:203::254/64
+ipv6 address FE80::C link-local
 
 interface lo0
 ip address 10.10.10.129 255.255.255.192
@@ -21,7 +23,8 @@ router eigrp DUAL_STACK
 address-family ipv4 unicast as 10
   eigrp router-id 3.3.3.3
   network 142.232.197.0 0.0.0.127
-  network 142.232.197.128 0.0.0.127
+  network 142.232.3.0 0.0.0.255
+  network 10.10.10.128 0.0.0.63
   topology base
     no auto-summary
   exit
@@ -36,7 +39,7 @@ address-family ipv4 unicast as 10
  !
  address-family ipv6 unicast autonomous-system 16
   !
-  af-interface Loopback10
+  af-interface Loopback6
    passive-interface
   exit-af-interface
   !
