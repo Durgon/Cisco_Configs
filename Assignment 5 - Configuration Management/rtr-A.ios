@@ -6,16 +6,18 @@ interface G0/0/0.100
 encapsulation dot1q 100
 ip address 142.232.197.126 255.255.255.128
 ipv6 address C15A:6b69:726b:100::254/64
+ipv6 address FE80::A link-local
 no shutdown
 !
-interface G0/0/0.200
-encapsulation dot1q 200
-ip address 142.232.197.254 255.255.255.128
-ipv6 address C15A:6b69:726b:200::254/64
+interface G0/0/0.201
+encapsulation dot1q 201
+ip address 142.232.1.254 255.255.255.0
+ipv6 address C15A:6b69:726b:201::254/64
+ipv6 address FE80::A link-local
 no shutdown
 !
 interface lo0
-ip address 192.168.1.1 255.255.255.0
+ip address 10.10.10.1 255.255.255.192
 interface lo6
 ipv6 address 2001:acad:1::1/64
 !
@@ -23,7 +25,8 @@ router eigrp DUAL_STACK
   address-family ipv4 unicast as 10
     eigrp router-id 1.1.1.1
     network 142.232.197.0 0.0.0.127
-    network 142.232.197.128 0.0.0.127
+    network 142.232.1.0 0.0.0.255
+    network 10.10.10.0 0.0.0.63
   topology base
     no auto-summary
   exit
