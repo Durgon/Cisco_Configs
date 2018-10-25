@@ -1,3 +1,46 @@
 hostname RTR-B
 no ip domain-lookup
 ipv6 unicast-routing
+!
+interface G0/0/0.100
+encapsulation dot1q 100
+ip address 142.232.197.126 255.255.255.128
+ipv6 address C15A:6b69:726b:100::253/64
+!
+interface G0/0/0.200
+encapsulation dot1q 200
+ip address 142.232.197.253 255.255.255.128
+ipv6 address C15A:6b69:726b:200::253/64
+!
+interface lo0
+ip address 192.168.2.1 255.255.255.0
+interface lo6
+ipv6 address 2001:acad:2::1/64
+!
+router eigrp DUAL_STACK
+  address-family ipv4 unicast as 10
+    eigrp router-id 2.2.2.2
+    network 142.232.197.0 0.0.0.127
+    network 142.232.197.128 0.0.0.127
+  topology base
+    no auto-summary
+  exit
+  !
+  af-interface Loopback0
+   passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 16
+  !
+  af-interface Loopback10
+   passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  eigrp router-id 2.2.2.2
+ exit-address-family

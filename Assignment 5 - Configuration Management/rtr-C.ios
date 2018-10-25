@@ -10,7 +10,6 @@ ipv6 address C15A:6b69:726b:100::252/64
 interface G0/0/0.200
 encapsulation dot1q 200
 ip address 142.232.197.252 255.255.255.128
-ipv6 address BA15:3310:2018:200::252/64
 ipv6 address C15A:6b69:726b:200::252/64
 
 interface lo0
