@@ -1,0 +1,2 @@
+hostname RTR-D
+no ip-domain-lookup
