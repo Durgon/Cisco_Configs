@@ -12,7 +12,7 @@ no shutdown
 interface G0/0/0.202
 encapsulation dot1q 202
 ip address 142.232.2.254 255.255.255.0
-ipv6 address C15A:6b69:726b:200::254/64
+ipv6 address C15A:6b69:726b:202::254/64
 ipv6 address FE80::B link-local
 no shutdown
 !
