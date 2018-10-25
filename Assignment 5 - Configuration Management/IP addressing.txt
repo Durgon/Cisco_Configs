@@ -10,4 +10,9 @@ Host Network - VLAN 200: 142.232.197.128/25 D/G: 142.232.197.129
   Router C: 142.232.197.252
   Router D: 142.232.197.251
   Switch A: 142.232.197.250
+Loopback Network: 10.10.10.0/26
+  Router A, Lo0: 10.10.10.1/26
+  Router B, Lo0: 10.10.10.65/26
+  Router C, Lo0: 10.10.10.129/26
+  Router D, Lo0: 10.10.10.193/26
 Default VLAN - VLAN 666
