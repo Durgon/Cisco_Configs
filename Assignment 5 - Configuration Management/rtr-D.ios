@@ -13,9 +13,9 @@ ip address 142.232.197.251 255.255.255.128
 ipv6 address C15A:6b69:726b:200::251/64
 
 interface lo0
-ip address 192.168.4.1 255.255.255.0
+ip address 10.10.10.193 255.255.255.192
 interface lo6
-ipv6 address 2001:acad:4::1/64
+ipv6 address C15A:6b69:726b:304::1/64
 
 router eigrp DUAL_STACK
 address-family ipv4 unicast as 10
