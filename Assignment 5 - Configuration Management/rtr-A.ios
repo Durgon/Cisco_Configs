@@ -4,13 +4,15 @@ ipv6 unicast-routing
 !
 interface G0/0/0.100
 encapsulation dot1q 100
-ip address 142.232.197.127 255.255.255.128
+ip address 142.232.197.126 255.255.255.128
 ipv6 address C15A:6b69:726b:100::254/64
+no shutdown
 !
 interface G0/0/0.200
 encapsulation dot1q 200
 ip address 142.232.197.254 255.255.255.128
 ipv6 address C15A:6b69:726b:200::254/64
+no shutdown
 !
 interface lo0
 ip address 192.168.1.1 255.255.255.0
@@ -36,7 +38,7 @@ router eigrp DUAL_STACK
  !
  address-family ipv6 unicast autonomous-system 16
   !
-  af-interface Loopback10
+  af-interface Loopback6
    passive-interface
   exit-af-interface
   !
