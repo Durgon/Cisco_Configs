@@ -1,0 +1,2 @@
+Router Network: 142.232.197.0/25
+Host Network: 142.232.197.0/25
