@@ -1,2 +1,13 @@
-Router Network: 142.232.197.0/25
-Host Network: 142.232.197.0/25
+Router Network - VLAN 100: 142.232.197.0/25
+  Router A: 142.232.197.127
+  Router B: 142.232.197.126
+  Router C: 142.232.197.125
+  Router D: 142.232.197.124
+  Switch A: 142.232.197.123
+Host Network - VLAN 200: 142.232.197.128/25 D/G: 142.232.197.129
+  Router A: 142.232.197.254
+  Router B: 142.232.197.253
+  Router C: 142.232.197.252
+  Router D: 142.232.197.251
+  Switch A: 142.232.197.250
+Default VLAN - VLAN 666
