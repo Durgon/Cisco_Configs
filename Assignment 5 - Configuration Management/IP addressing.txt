@@ -1,16 +1,16 @@
-Router Network - VLAN 100: 142.232.197.0/25
+Router Network - VLAN 100: 142.232.197.0/25 | C15A:6b69:726b:100::/64
   Router A: 142.232.197.127
   Router B: 142.232.197.126
   Router C: 142.232.197.125
   Router D: 142.232.197.124
   Switch A: 142.232.197.123
-Host Network - VLAN 200: 142.232.197.128/25 D/G: 142.232.197.129
+Host Network - VLAN 200: 142.232.197.128/25 D/G: 142.232.197.129| C15A:6b69:726b:200::/64
   Router A: 142.232.197.254
   Router B: 142.232.197.253
   Router C: 142.232.197.252
   Router D: 142.232.197.251
   Switch A: 142.232.197.250
-Loopback Network: 10.10.10.0/26
+Loopback Network: 10.10.10.0/26 | C15A:6b69:726b:300::/64
   Router A, Lo0: 10.10.10.1/26
   Router B, Lo0: 10.10.10.65/26
   Router C, Lo0: 10.10.10.129/26
