@@ -21,6 +21,7 @@ ip dhcp excluded-address 142.232.1.254
 ip dhcp pool VMNET
  network 142.232.1.0 255.255.255.0
  default-router 142.232.1.254
+ exit
 !
 !
 !
@@ -93,6 +94,7 @@ interface Loopback6
 interface GigabitEthernet0/0/0
  no ip address
  negotiation auto
+ no shutdown
 !
 interface GigabitEthernet0/0/0.100
  encapsulation dot1Q 100

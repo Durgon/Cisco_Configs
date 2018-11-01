@@ -1,6 +1,9 @@
+!
 kron policy-list backup-daily
-cli copy tftp (command here)
+  cli show ip route | redirect tftp://142.232.4.1/route.txt
+  exit
+!
+kron occurrence backup-daily at 16:00 recurring
+  policy-list backup-daily
 exit
-kron occurrence BackupDaily at 16:00 recurring
-policy-list backup-daily
-exit
+show kron schedule

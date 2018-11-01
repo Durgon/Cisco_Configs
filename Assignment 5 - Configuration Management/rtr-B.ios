@@ -21,6 +21,7 @@ ip dhcp excluded-address 142.232.2.254
 ip dhcp pool VMNET
  network 142.232.2.0 255.255.255.0
  default-router 142.232.2.254
+ exit
 !
 !
 !
@@ -93,6 +94,7 @@ interface Loopback6
 interface GigabitEthernet0/0/0
  no ip address
  negotiation auto
+ no shutdown
 !
 interface GigabitEthernet0/0/0.100
  encapsulation dot1Q 100
@@ -135,7 +137,7 @@ router eigrp DUAL_STACK
   topology base
   exit-af-topology
   network 10.10.10.64 0.0.0.63
-  network 142.232.1.0 0.0.0.255
+  network 142.232.2.0 0.0.0.255
   network 142.232.197.0 0.0.0.127
   eigrp router-id 2.2.2.2
  exit-address-family
@@ -179,6 +181,7 @@ line vty 5 15
  login
  transport input telnet
 !
+
 wsma agent exec
 !
 wsma agent config
