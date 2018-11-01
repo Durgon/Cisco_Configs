@@ -1,0 +1,6 @@
+kron policy-list backup-daily
+cli copy tftp (command here)
+exit
+kron occurrence BackupDaily at 16:00 recurring
+policy-list backup-daily
+exit
