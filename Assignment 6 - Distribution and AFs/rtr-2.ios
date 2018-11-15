@@ -55,6 +55,10 @@ router eigrp DUAL_STACK
       passive-interface
     exit
     !
+    topology base
+      redistribute ospfv3 1
+    exit
+    !
     eigrp router-id 2.2.2.2
     exit
   !
@@ -63,10 +67,12 @@ router ospfv3 1
   !
   address-family ipv4 unicast
     router-id 2.2.2.2
+    redistribute eigrp 3
   exit
   !
   address-family ipv6 unicast
     router-id 2.2.2.2
+    redistribute eigrp 3
   exit
   !
 !
