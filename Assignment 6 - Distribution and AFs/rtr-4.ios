@@ -1,44 +1,206 @@
 hostname rtr-4
 !
-no ip domain-lookup
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+!
+no aaa new-model
+!
+no ip domain lookup
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+!
+!
+!
+!
+vtp domain cisco
+vtp mode transparent
+!
 ipv6 unicast-routing
 !
 !
+multilink bundle-name authenticated
+!
+!
+!
+crypto pki trustpoint TP-self-signed-310940076
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-310940076
+ revocation-check none
+ rsakeypair TP-self-signed-310940076
+!
+!
+crypto pki certificate chain TP-self-signed-310940076
+ certificate self-signed 01
+  3082032E 30820216 A0030201 02020101 300D0609 2A864886 F70D0101 05050030
+  30312E30 2C060355 04031325 494F532D 53656C66 2D536967 6E65642D 43657274
+  69666963 6174652D 33313039 34303037 36301E17 0D313831 31313630 35313233
+  305A170D 32303031 30313030 30303030 5A303031 2E302C06 03550403 1325494F
+  532D5365 6C662D53 69676E65 642D4365 72746966 69636174 652D3331 30393430
+  30373630 82012230 0D06092A 864886F7 0D010101 05000382 010F0030 82010A02
+  82010100 AB0C3B44 4BE831A5 3B437FD8 304769CF BD00A661 3F562918 0254CAE7
+  4A042E17 8AAF017D 42BBC4D8 534C6954 0511B21B 22CC75D1 C684BE29 151C2FA5
+  B9A6A3C0 8976A976 2EB48402 E0C37D0A 2B6398F2 41775067 70BD2DC6 78581303
+  86180307 F1F39BE2 DF34BE90 1B12DACB 4B83F959 BAE5C6DD 795CC87D 8563BE56
+  392A08F2 820A6C35 BFBB0D3F B5A955A1 08F3ADE9 9C9C09D1 FD4383AC 7C451624
+  E00FF0F5 D6EAEE1F EEF7F903 55CD4186 0BEF9995 EF366C5E C03B7650 1A2C93DA
+  BBA5F10B EB6F9DC8 70255395 032B4AE1 8940E205 48B7909D B3BC42F0 B34C5331
+  53562009 2750E181 FE8B3316 8088EC16 F39CD399 D291B714 FC4E5433 07DAE504
+  1C7CF5D7 02030100 01A35330 51300F06 03551D13 0101FF04 05300301 01FF301F
+  0603551D 23041830 168014A7 6D37F57B 409A0D9C CCD5B82F E76D08D2 EB2E8B30
+  1D060355 1D0E0416 0414A76D 37F57B40 9A0D9CCC D5B82FE7 6D08D2EB 2E8B300D
+  06092A86 4886F70D 01010505 00038201 01003A1B DE36A98C F13549E3 7D9A78E1
+  E4750181 0086D871 5FFDC192 83DC3084 E09BF472 FF572AED 121659AE 4DC7D28B
+  66E89B93 3A20DFD9 6FE83159 DC58AB9B 79E64746 C3B6F028 B38A76F0 A61EA77B
+  B51B86BE 0CD38134 836435EC 0FBEF290 0387285A 07BEDB1E E9E10BDF 866BBBEE
+  65A6551C 8675E602 E6425606 AAD1FC93 0A23508D 2A01B401 95A87F0C 13BEF8F9
+  A94C91A7 2E21CC08 2F632154 F20E1CDA F5CF49DD 9F0340D4 A38C32AB B44644CD
+  2A39EC8A B930DFC8 33892104 905FC3EF 498D4FB2 8AECA202 73ACE239 315ED0D3
+  EAE496D2 93FBB7D1 A5AB5D7C DD5B5BC3 2948FE38 F40272D6 63BA8BF8 849D1B69
+  D3006687 D50DD882 44B8C02C 78F40667 E451
+        quit
+!
+!
+license udi pid ISR4321/K9 sn FDO20080X9A
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+!
+!
+redundancy
+ mode none
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
 interface Loopback0
-  ip address 172.16.4.1 255.255.255.255
-  ipv6 address 2016:BA15:3310:4::1/64
-  ipv6 address FE80::4 link-local
-  ospfv3 1 ipv4 area 0
-  ospfv3 1 ipv6 area 0
+ ip address 172.16.4.1 255.255.255.255
+ ipv6 address FE80::4 link-local
+ ipv6 address 2016:BA15:3310:4::1/64
+ ospfv3 1 ipv6 area 0
+ ospfv3 1 ipv4 area 0
 !
-interface G0/0/0
-  no shutdown
+interface GigabitEthernet0/0/0
+ no ip address
+ negotiation auto
 !
-interface G0/0/0.24
-  encapsulation dot1q 24
-  ip address 172.16.24.4 255.255.255.0
-  ipv6 address 2016:BA15:3310:24::4/64
-  ipv6 address FE80::4 link-local
-  ospfv3 1 ipv4 area 0
-  ospfv3 1 ipv6 area 0
+interface GigabitEthernet0/0/0.24
+ encapsulation dot1Q 24
+ ip address 172.16.24.4 255.255.255.0
+ ipv6 address FE80::4 link-local
+ ipv6 address 2016:BA15:3310:24::4/64
+ ospfv3 1 ipv6 area 0
+ ospfv3 1 ipv4 area 0
 !
-interface G0/0/0.45
-  encapsulation dot1q 45
-  ip address 172.16.45.4 255.255.255.0
-  ipv6 address 2016:BA15:3310:45::4/64
-  ipv6 address FE80::4 link-local
-  ospfv3 1 ipv4 area 0
-  ospfv3 1 ipv6 area 0
-exit
+interface GigabitEthernet0/0/0.45
+ encapsulation dot1Q 45
+ ip address 172.16.45.4 255.255.255.0
+ ipv6 address FE80::4 link-local
+ ipv6 address 2016:BA15:3310:45::4/64
+ ospfv3 1 ipv6 area 0
+ ospfv3 1 ipv4 area 0
 !
+interface GigabitEthernet0/0/1
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet0/1/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet0/1/1
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet0
+ vrf forwarding Mgmt-intf
+ no ip address
+ shutdown
+ negotiation auto
 !
 router ospfv3 1
-router-id 4.4.4.4
-  !
-  address-family ipv4 unicast
-  exit
-  !
-  address-family ipv6 unicast
-  exit
-  !
+ router-id 4.4.4.4
+ !
+ address-family ipv4 unicast
+  passive-interface Loopback0
+ exit-address-family
+ !
+ address-family ipv6 unicast
+  passive-interface Loopback0
+ exit-address-family
 !
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+ip tftp source-interface GigabitEthernet0
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ transport input none
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ login
+!
+wsma agent exec
+!
+wsma agent config
+!
+wsma agent filesys
+!
+wsma agent notify
+!
+!
+end

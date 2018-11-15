@@ -1,51 +1,208 @@
 hostname rtr-5
 !
-no ip domain-lookup
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+!
+no aaa new-model
+!
+!
+!
+
+no ip domain lookup
+!
+!
+!
 ipv6 unicast-routing
 !
 !
+!
+!
+!
+!
+!
+subscriber templating
+vtp domain cisco
+vtp mode transparent
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+crypto pki trustpoint TP-self-signed-1468152162
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-1468152162
+ revocation-check none
+ rsakeypair TP-self-signed-1468152162
+!
+!
+crypto pki certificate chain TP-self-signed-1468152162
+ certificate self-signed 01
+  30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 05050030
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274
+  69666963 6174652D 31343638 31353231 3632301E 170D3138 31313135 31373236
+  33375A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D31 34363831
+  35323136 32308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
+  0A028201 0100CECD 2F3A6686 6082CEDF F9FE01DA 5D393136 E5A24637 89CB856B
+  CF089FE9 5ACF845E 4ED2ECAD 0811999A 67E76921 D2CAFD67 FA6BFDF2 791A9931
+  E35D55AC 440F8A02 DEEDE133 E115B594 3B2F097A 4E4F41FC F294DC24 97F9A7B4
+  35C71773 87116CA2 CC39D525 808F08D4 B7F67C86 AE1EBCAB 75DD733A B9CDD659
+  AD7E5B13 944469EC F39482D7 B778C30F 2384AD3F 627B37A4 BEFE63C2 5D21FA55
+  CE849FEC 4B32F710 CA944A0B 92CC1698 BAC3E390 43EEF70C BA8D0D4F 0E7EBF9C
+  E6EC36FD 578CB455 5487960C FC058823 034772EC C78CA8ED 0301A021 35B2F7DF
+  E66F0C67 CA369B2F 412AFACD 6DDBF195 019853DE 884B296C 337412D5 8AFB770C
+  8CADF0A5 87D70203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF
+  301F0603 551D2304 18301680 143A1EA4 4F275E4E 80D61C09 DB67A5C1 BB4811B2
+  7C301D06 03551D0E 04160414 3A1EA44F 275E4E80 D61C09DB 67A5C1BB 4811B27C
+  300D0609 2A864886 F70D0101 05050003 82010100 14C1D037 9BAF4B6A A45E2CD3
+  75698EAE 1B6C0443 18CFD8E2 22BA65E9 08D1D09E 9B50D7E3 B34F3A73 BB920FD3
+  10CCFAE8 02CD9D2A 0860092A 0660ABA9 0182C49D FAF98DCE E8B2BBC0 32ED68BD
+  A416DF49 1A94588C 6DAE4C46 D4906C92 628B15C1 C0DA78FE 69636FB8 F4A9031E
+  EE6AAC84 EE90EF88 FF93B97D 22C8F619 05945A05 9305CC3A 452CBD62 396256C2
+  8E641ABC A6AE7CC6 9B34D57E 154E8B81 5F3C1CEA 5E1F8C61 C3619019 9B2AF588
+  B37673B3 99A13121 56981EAD F5376BF8 BCA84C18 CFFF4987 99203F5D 7BD9566F
+  C5EE7F6F 5D5B5EC7 DED580BD FAD57B9F 154E1D5F 6C8E1A73 11D354EA CE9565D7
+  28144CA9 6288E2FD DCCD5FB7 85110328 A9F4B1BE
+        quit
+
+
+license udi pid ISR4321/K9 sn FDO19530385
+!
+diagnostic bootup level minimal
+spanning-tree extend system-id
+!
+!
+redundancy
+ mode none
+!
+!
+vlan internal allocation policy ascending
+!
+!
+!
+!
+!
+!
 interface Loopback0
-  ip address 172.16.5.1 255.255.255.255
-  ipv6 address 2016:BA15:3310:5::1/64
-  ipv6 address FE80::5 link-local
-  ospfv3 1 ipv4 area 0
-  ospfv3 1 ipv6 area 0
+ ip address 172.16.5.1 255.255.255.255
+ ipv6 address FE80::5 link-local
+ ipv6 address 2016:BA15:3310:5::1/64
+ ospfv3 1 ipv6 area 0
+ ospfv3 1 ipv4 area 0
 !
 interface Loopback1
-  ip address 192.168.1.1 255.255.255.255
-  ipv6 address 2016:BA15:192:168::1/64
-  ipv6 address FE80::5 link-local
-  ospfv3 1 ipv4 area 2
-  ospfv3 1 ipv6 area 2
+ ip address 192.168.1.1 255.255.255.255
+ ipv6 address FE80::5 link-local
+ ipv6 address 2016:BA15:192:168::1/64
+ ospfv3 1 ipv6 area 2
+ ospfv3 1 ipv4 area 2
 !
-interface G0/0/0
-  no shutdown
+interface GigabitEthernet0/0/0
+ no ip address
+ negotiation auto
 !
-interface g0/0/0.35
-  encapsulation dot1q 35
-  ip address 172.16.35.5 255.255.255.0
-  ipv6 address 2016:BA15:3310:35::5/64
-  ipv6 address FE80::5 link-local
-  ospfv3 1 ipv4 area 1
-  ospfv3 1 ipv6 area 1
+interface GigabitEthernet0/0/0.35
+ encapsulation dot1Q 35
+ ip address 172.16.35.5 255.255.255.0
+ ipv6 address FE80::5 link-local
+ ipv6 address 2016:BA15:3310:35::5/64
+ ospfv3 1 ipv6 area 1
+ ospfv3 1 ipv4 area 1
 !
-interface g0/0/0.45
-  encapsulation dot1q 45
-  ip address 172.16.45.5 255.255.255.0
-  ipv6 address 2016:BA15:3310:45::5/64
-  ipv6 address FE80::5 link-local
-  ospfv3 1 ipv4 area 0
-  ospfv3 1 ipv6 area 0
-  exit
+interface GigabitEthernet0/0/0.45
+ encapsulation dot1Q 45
+ ip address 172.16.45.5 255.255.255.0
+ ipv6 address FE80::5 link-local
+ ipv6 address 2016:BA15:3310:45::5/64
+ ospfv3 1 ipv6 area 0
+ ospfv3 1 ipv4 area 0
 !
+interface GigabitEthernet0/0/1
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet0/1/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet0/1/1
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet0
+ vrf forwarding Mgmt-intf
+ no ip address
+ shutdown
+ negotiation auto
+!
+interface Vlan1
+ no ip address
+ shutdown
 !
 router ospfv3 1
-router-id 5.5.5.5
-  !
-  address-family ipv4 unicast
-  exit
-  !
-  address-family ipv6 unicast
-  exit
-  !
+ router-id 5.5.5.5
+ !
+ address-family ipv4 unicast
+  passive-interface Loopback0
+  passive-interface Loopback1
+ exit-address-family
+ !
+ address-family ipv6 unicast
+  passive-interface Loopback0
+  passive-interface Loopback1
+ exit-address-family
 !
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+ip tftp source-interface GigabitEthernet0
+!
+!
+!
+!
+!
+!
+!
+ipv6 access-list preauth_v6
+ permit udp any any eq domain
+ permit tcp any any eq domain
+ permit icmp any any nd-ns
+ permit icmp any any nd-na
+ permit icmp any any router-solicitation
+ permit icmp any any router-advertisement
+ permit icmp any any redirect
+ permit udp any eq 547 any eq 546
+ permit udp any eq 546 any eq 547
+ deny ipv6 any any
+!
+control-plane
+!
+!
+line con 0
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ login
+!
+!
+!
+!
+!
+!
+end
