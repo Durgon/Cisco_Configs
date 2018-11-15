@@ -26,16 +26,16 @@ interface g0/0.35
   ip address 172.16.35.5 255.255.255.0
   ipv6 address 2016:BA15:3310:35::5/64
   ipv6 address FE80::5 link-local
-  ospfv3 1 ipv4 area 0
-  ospfv3 1 ipv6 area 0
+  ospfv3 1 ipv4 area 1
+  ospfv3 1 ipv6 area 1
 !
 interface g0/0.45
   encapsulation dot1q 54
   ip address 172.26.45.5 255.255.255.0
   ipv6 address 2016:BA15:3310:45::5/64
   ipv6 address FE80::5 link-local
-  ospfv3 1 ipv4 area 1
-  ospfv3 1 ipv6 area 1
+  ospfv3 1 ipv4 area 0
+  ospfv3 1 ipv6 area 0
   exit
 !
 !

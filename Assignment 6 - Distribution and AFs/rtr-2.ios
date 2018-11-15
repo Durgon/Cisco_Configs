@@ -1,7 +1,7 @@
 hostname rtr-2
 !
 no ip domain-lookup
-ipv6 unicast routing
+ipv6 unicast
 !
 !
 interface Loopback0
@@ -11,16 +11,16 @@ interface Loopback0
   ospfv3 1 ipv4 area 0
   ospfv3 1 ipv6 area 0
 !
-interface G0/0
+interface G0/0/0
   no shutdown
 !
-interface g0/0.12
+interface g0/0/0.12
   encapsulation dot1q 12
   ip address 10.12.12.2 255.255.255.0
   ipv6 address 2016:BA15:3310:12::2/64
   ipv6 address FE80::2 link-local
 !
-interface g0/0.24
+interface g0/0/0.24
   encapsulation dot1q 24
   ip address 172.16.24.2 255.255.255.0
   ipv6 address 2016:BA15:3310:24::2/64
@@ -28,7 +28,7 @@ interface g0/0.24
   ospfv3 1 ipv4 area 0
   ospfv3 1 ipv6 area 0
 !
-interface g0/0.23
+interface g0/0/0.23
   encapsulation dot1q 23
   ip address 172.26.23.2 255.255.255.0
   ipv6 address 2016:BA15:3310:23::2/64
@@ -45,6 +45,10 @@ router eigrp DUAL_STACK
       passive-interface
     exit
     !
+    topology base
+      redistribute ospfv3 1
+    exit
+    !
     network 10.12.12.0
     eigrp router-id 2.2.2.2
     exit
@@ -56,7 +60,7 @@ router eigrp DUAL_STACK
     exit
     !
     topology base
-      redistribute ospfv3 1
+      redistribute ospf 1
     exit
     !
     eigrp router-id 2.2.2.2
@@ -64,14 +68,13 @@ router eigrp DUAL_STACK
   !
 !
 router ospfv3 1
+  router-id 2.2.2.2
   !
   address-family ipv4 unicast
-    router-id 2.2.2.2
     redistribute eigrp 3
   exit
   !
   address-family ipv6 unicast
-    router-id 2.2.2.2
     redistribute eigrp 3
   exit
   !

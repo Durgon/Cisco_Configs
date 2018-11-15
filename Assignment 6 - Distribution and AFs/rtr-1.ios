@@ -38,16 +38,15 @@ router eigrp DUAL_STACK
     network 10.12.12.0
     network 10.1.0.0
     eigrp router-id 1.1.1.1
-    exit
-  !
-  address-family ipv6 unicast autonomous-system 3
-  !
-    af-interface Loopback0
-      passive-interface
-    exit
     !
-    af-interface Loopback1
-      passive-interface
+    address-family ipv6 unicast autonomous-system 3
+    !
+      af-interface Loopback0
+        passive-interface
+        exit
+      !
+      af-interface Loopback1
+        passive-interface
     exit
     !
     eigrp router-id 1.1.1.1
