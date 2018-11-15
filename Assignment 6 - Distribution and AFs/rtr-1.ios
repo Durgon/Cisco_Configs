@@ -1,53 +1,69 @@
 hostname rtr-1
 !
-no ip domain-lookup
-ipv6 unicast routing
+boot-start-marker
+boot-end-marker
 !
 !
-interface G0/0
-  no shutdown
 !
-interface g0/0.12
-  encapsulation dot1q 12
-  ip address 10.12.12.1 255.255.255.0
-  ipv6 address 2016:BA15:3310:12::1/64
-  ipv6 address FE80::1 link-local
+!
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+!
+!
+!
+!
 !
 interface Loopback0
-  ip address 10.1.1.1 255.255.255.255
-  ipv6 address 2016:BA15:3310:1011::1/64
-  ipv6 address FE80::1 link-local
+ ip address 10.1.1.1 255.255.255.255
+ ipv6 address FE80::1 link-local
+ ipv6 address 2016:BA15:3310:1011::1/64
 !
 interface Loopback1
-  ip address 10.1.2.1 255.255.255.255
-  ipv6 address 2016:BA15:3310:1012::1/64
-  ipv6 address FE80::1 link-local
+ ip address 10.1.2.1 255.255.255.255
+ ipv6 address FE80::1 link-local
+ ipv6 address 2016:BA15:3310:1012::1/64
+!
+interface GigabitEthernet0/0.12
+ encapsulation dot1Q 12
+ ip address 10.12.12.1 255.255.255.0
+ ipv6 address FE80::1 link-local
+ ipv6 address 2016:BA15:3310:12::1/64
 !
 !
 router eigrp DUAL_STACK
-  address-family ipv4 unicast autonomous-system 3
+ !
+ address-family ipv4 unicast autonomous-system 3
   !
-    af-interface Loopback0
-      passive-interface
-    exit
-    !
-    af-interface Loopback1
-      passive-interface
-    exit
-    !
-    network 10.12.12.0
-    network 10.1.0.0
-    eigrp router-id 1.1.1.1
-    !
-    address-family ipv6 unicast autonomous-system 3
-    !
-      af-interface Loopback0
-        passive-interface
-        exit
-      !
-      af-interface Loopback1
-        passive-interface
-    exit
-    !
-    eigrp router-id 1.1.1.1
-    exit
+  af-interface Loopback0
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Loopback1
+   passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  network 10.0.0.0
+  eigrp router-id 1.1.1.1
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 3
+  !
+  af-interface Loopback0
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Loopback1
+   passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  eigrp router-id 1.1.1.1
+ exit-address-family
+!
+end

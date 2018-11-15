@@ -1,44 +1,50 @@
 hostname rtr-3
 !
+ipv6 unicast-routing
 no ip domain-lookup
-ipv6 unicast
+!
+!
+!
 !
 !
 interface Loopback0
-  ip address 172.16.3.1 255.255.255.255
-  ipv6 address 2016:BA16:3310:3::1/64
-  ipv6 address FE80::3 link-local
-  ospfv3 1 ipv4 area 0
-  ospfv3 1 ipv6 area 0
+ ip address 172.16.3.1 255.255.255.255
+ ipv6 address FE80::1 link-local
+ ipv6 address 2016:BA15:3310:3::1/64
+ ospfv3 1 ipv6 area 1
+ ospfv3 1 ipv4 area 1
 !
-interface G0/0/0
-  no shutdown
+interface GigabitEthernet0/0/0
+ no ip address
+ negotiation auto
 !
-interface G0/0/0.23
-  encapsulation dot1q 23
-  ip address 172.16.23.3 255.255.255.0
-  ipv6 address 2016:BA16:3310:23::3/64
-  ipv6 address FE80::3 link-local
-  ospfv3 1 ipv4 area 1
-  ospfv3 1 ipv6 area 1
+interface GigabitEthernet0/0/0.23
+ encapsulation dot1Q 23
+ ip address 172.16.23.3 255.255.255.0
+ ipv6 address FE80::3 link-local
+ ipv6 address 2016:BA15:3310:23::3/64
+ ospfv3 1 ipv6 area 1
+ ospfv3 1 ipv4 area 1
 !
-interface G0/0/0.35
-  encapsulation dot1q 35
-  ip address 172.16.35.3 255.255.255.0
-  ipv6 address 2016:BA15:3310:35::3/64
-  ipv6 address FE80::3 link-local
-  ospfv3 1 ipv4 area 1
-  ospfv3 1 ipv4 area 1
-exit
+interface GigabitEthernet0/0/0.35
+ encapsulation dot1Q 35
+ ip address 172.16.35.3 255.255.255.0
+ ipv6 address FE80::3 link-local
+ ipv6 address 2016:BA15:3310:35::3/64
+ ospfv3 1 ipv6 area 1
+ ospfv3 1 ipv4 area 1
 !
 !
 router ospfv3 1
-  router-id 3.3.3.3
-  !
-  address-family ipv4 unicast
-  exit
-  !
-  address-family ipv6 unicast
-  exit
-  !
+ router-id 3.3.3.3
+ !
+ address-family ipv4 unicast
+  passive-interface Loopback0
+ exit-address-family
+ !
+ address-family ipv6 unicast
+  passive-interface Loopback0
+ exit-address-family
 !
+!
+end

@@ -1,83 +1,122 @@
 hostname rtr-2
 !
-no ip domain-lookup
-ipv6 unicast
+boot-start-marker
+boot-end-marker
+!
+no ip domain lookup
+!
+!
+ipv6 unicast-routing
+!
+!
+!
+!
+!
+!
 !
 !
 interface Loopback0
-  ip address 172.16.2.1 255.255.255.255
-  ipv6 address 2016:BA16:3310:2::1/64
-  ipv6 address FE80::2 link-local
-  ospfv3 1 ipv4 area 0
-  ospfv3 1 ipv6 area 0
+ ip address 172.16.2.1 255.255.255.255
+ ipv6 address FE80::2 link-local
+ ipv6 address 2016:BA15:3310:2::1/64
+ ospfv3 1 ipv6 area 0
+ ospfv3 1 ipv4 area 0
 !
-interface G0/0/0
-  no shutdown
+interface GigabitEthernet0/0/0.12
+ encapsulation dot1Q 12
+ ip address 10.12.12.2 255.255.255.0
+ ip policy route-map ipv4
+ ipv6 address FE80::2 link-local
+ ipv6 address 2016:BA15:3310:12::2/64
+ ipv6 enable
+ ipv6 policy route-map IPV6
 !
-interface g0/0/0.12
-  encapsulation dot1q 12
-  ip address 10.12.12.2 255.255.255.0
-  ipv6 address 2016:BA15:3310:12::2/64
-  ipv6 address FE80::2 link-local
+interface GigabitEthernet0/0/0.23
+ encapsulation dot1Q 23
+ ip address 172.26.23.2 255.255.255.0
+ ipv6 address FE80::2 link-local
+ ipv6 address 2016:BA15:3310:23::2/64
+ ipv6 enable
+ ospfv3 1 ipv6 area 1
+ ospfv3 1 ipv4 area 1
 !
-interface g0/0/0.24
-  encapsulation dot1q 24
-  ip address 172.16.24.2 255.255.255.0
-  ipv6 address 2016:BA15:3310:24::2/64
-  ipv6 address FE80::2 link-local
-  ospfv3 1 ipv4 area 0
-  ospfv3 1 ipv6 area 0
-!
-interface g0/0/0.23
-  encapsulation dot1q 23
-  ip address 172.26.23.2 255.255.255.0
-  ipv6 address 2016:BA15:3310:23::2/64
-  ipv6 address FE80::2 link-local
-  ospfv3 1 ipv4 area 1
-  ospfv3 1 ipv6 area 1
-  exit
+interface GigabitEthernet0/0/0.24
+ encapsulation dot1Q 24
+ ip address 172.16.24.2 255.255.255.0
+ ipv6 address FE80::2 link-local
+ ipv6 address 2016:BA15:3310:24::2/64
+ ipv6 enable
+ ospfv3 1 ipv6 area 0
+ ospfv3 1 ipv4 area 0
 !
 !
 router eigrp DUAL_STACK
-  address-family ipv4 unicast autonomous-system 3
+ !
+ address-family ipv4 unicast autonomous-system 3
   !
-    af-interface Loopback0
-      passive-interface
-    exit
-    !
-    topology base
-      redistribute ospfv3 1
-      default-metric 10000 100 255 1 1500
-    exit
-    !
-    network 10.12.12.0
-    eigrp router-id 2.2.2.2
-    exit
+  af-interface Loopback0
+   passive-interface
+  exit-af-interface
   !
-  address-family ipv6 unicast autonomous-system 3
+  topology base
+   default-metric 10000 100 255 1 1500
+   redistribute ospfv3 1
+  exit-af-topology
+  network 10.0.0.0
+  eigrp router-id 2.2.2.2
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 3
   !
-    af-interface Loopback0
-      passive-interface
-    exit
-    !
-    topology base
-      redistribute ospf 1
-      default-metric 10000 100 255 1 1500
-    exit
-    !
-    eigrp router-id 2.2.2.2
-    exit
+  af-interface Loopback0
+   passive-interface
+  exit-af-interface
   !
+  topology base
+   redistribute ospf 1
+  exit-af-topology
+  eigrp router-id 2.2.2.2
+ exit-address-family
 !
 router ospfv3 1
-  router-id 2.2.2.2
-  !
-  address-family ipv4 unicast
-    redistribute eigrp 3
-  exit
-  !
-  address-family ipv6 unicast
-    redistribute eigrp 3
-  exit
-  !
+ router-id 2.2.2.2
+ !
+ address-family ipv4 unicast
+  redistribute eigrp 3
+  passive-interface Loopback0
+ exit-address-family
+ !
+ address-family ipv6 unicast
+  passive-interface Loopback0
+  redistribute eigrp 3
+ exit-address-family
 !
+access-list 1 permit 10.1.1.1
+access-list 2 permit 10.1.2.1
+!
+!
+route-map ipv4 permit 3
+ match ip address 2
+ set ip next-hop 172.16.23.3
+!
+route-map ipv4 permit 4
+ match ip address 1
+ set ip next-hop 172.16.24.4
+!
+route-map IPV6 permit 10
+ match ipv6 address r1-r3
+ set ipv6 next-hop 2016:BA15:3310:23::3
+!
+route-map IPV6 permit 20
+ match ipv6 address r1-r4
+ set ipv6 next-hop 2016:BA15:3310:24::4
+!
+!
+!
+ipv6 access-list r1-r3
+ permit ipv6 host 2016:BA15:3310:1011::1 any
+!
+ipv6 access-list r1-r4
+ permit ipv6 host 2016:BA15:3310:1012::1 any
+!
+end
