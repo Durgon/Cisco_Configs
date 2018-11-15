@@ -15,8 +15,8 @@ interface Loopback1
   ip address 192.168.1.1 255.255.255.255
   ipv6 address 2016:BA15:192:168::1/64
   ipv6 address FE80::5 link-local
-  ospfv3 1 ipv4 area 0
-  ospfv3 1 ipv6 area 0
+  ospfv3 1 ipv4 area 2
+  ospfv3 1 ipv6 area 2
 !
 interface G0/0
   no shutdown
