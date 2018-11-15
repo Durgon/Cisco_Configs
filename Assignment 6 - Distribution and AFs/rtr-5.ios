@@ -1,0 +1,52 @@
+hostname rtr-5
+!
+no ip domain-lookup
+ipv6 unicast routing
+!
+!
+interface Loopback0
+  ip address 172.16.5.1 255.255.255.255
+  ipv6 address 2016:BA16:3310:5::1/64
+  ipv6 address FE80::5 link-local
+  ospfv3 1 ipv4 area 0
+  ospfv3 1 ipv6 area 0
+!
+interface Loopback1
+  ip address 192.168.1.1 255.255.255.255
+  ipv6 address 2016:BA15:192:168::1/64
+  ipv6 address FE80::5 link-local
+  ospfv3 1 ipv4 area 0
+  ospfv3 1 ipv6 area 0
+!
+interface G0/0
+  no shutdown
+!
+interface g0/0.35
+  encapsulation dot1q 35
+  ip address 172.16.35.5 255.255.255.0
+  ipv6 address 2016:BA15:3310:35::5/64
+  ipv6 address FE80::5 link-local
+  ospfv3 1 ipv4 area 0
+  ospfv3 1 ipv6 area 0
+!
+interface g0/0.45
+  encapsulation dot1q 54
+  ip address 172.26.45.5 255.255.255.0
+  ipv6 address 2016:BA15:3310:45::5/64
+  ipv6 address FE80::5 link-local
+  ospfv3 1 ipv4 area 1
+  ospfv3 1 ipv6 area 1
+  exit
+!
+!
+router ospfv3 1
+  !
+  address-family ipv4 unicast
+    router-id 5.5.5.5
+  exit
+  !
+  address-family ipv6 unicast
+    router-id 5.5.5.5
+  exit
+  !
+!

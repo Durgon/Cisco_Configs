@@ -59,7 +59,7 @@ router eigrp DUAL_STACK
     exit
   !
 !
-router ospfv3 0
+router ospfv3 1
   !
   address-family ipv4 unicast
     router-id 2.2.2.2

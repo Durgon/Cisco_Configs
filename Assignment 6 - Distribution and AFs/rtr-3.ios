@@ -1,0 +1,45 @@
+hostname rtr-3
+!
+no ip domain-lookup
+ipv6 unicast routing
+!
+!
+interface Loopback0
+  ip address 172.16.3.1 255.255.255.255
+  ipv6 address 2016:BA16:3310:3::1/64
+  ipv6 address FE80::3 link-local
+  ospfv3 1 ipv4 area 0
+  ospfv3 1 ipv6 area 0
+!
+interface G0/0
+  no shutdown
+!
+interface G0/0.23
+  encapsulation dot1q 23
+  ip address 172.16.23.3 255.255.255.0
+  ipv6 address 2016:BA16:3310:23::3/64
+  ipv6 address FE80::3 link-local
+  ospfv3 1 ipv4 area 0
+  ospfv3 1 ipv6 area 0
+!
+interface G0/0.35
+  encapsulation dot1q 35
+  ip address 172.16.35.3 255.255.255.0
+  ipv6 address 2016:BA15:3310:35::3/64
+  ipv6 address FE80::3 link-local
+  ospfv3 1 ipv4 area 0
+  ospfv3 1 ipv4 area 0
+exit
+!
+!
+router ospfv3 1
+  !
+  address-family ipv4 unicast
+    router-id 3.3.3.3
+  exit
+  !
+  address-family ipv6 unicast
+    router-id 3.3.3.3
+  exit
+  !
+!
