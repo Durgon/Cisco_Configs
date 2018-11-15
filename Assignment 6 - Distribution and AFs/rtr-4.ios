@@ -14,7 +14,7 @@ interface Loopback0
 interface G0/0
   no shutdown
 !
-interface G0/0.24
+interface G0/0/0.24
   encapsulation dot1q 24
   ip address 172.16.24.4 255.255.255.0
   ipv6 address 2016:BA16:3310:24::4/64
@@ -22,7 +22,7 @@ interface G0/0.24
   ospfv3 1 ipv4 area 1
   ospfv3 1 ipv6 area 1
 !
-interface G0/0.45
+interface G0/0/0.45
   encapsulation dot1q 45
   ip address 172.16.45.4 255.255.255.0
   ipv6 address 2016:BA15:3310:45::4/64
@@ -33,13 +33,12 @@ exit
 !
 !
 router ospfv3 1
+router-id 4.4.4.4
   !
   address-family ipv4 unicast
-    router-id 4.4.4.4
   exit
   !
   address-family ipv6 unicast
-    router-id 4.4.4.4
   exit
   !
 !
