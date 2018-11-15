@@ -1,0 +1,72 @@
+hostname rtr-2
+!
+no ip domain-lookup
+ipv6 unicast routing
+!
+!
+interface Loopback0
+  ip address 172.16.2.1 255.255.255.255
+  ipv6 address 2016:BA16:3310:2::1/64
+  ipv6 address FE80::2 link-local
+  ospfv3 1 ipv4 area 0
+  ospfv3 1 ipv6 area 0
+!
+interface G0/0
+  no shutdown
+!
+interface g0/0.12
+  encapsulation dot1q 12
+  ip address 10.12.12.2 255.255.255.0
+  ipv6 address 2016:BA15:3310:12::2/64
+  ipv6 address FE80::2 link-local
+!
+interface g0/0.24
+  encapsulation dot1q 24
+  ip address 172.16.24.2 255.255.255.0
+  ipv6 address 2016:BA15:3310:24::2/64
+  ipv6 address FE80::2 link-local
+  ospfv3 1 ipv4 area 0
+  ospfv3 1 ipv6 area 0
+!
+interface g0/0.23
+  encapsulation dot1q 23
+  ip address 172.26.23.2 255.255.255.0
+  ipv6 address 2016:BA15:3310:23::2/64
+  ipv6 address FE80::2 link-local
+  ospfv3 1 ipv4 area 1
+  ospfv3 1 ipv6 area 1
+  exit
+!
+!
+router eigrp DUAL_STACK
+  address-family ipv4 unicast autonomous-system 3
+  !
+    af-interface Loopback0
+      passive-interface
+    exit
+    !
+    network 10.12.12.0
+    eigrp router-id 2.2.2.2
+    exit
+  !
+  address-family ipv6 unicast autonomous-system 3
+  !
+    af-interface Loopback0
+      passive-interface
+    exit
+    !
+    eigrp router-id 2.2.2.2
+    exit
+  !
+!
+router ospfv3 0
+  !
+  address-family ipv4 unicast
+    router-id 2.2.2.2
+  exit
+  !
+  address-family ipv6 unicast
+    router-id 2.2.2.2
+  exit
+  !
+!
