@@ -74,6 +74,7 @@ router eigrp DUAL_STACK
   !
   topology base
    redistribute ospf 1
+   default-metric 10000 100 255 1 1500
   exit-af-topology
   eigrp router-id 2.2.2.2
  exit-address-family
