@@ -1,0 +1,2 @@
+Central layer 3 switch will function as "ISP" router device running BGP AS 1
+Each router will represent a separate "ISP Customer" device, running AS #s {101..104}
