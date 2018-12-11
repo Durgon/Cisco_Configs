@@ -1,7 +1,7 @@
 ISP_SW (AS 1)
   VLAN 10 (customer vlan): 1.1.1.1 /8
 Rtr1 (AS 65101)
-  g0/0 (outside connection): 1.1.1.2 /8
+  g0/0/0 (outside connection): 1.1.1.2 /8
   g0/1 (inside connection to router 2): 10.10.12.
 
 Rtr4 (AS 65202)
