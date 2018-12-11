@@ -1,0 +1,159 @@
+!
+! Last configuration change at 18:34:48 UTC Tue Dec 11 2018
+!
+version 16.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+!
+hostname Customer1-2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+!
+no aaa new-model
+!
+!
+ip dhcp pool SERVER
+ network 142.232.197.0 255.255.255.0
+ default-router 142.232.197.254
+ domain-name deepfried.local
+ dns-server 1.1.1.1
+!
+ip dhcp pool Server1
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+!
+!
+!
+!
+vtp domain cisco
+vtp mode transparent
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+license udi pid ISR4321/K9 sn FDO20080XS4
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+!
+!
+redundancy
+ mode none
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0/0
+ ip address 142.232.197.254 255.255.255.0
+ negotiation auto
+!
+interface GigabitEthernet0/0/1
+ no ip address
+ negotiation auto
+!
+interface GigabitEthernet0/1/0
+ ip address 10.10.13.2 255.255.255.0
+ negotiation auto
+!
+interface GigabitEthernet0/1/1
+ ip address 10.10.12.2 255.255.255.0
+ negotiation auto
+!
+interface GigabitEthernet0
+ vrf forwarding Mgmt-intf
+ no ip address
+ negotiation auto
+!
+!
+router eigrp DUAL_STACK
+ !
+ address-family ipv4 unicast autonomous-system 4
+  !
+  topology base
+  exit-af-topology
+  network 10.10.12.0 0.0.0.255
+  network 10.10.13.0 0.0.0.255
+  network 142.232.197.0 0.0.0.255
+ exit-address-family
+!
+ip forward-protocol nd
+no ip http server
+ip http secure-server
+ip tftp source-interface GigabitEthernet0
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ transport input none
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ login
+!
+wsma agent exec
+!
+wsma agent config
+!
+wsma agent filesys
+!
+wsma agent notify
+!
+!
+end
