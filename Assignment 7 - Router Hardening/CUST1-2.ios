@@ -28,7 +28,7 @@ no aaa new-model
 ip dhcp pool SERVER
  network 142.232.197.0 255.255.255.0
  default-router 142.232.197.254
- domain-name deepfried.local
+ domain-name Hardening.lab
  dns-server 1.1.1.1
 !
 ip dhcp pool Server1
