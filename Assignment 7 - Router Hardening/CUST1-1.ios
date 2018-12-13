@@ -1,0 +1,136 @@
+hostname CUST1-1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+no ip icmp rate-limit unreachable
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+!
+multilink bundle-name authenticated
+!
+key chain Chain1
+ key 1
+   key-string 7 cisco 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip tcp synwait-time 5
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback4
+ ip address 142.232.11.1 255.255.255.255
+!
+interface Ethernet0/0
+ no ip address
+ shutdown
+ duplex auto
+!
+interface GigabitEthernet0/0
+ ip address 1.1.1.2 255.0.0.0
+ media-type gbic
+ speed 1000
+ duplex full
+ negotiation auto
+!
+interface GigabitEthernet1/0
+ ip address 10.10.12.1 255.255.255.0
+ negotiation auto
+!
+interface GigabitEthernet2/0
+ ip address 10.10.13.1 255.255.255.0
+ negotiation auto
+!
+!
+router eigrp DUAL_STACK
+ !
+ address-family ipv4 unicast autonomous-system 4
+  !
+  af-interface Loopback4
+   passive-interface
+  exit-af-interface
+  !
+  af-interface GigabitEthernet1/0
+   authentication mode md5
+   authentication key-chain Chain1
+  exit-af-interface
+  !
+  af-interface GigabitEthernet2/0
+   authentication mode md5
+   authentication key-chain Chain1
+  exit-af-interface
+  !
+  topology base
+   redistribute static
+  exit-af-topology
+  network 10.10.12.0 0.0.0.255
+  network 10.10.13.0 0.0.0.255
+  network 142.232.0.0
+  eigrp router-id 1.1.1.1
+ exit-address-family
+!
+router bgp 65101
+ bgp log-neighbor-changes
+ neighbor 1.1.1.1 remote-as 1
+ neighbor 1.1.1.1 password 7 Customer1
+ !
+ address-family ipv4
+  neighbor 1.1.1.1 activate
+ exit-address-family
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 GigabitEthernet0/0
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login
+!
+!
+end

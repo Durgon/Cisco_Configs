@@ -1,75 +1,29 @@
-!
-! Last configuration change at 18:34:48 UTC Tue Dec 11 2018
-!
-version 16.7
-service timestamps debug datetime msec
-service timestamps log datetime msec
-platform qfp utilization monitor load 80
-no platform punt-keepalive disable-kernel-core
-!
-hostname Customer1-2
+hostname CUST1-2
 !
 boot-start-marker
 boot-end-marker
 !
 !
-vrf definition Mgmt-intf
- !
- address-family ipv4
- exit-address-family
- !
- address-family ipv6
- exit-address-family
-!
 !
 no aaa new-model
-!
-!
-ip dhcp pool SERVER
- network 142.232.197.0 255.255.255.0
- default-router 142.232.197.254
- domain-name Hardening.lab
- dns-server 1.1.1.1
-!
-ip dhcp pool Server1
+no ip icmp rate-limit unreachable
 !
 !
 !
 !
 !
 !
-!
-!
-!
-!
-subscriber templating
-!
-!
-!
-!
-vtp domain cisco
-vtp mode transparent
-!
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
 !
 !
 multilink bundle-name authenticated
 !
-!
-!
-!
-!
-!
-license udi pid ISR4321/K9 sn FDO20080XS4
-no license smart enable
-diagnostic bootup level minimal
-!
-spanning-tree extend system-id
-!
-!
-!
-!
-redundancy
- mode none
+key chain Chain1
+ key 1
+   key-string 7 13061E010803
 !
 !
 !
@@ -82,6 +36,7 @@ redundancy
 !
 !
 !
+ip tcp synwait-time 5
 !
 !
 !
@@ -91,27 +46,27 @@ redundancy
 !
 !
 !
+interface Loopback4
+ ip address 142.232.12.1 255.255.255.255
 !
-!
-interface GigabitEthernet0/0/0
- ip address 142.232.197.254 255.255.255.0
- negotiation auto
-!
-interface GigabitEthernet0/0/1
+interface Ethernet0/0
  no ip address
+ shutdown
+ duplex auto
+!
+interface GigabitEthernet0/0
+ ip address 10.10.23.2 255.255.255.0
+ media-type gbic
+ speed 1000
+ duplex full
  negotiation auto
 !
-interface GigabitEthernet0/1/0
- ip address 10.10.13.2 255.255.255.0
- negotiation auto
-!
-interface GigabitEthernet0/1/1
+interface GigabitEthernet1/0
  ip address 10.10.12.2 255.255.255.0
  negotiation auto
 !
-interface GigabitEthernet0
- vrf forwarding Mgmt-intf
- no ip address
+interface GigabitEthernet2/0
+ ip address 142.232.197.254 255.255.255.0
  negotiation auto
 !
 !
@@ -119,19 +74,37 @@ router eigrp DUAL_STACK
  !
  address-family ipv4 unicast autonomous-system 4
   !
+  af-interface Loopback4
+   passive-interface
+  exit-af-interface
+  !
+  af-interface GigabitEthernet2/0
+   passive-interface
+  exit-af-interface
+  !
+  af-interface GigabitEthernet1/0
+   authentication mode md5
+   authentication key-chain Chain1
+  exit-af-interface
+  !
+  af-interface GigabitEthernet0/0
+   authentication mode md5
+   authentication key-chain Chain1
+  exit-af-interface
+  !
   topology base
   exit-af-topology
   network 10.10.12.0 0.0.0.255
-  network 10.10.13.0 0.0.0.255
-  network 142.232.197.0 0.0.0.255
+  network 10.10.23.0 0.0.0.255
+  network 142.232.0.0
+  eigrp router-id 2.2.2.2
  exit-address-family
 !
 ip forward-protocol nd
+!
+!
 no ip http server
-ip http secure-server
-ip tftp source-interface GigabitEthernet0
-!
-!
+no ip http secure-server
 !
 !
 !
@@ -140,20 +113,17 @@ control-plane
 !
 !
 line con 0
- transport input none
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
  stopbits 1
 line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
  stopbits 1
 line vty 0 4
  login
-!
-wsma agent exec
-!
-wsma agent config
-!
-wsma agent filesys
-!
-wsma agent notify
 !
 !
 end
