@@ -1,19 +1,53 @@
+
+!
+! Last configuration change at 07:16:23 UTC Fri Mar 1 2002
+! NVRAM config last updated at 12:34:15 UTC Fri Mar 1 2002
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
 hostname CUST1-2
 !
 boot-start-marker
 boot-end-marker
 !
 !
+enable secret 4 06YFDUHH61wAE/kLkDq9BGho1QM5EnRtoyr8cHAUg.2
 !
-no aaa new-model
+aaa new-model
+!
+!
+aaa group server radius RAD1
+ server-private 142.232.197.1 auth-port 1812 acct-port 1813 key 7 0822455D0A16
+ ip radius source-interface GigabitEthernet2/0
+!
+aaa authentication login default group RAD1 local
+aaa authentication login console group RAD1 local
+aaa authorization console
+aaa authorization exec default group RAD1 local
+!
+!
+!
+!
+!
+aaa session-id common
 no ip icmp rate-limit unreachable
 !
 !
 !
+ip dhcp excluded-address 142.232.197.254
+!
+ip dhcp pool pool1
+ network 142.232.197.0 255.255.255.0
+ default-router 142.232.197.254
+ domain-name hardening.lab
 !
 !
 !
 no ip domain lookup
+ip domain name hardening.lab
 ip cef
 ipv6 unicast-routing
 ipv6 cef
@@ -31,12 +65,14 @@ key chain Chain1
 !
 !
 !
+username admin privilege 15 secret 4 tnhtc92DXBhelxjYk8LWJrPV36S2i4ntXrpb4RFmfqY
 !
 !
 !
 !
 !
 ip tcp synwait-time 5
+ip ssh version 2
 !
 !
 !
@@ -49,6 +85,11 @@ ip tcp synwait-time 5
 interface Loopback4
  ip address 142.232.12.1 255.255.255.255
 !
+interface Loopback6
+ no ip address
+ ipv6 address FE80::12 link-local
+ ipv6 address C15A:6B69:726B:12::1/128
+!
 interface Ethernet0/0
  no ip address
  shutdown
@@ -56,18 +97,28 @@ interface Ethernet0/0
 !
 interface GigabitEthernet0/0
  ip address 10.10.23.2 255.255.255.0
+ ip authentication mode eigrp 4 md5
+ ip authentication key-chain eigrp 4 Chain1
  media-type gbic
  speed 1000
  duplex full
  negotiation auto
+ ipv6 address FE80::12 link-local
+ ipv6 address 2018:BA15:3310:23::2/64
 !
 interface GigabitEthernet1/0
  ip address 10.10.12.2 255.255.255.0
+ ip authentication mode eigrp 4 md5
+ ip authentication key-chain eigrp 4 Chain1
  negotiation auto
+ ipv6 address FE80::12 link-local
+ ipv6 address 2018:BA15:3310:12::2/64
 !
 interface GigabitEthernet2/0
  ip address 142.232.197.254 255.255.255.0
  negotiation auto
+ ipv6 address FE80::12 link-local
+ ipv6 address C15A:6B69:726B:197::254/64
 !
 !
 router eigrp DUAL_STACK
@@ -99,6 +150,30 @@ router eigrp DUAL_STACK
   network 142.232.0.0
   eigrp router-id 2.2.2.2
  exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 6
+  !
+  af-interface GigabitEthernet1/0
+   authentication mode md5
+   authentication key-chain Chain1
+  exit-af-interface
+  !
+  af-interface GigabitEthernet0/0
+   authentication mode md5
+   authentication key-chain Chain1
+  exit-af-interface
+  !
+  af-interface Loopback6
+   passive-interface
+  exit-af-interface
+  !
+  af-interface GigabitEthernet2/0
+   passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+ exit-address-family
 !
 ip forward-protocol nd
 !
@@ -107,6 +182,8 @@ no ip http server
 no ip http secure-server
 !
 !
+!
+radius-server directed-request
 !
 !
 control-plane
@@ -123,7 +200,13 @@ line aux 0
  logging synchronous
  stopbits 1
 line vty 0 4
- login
+ password 7 121A0C041104
+ transport input ssh
+line vty 5 15
+ password 7 121A0C041104
+ transport input ssh
 !
+ntp authentication-key 2 md5 094F42080A16 7
+ntp server 10.10.12.1
 !
 end

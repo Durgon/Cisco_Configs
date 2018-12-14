@@ -1,3 +1,13 @@
+
+!
+! Last configuration change at 07:16:23 UTC Fri Mar 1 2002
+! NVRAM config last updated at 12:34:15 UTC Fri Mar 1 2002
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
 hostname CUST2-1
 !
 boot-start-marker
@@ -121,11 +131,15 @@ line aux 0
 line vty 0 4
  password 7 00071A150754
  login local
- transport input telnet ssh
+ transport input ssh
 line vty 5 15
  password 7 00071A150754
  login local
- transport input telnet ssh
+ transport input ssh
 !
+ntp authentication-key 1 md5 05080F1C2243 7
+ntp authenticate
+ntp trusted-key 1
+ntp server 1.1.1.1 key 1
 !
 end
