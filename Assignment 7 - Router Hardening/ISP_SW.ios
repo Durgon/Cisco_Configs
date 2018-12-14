@@ -3,6 +3,7 @@ hostname ISP_SW
 boot-start-marker
 boot-end-marker
 !
+enable secret 5 $1$dF/E$kmKZ3p5iy.Asae084V1sP0
 !
 no aaa new-model
 memory-size iomem 5
@@ -11,6 +12,7 @@ no ip icmp rate-limit unreachable
 !
 ip cef
 no ip domain lookup
+ip domain name hardening.lab
 !
 !
 !
@@ -31,9 +33,11 @@ ipv6 unicast-routing
 !
 vtp file nvram:vlan.dat
 
+username admin privilege 15 secret 5 $1$1XL0$rNlRYWcjkIUMy27J4jNws0
 !
 !
 ip tcp synwait-time 5
+ip ssh version 2
 !
 !
 !
@@ -83,19 +87,32 @@ interface Vlan1
 !
 interface Vlan10
  ip address 1.1.1.1 255.0.0.0
+ ipv6 address 1:1:1::1/48
+ ipv6 address FE80::1 link-local
 !
 router bgp 1
  bgp log-neighbor-changes
+ neighbor 1:1:1::2 remote-as 65101
+ neighbor 1:1:1::2 password 7 0528131C3543430C0B54
+ neighbor 1:1:1::3 remote-as 65202
+ neighbor 1:1:1::3 password 7 022511481F0902245E1C
  neighbor 1.1.1.2 remote-as 65101
- neighbor 1.1.1.2 password 7 Customer1
+ neighbor 1.1.1.2 password 7 013013174F040B0A331D
  neighbor 1.1.1.3 remote-as 65202
- neighbor 1.1.1.3 password 7 Customer2
+ neighbor 1.1.1.3 password 7 106D1C0A11181F0E1E56
  !
  address-family ipv4
+ no neighbor 1:1:1::2 activate
+ no neighbor 1:1:1::3 activate
  neighbor 1.1.1.2 activate
  neighbor 1.1.1.3 activate
  no auto-summary
- no synchronization
+ synchronization
+ exit-address-family
+ !
+ address-family ipv6
+ neighbor 1:1:1::2 activate
+ neighbor 1:1:1::3 activate
  exit-address-family
 !
 no ip http server
@@ -104,6 +121,9 @@ no ip http secure-server
 !
 !
 no cdp log mismatch duplex
+!
+route-map CUST1-CUST2 permit 10
+ set ipv6 next-hop 1:1:1::3
 !
 !
 !
@@ -117,17 +137,45 @@ control-plane
 !
 !
 !
+banner exec ^C
+
+***************************************************************
+This is a normal Router with a SW module inside (NM-16ESW)
+It has been preconfigured with hard coded speed and duplex
+
+To create vlans use the command "vlan database" from exec mode
+After creating all desired vlans use "exit" to apply the config
+
+To view existing vlans use the command "show vlan-switch brief"
+
+Warning: You are using an old IOS image for this router.
+Please update the IOS to enable the "macro" command!
+***************************************************************
+
+^C
 !
 line con 0
  exec-timeout 0 0
  privilege level 15
+ password 7 094F42080A16
  logging synchronous
+ login local
 line aux 0
  exec-timeout 0 0
  privilege level 15
  logging synchronous
 line vty 0 4
- login
+ password 7 094F42080A16
+ login local
+ transport input ssh
+line vty 5 15
+ password 7 094F42080A16
+ login local
+ transport input ssh
 !
+ntp authentication-key 1 md5 030752180500 7
+ntp authenticate
+ntp trusted-key 1
+ntp master 1
 !
 end

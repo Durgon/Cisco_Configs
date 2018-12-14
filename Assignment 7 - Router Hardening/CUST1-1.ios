@@ -4,8 +4,25 @@ boot-start-marker
 boot-end-marker
 !
 !
+enable secret 4 06YFDUHH61wAE/kLkDq9BGho1QM5EnRtoyr8cHAUg.2
 !
-no aaa new-model
+aaa new-model
+!
+!
+aaa group server radius RAD1
+ server-private 142.232.197.1 auth-port 1812 acct-port 1813 key 7 01100F175804
+ ip radius source-interface GigabitEthernet1/0
+!
+aaa authentication login default group RAD1 local
+aaa authentication login console group RAD1 local
+aaa authorization console
+aaa authorization exec default group RAD1 local
+!
+!
+!
+!
+!
+aaa session-id common
 no ip icmp rate-limit unreachable
 !
 !
@@ -14,6 +31,8 @@ no ip icmp rate-limit unreachable
 !
 !
 no ip domain lookup
+ip domain name hardening.lab
+ip host RadiusServer 142.232.197.1
 ip cef
 ipv6 unicast-routing
 ipv6 cef
@@ -23,7 +42,7 @@ multilink bundle-name authenticated
 !
 key chain Chain1
  key 1
-   key-string 7 cisco 
+   key-string 7 045802150C2E
 !
 !
 !
@@ -31,12 +50,14 @@ key chain Chain1
 !
 !
 !
+username admin privilege 15 secret 4 tnhtc92DXBhelxjYk8LWJrPV36S2i4ntXrpb4RFmfqY
 !
 !
 !
 !
 !
 ip tcp synwait-time 5
+ip ssh version 2
 !
 !
 !
@@ -49,6 +70,11 @@ ip tcp synwait-time 5
 interface Loopback4
  ip address 142.232.11.1 255.255.255.255
 !
+interface Loopback6
+ no ip address
+ ipv6 address FE80::11 link-local
+ ipv6 address C15A:6B69:726B:11::1/128
+!
 interface Ethernet0/0
  no ip address
  shutdown
@@ -60,14 +86,20 @@ interface GigabitEthernet0/0
  speed 1000
  duplex full
  negotiation auto
+ ipv6 address FE80::11 link-local
+ ipv6 address 1:1:1::2/48
 !
 interface GigabitEthernet1/0
  ip address 10.10.12.1 255.255.255.0
  negotiation auto
+ ipv6 address FE80::11 link-local
+ ipv6 address 2018:BA15:3310:12::1/64
 !
 interface GigabitEthernet2/0
  ip address 10.10.13.1 255.255.255.0
  negotiation auto
+ ipv6 address FE80::11 link-local
+ ipv6 address 2018:BA15:3310:13::1/64
 !
 !
 router eigrp DUAL_STACK
@@ -96,14 +128,56 @@ router eigrp DUAL_STACK
   network 142.232.0.0
   eigrp router-id 1.1.1.1
  exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 6
+  !
+  af-interface Loopback6
+   passive-interface
+  exit-af-interface
+  !
+  af-interface GigabitEthernet1/0
+   authentication mode md5
+   authentication key-chain Chain1
+  exit-af-interface
+  !
+  af-interface GigabitEthernet2/0
+   authentication mode md5
+   authentication key-chain Chain1
+  exit-af-interface
+  !
+  topology base
+   redistribute static
+  exit-af-topology
+  eigrp router-id 1.1.1.1
+ exit-address-family
 !
 router bgp 65101
  bgp log-neighbor-changes
+ neighbor 1:1:1::1 remote-as 1
+ neighbor 1:1:1::1 password 7 03274E1812002C495C58
  neighbor 1.1.1.1 remote-as 1
- neighbor 1.1.1.1 password 7 Customer1
+ neighbor 1.1.1.1 password 7 04781E151B2E414B1B48
  !
  address-family ipv4
+  network 10.10.12.0 mask 255.255.255.0
+  network 10.10.13.0 mask 255.255.255.0
+  network 10.10.23.0 mask 255.255.255.0
+  aggregate-address 10.10.0.0 255.255.224.0 summary-only
+  no neighbor 1:1:1::1 activate
   neighbor 1.1.1.1 activate
+ exit-address-family
+ !
+ address-family ipv6
+  network 2018:BA15:3310:12::/64
+  network 2018:BA15:3310:13::/64
+  network 2018:BA15:3310:23::/64
+  network C15A:6B69:726B:11::1/128
+  network C15A:6B69:726B:12::1/128
+  network C15A:6B69:726B:13::1/128
+  network C15A:6B69:726B:197::/64
+  aggregate-address C15A:6B69:726B::/59 summary-only
+  aggregate-address 2018:BA15:3310::/58 summary-only
+  neighbor 1:1:1::1 activate
  exit-address-family
 !
 ip forward-protocol nd
@@ -113,7 +187,10 @@ no ip http server
 no ip http secure-server
 ip route 0.0.0.0 0.0.0.0 GigabitEthernet0/0
 !
+ipv6 route ::/0 GigabitEthernet0/0
 !
+!
+radius-server directed-request
 !
 !
 control-plane
@@ -130,7 +207,18 @@ line aux 0
  logging synchronous
  stopbits 1
 line vty 0 4
- login
+ password 7 045802150C2E
+ transport input telnet ssh
+line vty 5 15
+ password 7 045802150C2E
+ transport input telnet ssh
 !
+ntp authentication-key 1 md5 094F471A1A0A 7
+ntp authentication-key 2 md5 05080A0E325F 7
+ntp authenticate
+ntp trusted-key 1 - 2
+ntp master 3
+ntp update-calendar
+ntp server 1.1.1.1 key 1
 !
 end
