@@ -1,0 +1,126 @@
+SW4-Michal#sh spanning-tree
+
+VLAN0001
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    32769
+             Address     001b.0dbf.5b80
+             Cost        12
+             Port        64 (Port-channel2)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     0021.1c69.8f80
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time 300
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Po1                 Desg FWD 8         128.56   P2p
+Po2                 Root FWD 12        128.64   P2p
+
+
+
+VLAN0010
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    24586
+             Address     54a2.7434.5b00
+             Cost        24
+             Port        64 (Port-channel2)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32778  (priority 32768 sys-id-ext 10)
+             Address     0021.1c69.8f80
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time 300
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Fa0/1               Desg FWD 19        128.3    P2p Edge
+Fa0/2               Desg FWD 19        128.4    P2p Edge
+Po1                 Desg FWD 8         128.56   P2p
+Po2                 Root FWD 12        128.64   P2p
+
+
+
+VLAN0020
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    24596
+             Address     54a2.7434.5b00
+             Cost        24
+             Port        64 (Port-channel2)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32788  (priority 32768 sys-id-ext 20)
+             Address     0021.1c69.8f80
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time 300
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Fa0/1               Desg FWD 19        128.3    P2p Edge
+Fa0/2               Desg FWD 19        128.4    P2p Edge
+Po1                 Desg FWD 8         128.56   P2p
+Po2                 Root FWD 12        128.64   P2p
+
+
+
+VLAN0030
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    24606
+             Address     54a2.7434.5b00
+             Cost        24
+             Port        64 (Port-channel2)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32798  (priority 32768 sys-id-ext 30)
+             Address     0021.1c69.8f80
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time 300
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Po1                 Desg FWD 8         128.56   P2p
+Po2                 Root FWD 12        128.64   P2p
+
+
+
+VLAN0666
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    33434
+             Address     001b.0dbf.5b80
+             Cost        12
+             Port        64 (Port-channel2)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    33434  (priority 32768 sys-id-ext 666)
+             Address     0021.1c69.8f80
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time 300
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Po1                 Desg FWD 8         128.56   P2p
+Po2                 Root FWD 12        128.64   P2p
+
+
+
+VLAN0999
+  Spanning tree enabled protocol ieee
+  Root ID    Priority    33767
+             Address     001b.0dbf.5b80
+             Cost        12
+             Port        64 (Port-channel2)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    33767  (priority 32768 sys-id-ext 999)
+             Address     0021.1c69.8f80
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time 300
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Po1                 Desg FWD 8         128.56   P2p
+Po2                 Root FWD 12        128.64   P2p
+
+
+SW4-Michal#

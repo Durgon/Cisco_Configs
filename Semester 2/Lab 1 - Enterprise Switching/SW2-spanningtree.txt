@@ -1,0 +1,122 @@
+#do sh spann
+
+VLAN0001
+  Spanning tree enabled protocol rstp
+  Root ID    Priority    32769
+             Address     001b.0dbf.5b80
+             Cost        20
+             Port        2377 (Port-channel1)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32769  (priority 32768 sys-id-ext 1)
+             Address     00c8.8bdd.b480
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  300 sec
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Po1                 Root FWD 8         128.2377 P2p Peer(STP)
+Po3                 Altn BLK 12        128.2379 P2p Peer(STP)
+
+
+
+VLAN0010
+  Spanning tree enabled protocol rstp
+  Root ID    Priority    24586
+             Address     54a2.7434.5b00
+             Cost        32
+             Port        2377 (Port-channel1)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    28682  (priority 28672 sys-id-ext 10)
+             Address     00c8.8bdd.b480
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  300 sec
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Po1                 Root FWD 8         128.2377 P2p Peer(STP)
+Po3                 Altn BLK 12        128.2379 P2p Peer(STP)
+
+
+
+VLAN0020
+  Spanning tree enabled protocol rstp
+  Root ID    Priority    24596
+             Address     54a2.7434.5b00
+             Cost        32
+             Port        2377 (Port-channel1)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    28692  (priority 28672 sys-id-ext 20)
+             Address     00c8.8bdd.b480
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  300 sec
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Po1                 Root FWD 8         128.2377 P2p Peer(STP)
+Po3                 Altn BLK 12        128.2379 P2p Peer(STP)
+
+
+
+VLAN0030
+  Spanning tree enabled protocol rstp
+  Root ID    Priority    24606
+             Address     54a2.7434.5b00
+             Cost        32
+             Port        2377 (Port-channel1)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    32798  (priority 32768 sys-id-ext 30)
+             Address     00c8.8bdd.b480
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  300 sec
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Po1                 Root FWD 8         128.2377 P2p Peer(STP)
+Po3                 Altn BLK 12        128.2379 P2p Peer(STP)
+
+
+
+VLAN0666
+  Spanning tree enabled protocol rstp
+  Root ID    Priority    33434
+             Address     001b.0dbf.5b80
+             Cost        20
+             Port        2377 (Port-channel1)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    33434  (priority 32768 sys-id-ext 666)
+             Address     00c8.8bdd.b480
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  300 sec
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Po1                 Root FWD 8         128.2377 P2p Peer(STP)
+Po3                 Altn BLK 12        128.2379 P2p Peer(STP)
+
+
+
+VLAN0999
+  Spanning tree enabled protocol rstp
+  Root ID    Priority    33767
+             Address     001b.0dbf.5b80
+             Cost        20
+             Port        2377 (Port-channel1)
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+
+  Bridge ID  Priority    33767  (priority 32768 sys-id-ext 999)
+             Address     00c8.8bdd.b480
+             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec
+             Aging Time  300 sec
+
+Interface           Role Sts Cost      Prio.Nbr Type
+------------------- ---- --- --------- -------- --------------------------------
+Po1                 Root FWD 8         128.2377 P2p Peer(STP)
+Po3                 Altn BLK 12        128.2379 P2p Peer(STP)
+
+
+SW2-Michal(config)#$
