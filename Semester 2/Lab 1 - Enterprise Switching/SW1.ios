@@ -1,8 +1,9 @@
+
 Building configuration...
 
-Current configuration : 10682 bytes
+Current configuration : 10953 bytes
 !
-! Last configuration change at 21:17:10 UTC Wed Jan 23 2019
+! Last configuration change at 22:49:51 UTC Wed Jan 23 2019
 !
 version 16.3
 no service pad
@@ -21,6 +22,7 @@ vrf definition Mgmt-vrf
  address-family ipv6
  exit-address-family
 !
+enable secret 5 $1$kDNU$2pzE3kGNwIQo6gN9BGVaH.
 !
 no aaa new-model
 switch 1 provision ws-c3650-24ps
@@ -31,6 +33,7 @@ switch 1 provision ws-c3650-24ps
 !
 !
 !
+ip domain name switch.lab
 !
 !
 !
@@ -86,9 +89,11 @@ diagnostic bootup level minimal
 !
 spanning-tree mode rapid-pvst
 spanning-tree extend system-id
+spanning-tree backbonefast
 spanning-tree vlan 10,20,30 priority 24576
 !
 !
+username admin privilege 15 secret 5 $1$oqpE$07c1tD3mhnEt/eGnnZwSR.
 !
 redundancy
  mode sso
@@ -341,6 +346,7 @@ ip forward-protocol nd
 ip http server
 ip http authentication local
 ip http secure-server
+ip ssh version 2
 !
 !
 ip access-list extended AutoQos-4.0-wlan-Acl-Bulk-Data
@@ -402,9 +408,13 @@ line con 0
 line aux 0
  stopbits 1
 line vty 0 4
- login
+ password cisco
+ login local
+ transport input ssh
 line vty 5 15
- login
+ password cisco
+ login local
+ transport input ssh
 !
 !
 wsma agent exec
@@ -424,5 +434,3 @@ ap hyperlocation ble-beacon 2
 ap hyperlocation ble-beacon 3
 ap hyperlocation ble-beacon 4
 end
-
-SW1#
