@@ -43,95 +43,166 @@ crypto pki certificate chain TP-self-signed-476680064
 !
 !
 !
+port-channel load-balance src-dst-mac
+!
 !
 !
 spanning-tree mode pvst
 spanning-tree extend system-id
+spanning-tree vlan 30 priority 28672
 !
 vlan internal allocation policy ascending
 !
-vlan 10,20,30,40,666,999
+vlan 10,20,30,666,999
 !
 !
 !
 !
 interface Port-channel1
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
 !
 interface Port-channel3
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
+ speed 100
 !
 interface Port-channel5
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
 !
 interface FastEthernet0/1
+ switchport access vlan 666
+ shutdown
+ spanning-tree bpduguard enable
 !
 interface FastEthernet0/2
+ switchport access vlan 666
+ shutdown
+ spanning-tree bpduguard enable
 !
 interface FastEthernet0/3
- channel-group 3 mode on
  switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
  switchport mode trunk
+ speed 100
+ channel-group 3 mode on
 !
 interface FastEthernet0/4
- channel-group 3 mode on
  switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
  switchport mode trunk
+ speed 100
+ channel-group 3 mode on
 !
 interface FastEthernet0/5
+ switchport access vlan 666
+ shutdown
+ spanning-tree bpduguard enable
 !
 interface FastEthernet0/6
+ switchport access vlan 666
+ shutdown
+ spanning-tree bpduguard enable
 !
 interface FastEthernet0/7
+ switchport access vlan 666
+ shutdown
+ spanning-tree bpduguard enable
 !
 interface FastEthernet0/8
+ switchport access vlan 666
+ shutdown
+ spanning-tree bpduguard enable
 !
 interface FastEthernet0/9
+ switchport access vlan 666
+ shutdown
+ spanning-tree bpduguard enable
 !
 interface FastEthernet0/10
+ switchport access vlan 666
+ shutdown
+ spanning-tree bpduguard enable
 !
 interface FastEthernet0/11
+ switchport access vlan 666
+ shutdown
+ spanning-tree bpduguard enable
 !
 interface FastEthernet0/12
+ switchport access vlan 666
+ shutdown
+ spanning-tree bpduguard enable
 !
 interface FastEthernet0/13
+ switchport access vlan 666
+ shutdown
+ spanning-tree bpduguard enable
 !
 interface FastEthernet0/14
+ switchport access vlan 666
+ shutdown
+ spanning-tree bpduguard enable
 !
 interface FastEthernet0/15
+ switchport access vlan 666
+ shutdown
+ spanning-tree bpduguard enable
 !
 interface FastEthernet0/16
+ switchport access vlan 666
+ shutdown
+ spanning-tree bpduguard enable
 !
 interface FastEthernet0/17
+ switchport access vlan 666
+ shutdown
+ spanning-tree bpduguard enable
 !
 interface FastEthernet0/18
+ switchport access vlan 666
+ shutdown
+ spanning-tree bpduguard enable
 !
 interface FastEthernet0/19
- channel-group 1 mode on
  switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
  switchport mode trunk
+ channel-group 1 mode on
 !
 interface FastEthernet0/20
-channel-group 1 mode on
-switchport trunk encapsulation dot1q
-switchport mode trunk
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
+ channel-group 1 mode on
 !
 interface FastEthernet0/21
- channel-group 5 mode on
  switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
  switchport mode trunk
+ channel-group 5 mode on
 !
 interface FastEthernet0/22
- channel-group 5 mode on
  switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
  switchport mode trunk
+ channel-group 5 mode on
 !
 interface FastEthernet0/23
- channel-group 5 mode on
  switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
  switchport mode trunk
+ channel-group 5 mode on
 !
 interface FastEthernet0/24
- channel-group 5 mode on
  switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
  switchport mode trunk
+ channel-group 5 mode on
 !
 interface GigabitEthernet0/1
 !
@@ -140,6 +211,12 @@ interface GigabitEthernet0/2
 interface Vlan1
  no ip address
  shutdown
+!
+interface Vlan10
+ ip address 10.10.10.3 255.255.255.0
+!
+interface Vlan30
+ no ip address
 !
 ip classless
 ip http server
