@@ -95,13 +95,12 @@ interface FastEthernet0/16
 interface FastEthernet0/17
 !
 interface FastEthernet0/18
- channel-group 1 mode on
 !
 interface FastEthernet0/19
  channel-group 1 mode on
 !
 interface FastEthernet0/20
- channel-group 5 mode on
+ channel-group 1 mode on
 !
 interface FastEthernet0/21
  channel-group 5 mode on
