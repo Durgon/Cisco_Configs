@@ -1,4 +1,4 @@
-hostname Sw2
+hostname SW4-Michal
 !
 boot-start-marker
 boot-end-marker
@@ -6,6 +6,7 @@ boot-end-marker
 !
 no aaa new-model
 system mtu routing 1500
+vtp mode transparent
 ip subnet-zero
 !
 !
@@ -15,6 +16,7 @@ ip subnet-zero
 !
 !
 !
+port-channel load-balance src-dst-mac
 !
 !
 spanning-tree mode pvst
@@ -22,72 +24,153 @@ spanning-tree extend system-id
 !
 vlan internal allocation policy ascending
 !
+vlan 10
+ name vlan10
+!
+vlan 20
+ name vlan20
+!
+vlan 30
+ name vlan30
+!
+vlan 666
+ name vlan666
+!
+vlan 999
+ name vlan999
+!
 !
 !
 !
 interface Port-channel1
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
+ speed 100
 !
 interface Port-channel2
-!
-interface Port-channel4
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
 !
 interface FastEthernet0/1
- description Etherchannel to SW1
- channel-group 2 mode on
+ switchport access vlan 10
+ switchport voice vlan 20
+ spanning-tree portfast
+ spanning-tree bpduguard enable
 !
 interface FastEthernet0/2
- description Etherchannel to SW1
- channel-group 2 mode on
+ switchport access vlan 10
+ switchport voice vlan 20
+ spanning-tree portfast
+ spanning-tree bpduguard enable
 !
 interface FastEthernet0/3
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/4
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/5
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/6
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/7
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/8
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/9
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/10
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/11
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/12
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/13
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/14
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/15
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/16
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/17
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/18
+ switchport access vlan 666
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
+ shutdown
 !
 interface FastEthernet0/19
- channel-group 1 mode on
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
+ channel-group 2 mode on
 !
 interface FastEthernet0/20
- channel-group 1 mode on
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
+ channel-group 2 mode on
 !
 interface FastEthernet0/21
- channel-group 4 mode on
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
+ speed 100
+ channel-group 1 mode on
 !
 interface FastEthernet0/22
- channel-group 4 mode on
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
+ speed 100
+ channel-group 1 mode on
 !
 interface FastEthernet0/23
- channel-group 4 mode on
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
+ speed 100
+ channel-group 1 mode on
 !
 interface FastEthernet0/24
- channel-group 4 mode on
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
+ speed 100
+ channel-group 1 mode on
 !
 interface GigabitEthernet0/1
 !
@@ -95,7 +178,9 @@ interface GigabitEthernet0/2
 !
 interface Vlan1
  no ip address
- shutdown
+!
+interface Vlan10
+ ip address 10.10.10.4 255.255.255.0
 !
 ip classless
 ip http server
@@ -109,4 +194,393 @@ control-plane
 line con 0
 line vty 5 15
 !
+end
+
+SW4-Michal#
+SW4-Michal#
+SW2-Michal>en
+SW2-Michal#sh run
+Building configuration...
+
+Current configuration : 10108 bytes
+!
+! Last configuration change at 20:55:45 UTC Wed Jan 23 2019
+!
+version 16.3
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no platform punt-keepalive disable-kernel-core
+!
+hostname SW2-Michal
+!
+!
+vrf definition Mgmt-vrf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+!
+no aaa new-model
+switch 1 provision ws-c3650-24ps
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-3961223456
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-3961223456
+ revocation-check none
+ rsakeypair TP-self-signed-3961223456
+!
+!
+crypto pki certificate chain TP-self-signed-3961223456
+ certificate self-signed 01
+  30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 05050030
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274
+  69666963 6174652D 33393631 32323334 3536301E 170D3139 30313233 32303032
+  33315A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D33 39363132
+  32333435 36308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
+  0A028201 01008FC2 45D62A03 EA8F35A6 33781F41 A721AFC0 EDD49627 300A56EF
+  34E64DF4 4C765BCF 3A50228B 051FA6FB 6D828602 D05154F0 AF3647E2 A59EC315
+  529DB1D0 7674D2FD C7B65430 8D9701AC 9A3FC662 835CBF1A 2D29573F D6EC4334
+  EB1685EE 94A404B4 7505CF98 BAEEA965 037463BF 5848415B 5B09B629 C1E0FC83
+  D94FA5B9 762C3CB5 A46D65C4 BDF123E0 160F1DE3 C6A055F4 7C7F36F7 23A07262
+  9D1CDB5F 9902DD1A FAC53F24 201505F2 4B21EA09 3E37B9D3 523AC355 0D062679
+  B9F105BF 1488DCFB 132009EA 07DC33B6 D6DEF00C 54FBA7A8 6DF40CB8 AA5DF89C
+  6F46431F D9BD168B 5A939415 DB0929D0 72CEB6C3 B942673B 6F0CF37D 47EE65E5
+  7BB96463 DB970203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF
+  301F0603 551D2304 18301680 147A57B2 8BEE43B0 CA7A15BE ACF3D8BD 929D1A23
+  F2301D06 03551D0E 04160414 7A57B28B EE43B0CA 7A15BEAC F3D8BD92 9D1A23F2
+  300D0609 2A864886 F70D0101 05050003 82010100 59545949 1EA832D8 142A3BA7
+  AE48EEC4 3AE6E968 185697B2 531E3B61 95D061D1 2E302CD2 3076661B CD6D06EC
+  FD15BF87 CAFA49A7 258734A3 3B4DFEC0 FF4F7860 7836DE34 622AB20F E30BC9DE
+  DD94D895 75EA6EE5 1C94A266 09FB859E CE257F42 B5D412B9 476ACF83 9B27AD58
+  0510B1EB 079C04EF 2F75BD02 6C7D906E 800E2B77 DD6A91E9 7B22BD8C 2E6B34CC
+  E449A4B6 15BB1F13 FF412E20 E6A7F84D F1D95B9D 31F68A89 6DF4070D D6F174CD
+  7C575958 3CC43FC0 CFEE748D 9FE00A08 383634A4 7A3F993E 5F8393BC 90ADD3D7
+  811FB261 63E2FA23 E089A126 CC33C8A1 691EC65C 89DF4AF2 B9075E82 641333E7
+  A2D51824 6B87648E 477EBDFB B5FD787C 0654442B
+        quit
+!
+port-channel load-balance src-dst-mac
+license boot level ipservicesk9
+diagnostic bootup level minimal
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+spanning-tree vlan 10,20 priority 28672
+!
+!
+!
+redundancy
+ mode sso
+!
+!
+!
+class-map match-any system-cpp-police-topology-control
+  description Topology control
+class-map match-any system-cpp-police-sw-forward
+  description Sw forwarding, SGT Cache Full, LOGGING
+class-map match-any system-cpp-default
+  description DHCP snooping, show forward and rest of traffic
+class-map match-any system-cpp-police-sys-data
+  description Learning cache ovfl, Crypto Control, Exception, EGR Exception, NFL SAMPLED DATA, Gold Pkt, RPF Failed
+class-map match-any system-cpp-police-punt-webauth
+  description Punt Webauth
+class-map match-any system-cpp-police-forus
+  description Forus Address resolution and Forus traffic
+class-map match-any system-cpp-police-multicast-end-station
+  description MCAST END STATION
+class-map match-any system-cpp-police-multicast
+  description Transit Traffic and MCAST Data
+class-map match-any system-cpp-police-l2-control
+  description L2 control
+class-map match-any system-cpp-police-dot1x-auth
+  description DOT1X Auth
+class-map match-any system-cpp-police-data
+  description ICMP_GEN and BROADCAST
+class-map match-any system-cpp-police-control-low-priority
+  description ICMP redirect and general punt
+class-map match-any system-cpp-police-wireless-priority1
+  description Wireless priority 1
+class-map match-any system-cpp-police-wireless-priority2
+  description Wireless priority 2
+class-map match-any system-cpp-police-wireless-priority3-4-5
+  description Wireless priority 3,4 and 5
+class-map match-any non-client-nrt-class
+class-map match-any system-cpp-police-routing-control
+  description Routing control
+class-map match-any system-cpp-police-protocol-snooping
+  description Protocol snooping
+!
+policy-map port_child_policy
+ class non-client-nrt-class
+  bandwidth remaining ratio 10
+policy-map system-cpp-policy
+ class system-cpp-police-data
+  police rate 200 pps
+ class system-cpp-police-sys-data
+  police rate 100 pps
+ class system-cpp-police-sw-forward
+  police rate 1000 pps
+ class system-cpp-police-multicast
+  police rate 500 pps
+ class system-cpp-police-multicast-end-station
+  police rate 2000 pps
+ class system-cpp-police-punt-webauth
+ class system-cpp-police-l2-control
+ class system-cpp-police-routing-control
+  police rate 1800 pps
+ class system-cpp-police-control-low-priority
+ class system-cpp-police-wireless-priority1
+ class system-cpp-police-wireless-priority2
+ class system-cpp-police-wireless-priority3-4-5
+ class system-cpp-police-topology-control
+ class system-cpp-police-dot1x-auth
+ class system-cpp-police-protocol-snooping
+ class system-cpp-police-forus
+ class system-cpp-default
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Port-channel1
+ switchport trunk native vlan 999
+ switchport mode trunk
+ speed 100
+!
+interface Port-channel2
+ switchport trunk native vlan 999
+ switchport mode trunk
+!
+interface Port-channel3
+ switchport trunk native vlan 999
+ switchport mode trunk
+!
+interface GigabitEthernet0/0
+ vrf forwarding Mgmt-vrf
+ no ip address
+ negotiation auto
+!
+interface GigabitEthernet1/0/1
+ switchport trunk native vlan 999
+ switchport mode trunk
+ channel-group 2 mode on
+!
+interface GigabitEthernet1/0/2
+ switchport trunk native vlan 999
+ switchport mode trunk
+ channel-group 2 mode on
+!
+interface GigabitEthernet1/0/3
+ switchport trunk native vlan 999
+!
+interface GigabitEthernet1/0/4
+ switchport trunk native vlan 999
+!
+interface GigabitEthernet1/0/5
+ switchport trunk native vlan 999
+!
+interface GigabitEthernet1/0/6
+ switchport trunk native vlan 999
+!
+interface GigabitEthernet1/0/7
+ switchport trunk native vlan 999
+!
+interface GigabitEthernet1/0/8
+ switchport trunk native vlan 999
+!
+interface GigabitEthernet1/0/9
+ switchport trunk native vlan 999
+!
+interface GigabitEthernet1/0/10
+ switchport trunk native vlan 999
+!
+interface GigabitEthernet1/0/11
+ switchport trunk native vlan 999
+!
+interface GigabitEthernet1/0/12
+ switchport trunk native vlan 999
+!
+interface GigabitEthernet1/0/13
+ switchport trunk native vlan 999
+!
+interface GigabitEthernet1/0/14
+ switchport trunk native vlan 999
+!
+interface GigabitEthernet1/0/15
+ switchport trunk native vlan 999
+!
+interface GigabitEthernet1/0/16
+ switchport trunk native vlan 999
+!
+interface GigabitEthernet1/0/17
+ switchport trunk native vlan 999
+!
+interface GigabitEthernet1/0/18
+ switchport trunk native vlan 999
+!
+interface GigabitEthernet1/0/19
+ switchport trunk native vlan 999
+ switchport mode trunk
+ channel-group 3 mode on
+!
+interface GigabitEthernet1/0/20
+ switchport trunk native vlan 999
+ switchport mode trunk
+ channel-group 3 mode on
+!
+interface GigabitEthernet1/0/21
+ switchport trunk native vlan 999
+ switchport mode trunk
+ speed 100
+ channel-group 1 mode on
+!
+interface GigabitEthernet1/0/22
+ switchport trunk native vlan 999
+ switchport mode trunk
+ speed 100
+ channel-group 1 mode on
+!
+interface GigabitEthernet1/0/23
+ switchport trunk native vlan 999
+ switchport mode trunk
+ speed 100
+ channel-group 1 mode on
+!
+interface GigabitEthernet1/0/24
+ switchport trunk native vlan 999
+ switchport mode trunk
+ speed 100
+ channel-group 1 mode on
+!
+interface GigabitEthernet1/1/1
+!
+interface GigabitEthernet1/1/2
+!
+interface GigabitEthernet1/1/3
+!
+interface GigabitEthernet1/1/4
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ ip address 10.10.10.2 255.255.255.0
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+!
+!
+ip access-list extended AutoQos-4.0-wlan-Acl-Bulk-Data
+ permit tcp any any eq 22
+ permit tcp any any eq 465
+ permit tcp any any eq 143
+ permit tcp any any eq 993
+ permit tcp any any eq 995
+ permit tcp any any eq 1914
+ permit tcp any any eq ftp
+ permit tcp any any eq ftp-data
+ permit tcp any any eq smtp
+ permit tcp any any eq pop3
+ip access-list extended AutoQos-4.0-wlan-Acl-MultiEnhanced-Conf
+ permit udp any any range 16384 32767
+ permit tcp any any range 50000 59999
+ip access-list extended AutoQos-4.0-wlan-Acl-Scavanger
+ permit tcp any any range 2300 2400
+ permit udp any any range 2300 2400
+ permit tcp any any range 6881 6999
+ permit tcp any any range 28800 29100
+ permit tcp any any eq 1214
+ permit udp any any eq 1214
+ permit tcp any any eq 3689
+ permit udp any any eq 3689
+ permit tcp any any eq 11999
+ip access-list extended AutoQos-4.0-wlan-Acl-Signaling
+ permit tcp any any range 2000 2002
+ permit tcp any any range 5060 5061
+ permit udp any any range 5060 5061
+ip access-list extended AutoQos-4.0-wlan-Acl-Transactional-Data
+ permit tcp any any eq 443
+ permit tcp any any eq 1521
+ permit udp any any eq 1521
+ permit tcp any any eq 1526
+ permit udp any any eq 1526
+ permit tcp any any eq 1575
+ permit udp any any eq 1575
+ permit tcp any any eq 1630
+ permit udp any any eq 1630
+ permit tcp any any eq 1527
+ permit tcp any any eq 6200
+ permit tcp any any eq 3389
+ permit tcp any any eq 5985
+ permit tcp any any eq 8080
+!
+!
+!
+!
+control-plane
+ service-policy input system-cpp-policy
+!
+!
+no vstack
+!
+line con 0
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ login
+line vty 5 15
+ login
+!
+!
+wsma agent exec
+!
+wsma agent config
+!
+wsma agent filesys
+!
+wsma agent notify
+!
+!
+ap dot11 airtime-fairness policy-name Default 0
+ap group default-group
+ap hyperlocation ble-beacon 0
+ap hyperlocation ble-beacon 1
+ap hyperlocation ble-beacon 2
+ap hyperlocation ble-beacon 3
+ap hyperlocation ble-beacon 4
 end

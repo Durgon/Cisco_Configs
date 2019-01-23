@@ -22,35 +22,34 @@ crypto pki certificate chain TP-self-signed-375204352
  certificate self-signed 01
   30820229 30820192 A0030201 02020101 300D0609 2A864886 F70D0101 05050030
   30312E30 2C060355 04031325 494F532D 53656C66 2D536967 6E65642D 43657274
-  69666963 6174652D 33373532 30343335 32301E17 0D393330 33303130 30303134
-  365A170D 32303031 30313030 30303030 5A303031 2E302C06 03550403 1325494F
+  69666963 6174652D 33373532 30343335 32301E17 0D393330 33303130 30303130
+  305A170D 32303031 30313030 30303030 5A303031 2E302C06 03550403 1325494F
   532D5365 6C662D53 69676E65 642D4365 72746966 69636174 652D3337 35323034
   33353230 819F300D 06092A86 4886F70D 01010105 0003818D 00308189 02818100
-  C78E90B1 FC52C9BE 7C9C9310 E60F8B91 493BC542 44F549B0 02BEE816 C632EAA9
-  91F04DE5 F5E69BBE C618C43C 66C27DA8 57E4C33A B7C4D1AD 451618E2 8EC93D43
-  F4D8BB4D A7EEB443 473330B7 20A8E8CE 945E9BF3 B8C63166 FEA8295D D20EBF6A
-  A0CE1BB9 12C2974E 52A8EF2B 09239A58 8F7C97F1 80E4E969 54AD2A83 EAAB4EC3
+  C7CB09FC 5D908D64 4154F55E 67F3AD2F F218270E 1E3F2899 E56F6227 B86C3774
+  25A8AA00 DA8A81EB 6629AD0D C0FFF7FA 0DC1FB52 F625A668 FBBE6BD2 2BE1F095
+  D99DA1DC C1A510AF AB12F3DD 6313CC7E 0D0F7706 204B1B9B 19D1CF78 15A77E12
+  7C316CCC EA074EEB FD33F35E 41BFB6CA 0280AC0F 197D0C9D 23182B5C 4FEE0043
   02030100 01A35330 51300F06 03551D13 0101FF04 05300301 01FF301F 0603551D
-  23041830 1680147A 6C9B141D 46C30524 B3F40BBD 44182C4A E29D9130 1D060355
-  1D0E0416 04147A6C 9B141D46 C30524B3 F40BBD44 182C4AE2 9D91300D 06092A86
-  4886F70D 01010505 00038181 00B3321D DA8ECE1C 6CCF2304 F053B083 5FC96017
-  0D4ACD0A E4294277 B16B0BFF 4D516D7B 7A4B0BC8 6E14BAA5 0A2B5F6C 3197D0B1
-  A71CC5BF D015F5C1 9BE7FCA3 50FDE59D 7C9FBA4B B62BE96F 20CDDA28 72580405
-  A535342C 19AA54B4 9A9211F7 0C5F31D2 D715EDAB D4AAB4AB C5C884A0 1A1FA2D1
-  C8809ACC 75C585B3 8F768421 22
+  23041830 168014A6 BF17A193 C2076A1B EE2519B6 2D264980 06375B30 1D060355
+  1D0E0416 0414A6BF 17A193C2 076A1BEE 2519B62D 26498006 375B300D 06092A86
+  4886F70D 01010505 00038181 001BF86F 6157DC91 08FCEFF1 97A5B4FC 5D900747
+  B19E86AE B15ABA8A D35668D0 F63244E2 820BA55F D573167A 4BC01C1C 08E6CF84
+  7EE43A4A 6A6C830E EB88F8AE 7F03CCDA 7C20D702 8F7A41A6 39F75559 C5DDB39E
+  8524FB19 1D855EED A243F8CB 66C90F30 37FA7FC3 5D328D51 33E1041A D2F931A1
+  B02BA490 7C507A0C 67F84124 DD
         quit
 !
 !
 !
 !
 !
-port-channel load-balance src-dst-mac
 spanning-tree mode pvst
 spanning-tree extend system-id
 !
 vlan internal allocation policy ascending
 !
-vlan 10,20,30,666,999
+vlan 2,10,20,300
 !
 !
 !
@@ -58,141 +57,70 @@ vlan 10,20,30,666,999
 !
 !
 interface Port-channel1
- switchport trunk native vlan 999
 !
 interface Port-channel5
- switchport trunk native vlan 999
 !
 interface FastEthernet0/1
- switchport access vlan 10
- spanning-tree bpduguard enable
 !
 interface FastEthernet0/2
- switchport access vlan 666
- shutdown
- spanning-tree bpduguard enable
 !
 interface FastEthernet0/3
- switchport access vlan 666
- shutdown
- spanning-tree bpduguard enable
 !
 interface FastEthernet0/4
- switchport access vlan 666
- shutdown
- spanning-tree bpduguard enable
 !
 interface FastEthernet0/5
- switchport access vlan 666
- shutdown
- spanning-tree bpduguard enable
 !
 interface FastEthernet0/6
- switchport access vlan 666
- shutdown
- spanning-tree bpduguard enable
 !
 interface FastEthernet0/7
- switchport access vlan 666
- shutdown
- spanning-tree bpduguard enable
 !
 interface FastEthernet0/8
- switchport access vlan 666
- shutdown
- spanning-tree bpduguard enable
 !
 interface FastEthernet0/9
- switchport access vlan 666
- shutdown
- spanning-tree bpduguard enable
 !
 interface FastEthernet0/10
- switchport access vlan 666
- shutdown
- spanning-tree bpduguard enable
 !
 interface FastEthernet0/11
- switchport access vlan 666
- shutdown
- spanning-tree bpduguard enable
 !
 interface FastEthernet0/12
- switchport access vlan 666
- shutdown
- spanning-tree bpduguard enable
 !
 interface FastEthernet0/13
- switchport access vlan 666
- shutdown
- spanning-tree bpduguard enable
 !
 interface FastEthernet0/14
- switchport access vlan 666
- shutdown
- spanning-tree bpduguard enable
 !
 interface FastEthernet0/15
- switchport access vlan 666
- shutdown
- spanning-tree bpduguard enable
 !
 interface FastEthernet0/16
- switchport access vlan 666
- shutdown
- spanning-tree bpduguard enable
 !
 interface FastEthernet0/17
- switchport access vlan 666
- shutdown
- spanning-tree bpduguard enable
 !
 interface FastEthernet0/18
- switchport access vlan 666
- shutdown
- spanning-tree bpduguard enable
 !
 interface FastEthernet0/19
- switchport trunk native vlan 999
  channel-group 1 mode on
 !
 interface FastEthernet0/20
- switchport trunk native vlan 999
- switchport mode trunk
  channel-group 1 mode on
 !
 interface FastEthernet0/21
- switchport trunk native vlan 999
  channel-group 5 mode on
 !
 interface FastEthernet0/22
- switchport trunk native vlan 999
  channel-group 5 mode on
 !
 interface FastEthernet0/23
- switchport trunk native vlan 999
  channel-group 5 mode on
 !
 interface FastEthernet0/24
- switchport trunk native vlan 999
  channel-group 5 mode on
 !
 interface GigabitEthernet0/1
- switchport access vlan 666
- shutdown
- spanning-tree bpduguard enable
 !
 interface GigabitEthernet0/2
- switchport access vlan 666
- shutdown
- spanning-tree bpduguard enable
 !
 interface Vlan1
  no ip address
  shutdown
-!
-interface Vlan10
- ip address 10.10.10.5 255.255.255.0
 !
 ip http server
 ip http secure-server

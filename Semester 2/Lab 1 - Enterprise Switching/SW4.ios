@@ -1,0 +1,197 @@
+hostname SW4-Michal
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no aaa new-model
+system mtu routing 1500
+vtp mode transparent
+ip subnet-zero
+!
+!
+!
+!
+!
+!
+!
+!
+port-channel load-balance src-dst-mac
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+vlan 10
+ name vlan10
+!
+vlan 20
+ name vlan20
+!
+vlan 30
+ name vlan30
+!
+vlan 666
+ name vlan666
+!
+vlan 999
+ name vlan999
+!
+!
+!
+!
+interface Port-channel1
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
+ speed 100
+!
+interface Port-channel2
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
+!
+interface FastEthernet0/1
+ switchport access vlan 10
+ switchport voice vlan 20
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/2
+ switchport access vlan 10
+ switchport voice vlan 20
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/3
+ switchport access vlan 666
+ shutdown
+!
+interface FastEthernet0/4
+ switchport access vlan 666
+ shutdown
+!
+interface FastEthernet0/5
+ switchport access vlan 666
+ shutdown
+!
+interface FastEthernet0/6
+ switchport access vlan 666
+ shutdown
+!
+interface FastEthernet0/7
+ switchport access vlan 666
+ shutdown
+!
+interface FastEthernet0/8
+ switchport access vlan 666
+ shutdown
+!
+interface FastEthernet0/9
+ switchport access vlan 666
+ shutdown
+!
+interface FastEthernet0/10
+ switchport access vlan 666
+ shutdown
+!
+interface FastEthernet0/11
+ switchport access vlan 666
+ shutdown
+!
+interface FastEthernet0/12
+ switchport access vlan 666
+ shutdown
+!
+interface FastEthernet0/13
+ switchport access vlan 666
+ shutdown
+!
+interface FastEthernet0/14
+ switchport access vlan 666
+ shutdown
+!
+interface FastEthernet0/15
+ switchport access vlan 666
+ shutdown
+!
+interface FastEthernet0/16
+ switchport access vlan 666
+ shutdown
+!
+interface FastEthernet0/17
+ switchport access vlan 666
+ shutdown
+!
+interface FastEthernet0/18
+ switchport access vlan 666
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
+ shutdown
+!
+interface FastEthernet0/19
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
+ channel-group 2 mode on
+!
+interface FastEthernet0/20
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
+ channel-group 2 mode on
+!
+interface FastEthernet0/21
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
+ speed 100
+ channel-group 1 mode on
+!
+interface FastEthernet0/22
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
+ speed 100
+ channel-group 1 mode on
+!
+interface FastEthernet0/23
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
+ speed 100
+ channel-group 1 mode on
+!
+interface FastEthernet0/24
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport mode trunk
+ speed 100
+ channel-group 1 mode on
+!
+interface GigabitEthernet0/1
+!
+interface GigabitEthernet0/2
+!
+interface Vlan1
+ no ip address
+!
+interface Vlan10
+ ip address 10.10.10.4 255.255.255.0
+!
+ip classless
+ip http server
+ip http secure-server
+!
+!
+!
+control-plane
+!
+!
+line con 0
+line vty 5 15
+!
+end
