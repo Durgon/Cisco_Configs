@@ -1,3 +1,16 @@
+Building configuration...
+
+
+Current configuration : 1935 bytes
+!
+! Last configuration change at 16:11:54 UTC Fri Jan 25 2019
+!
+version 16.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+!
 hostname R1
 !
 boot-start-marker
@@ -15,6 +28,7 @@ vrf definition Mgmt-intf
 !
 no aaa new-model
 !
+no ip domain lookup
 !
 ip dhcp pool NET1
  network 192.168.12.0 255.255.255.0
@@ -82,10 +96,12 @@ redundancy
 !
 interface GigabitEthernet0/0/0
  ip address 10.100.201.112 255.255.254.0
+ ip nat outside
  negotiation auto
 !
 interface GigabitEthernet0/0/1
  ip address 192.168.12.1 255.255.255.0
+ ip nat inside
  negotiation auto
 !
 interface GigabitEthernet0/1/0
@@ -107,11 +123,16 @@ router eigrp 1
  network 192.168.12.0
  passive-interface GigabitEthernet0/0/1
 !
+ip nat inside source list NAT interface GigabitEthernet0/0/0 overload
 ip forward-protocol nd
 no ip http server
 ip http secure-server
 !
 !
+!
+ip access-list extended NAT
+ deny   ip 192.168.12.0 0.0.0.255 192.168.112.0 0.0.0.255 log
+ permit ip 192.168.12.0 0.0.0.255 any log
 !
 !
 !
@@ -120,6 +141,7 @@ control-plane
 !
 !
 line con 0
+ logging synchronous
  transport input none
  stopbits 1
 line aux 0
