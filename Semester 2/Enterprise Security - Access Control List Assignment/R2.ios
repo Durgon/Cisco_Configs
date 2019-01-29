@@ -17,10 +17,6 @@ no aaa new-model
 !
 no ip domain lookup
 !
-ip dhcp pool NET2
- network 192.168.112.0 255.255.255.0
- default-router 192.168.112.1
-!
 !
 !
 !
@@ -122,9 +118,28 @@ interface GigabitEthernet0/0/0
  negotiation auto
 !
 interface GigabitEthernet0/0/1
- ip address 192.168.112.1 255.255.255.0
- ip nat inside
+ no ip address
  negotiation auto
+!
+interface GigabitEthernet0/0/1.10
+ encapsulation dot1Q 10
+ ip address 192.168.112.1 255.255.255.192
+ ip nat inside
+!
+interface GigabitEthernet0/0/1.64
+ encapsulation dot1Q 64
+ ip address 192.168.112.65 255.255.255.192
+ ip nat inside
+!
+interface GigabitEthernet0/0/1.128
+ encapsulation dot1Q 128
+ ip address 192.168.112.129 255.255.255.192
+ ip nat inside
+!
+interface GigabitEthernet0/0/1.192
+ encapsulation dot1Q 192
+ ip address 192.168.112.193 255.255.255.192
+ ip nat inside
 !
 interface GigabitEthernet0/1/0
  no ip address
@@ -150,6 +165,7 @@ ip nat inside source list 101 interface GigabitEthernet0/0/0 overload
 ip forward-protocol nd
 no ip http server
 ip http secure-server
+ip tftp source-interface GigabitEthernet0
 ip route 0.0.0.0 0.0.0.0 10.100.200.1
 !
 !
