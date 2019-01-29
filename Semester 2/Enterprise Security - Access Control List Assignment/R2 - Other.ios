@@ -1,0 +1,236 @@
+hostname R2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+!
+!
+!
+!
+vtp domain cisco
+vtp mode transparent
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+crypto pki trustpoint TP-self-signed-2521705138
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-2521705138
+ revocation-check none
+ rsakeypair TP-self-signed-2521705138
+!
+!
+crypto pki certificate chain TP-self-signed-2521705138
+ certificate self-signed 01
+  30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 05050030
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274
+  69666963 6174652D 32353231 37303531 3338301E 170D3139 30313239 30303439
+  31305A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D32 35323137
+  30353133 38308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
+  0A028201 0100EB2B B26195FB D2ECC9D4 1568E02E 45107433 A330C531 19015A87
+  0162D246 84BD5D91 EE744E65 6E176618 5FBF6A5B AC2D8289 6D79F231 F25151E3
+  015CC77A E5D89875 16F5BDD2 99B6FF9F B1385855 3318AC1B 58CE123F 58D40D2F
+  EBCB8875 A26E8FBC B510531E 2DF10B62 01DA0311 B64A2F6A 39A3D1CF E962EFA5
+  C23077DA 0445F48A B3BD42BD F4A72DAA 9D60DB25 26739565 89859AF8 6F474228
+  8D7EBDAF F98282F9 F262C49B DCA9C960 7860E2F6 473B6FE2 A3BDE275 84D5C865
+  CD324AB9 1711A958 1D5F2004 92942F1C 5040F4E4 01A1813E E5DA1213 5AA5139A
+  AA4CC61D 5CBACD82 0B0BC04E 28A01248 78C230CF AC67B0F6 D1E8E65E A553BADF
+  BF40C051 65290203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF
+  301F0603 551D2304 18301680 146157B5 12D58E2E 2B84AEF6 E26933EB 5A02C543
+  D5301D06 03551D0E 04160414 6157B512 D58E2E2B 84AEF6E2 6933EB5A 02C543D5
+  300D0609 2A864886 F70D0101 05050003 82010100 EA025592 A53BF635 8EE053F1
+  C67CB39C F1B3221E 8F00D63C 58274D3B 9BEDFA29 BA119C9C E8048A1C 206DFEA8
+  4347814B 869514D1 2FFA8BD9 3154B510 51DC1D52 12AE2C00 BE9F989A ED8A8A8D
+  590301CF 1D88A2F3 2EC0EBE1 DE06522A 52CFC075 925D612E 1EF39DD7 F6E6B9CA
+  5B7DF258 67FC4550 66CFE87B F16EE480 30164DB9 0A0C8171 87AA51F3 0CB8BD3E
+  8F7CC73B 2566320E 9F217E06 31D0E5F8 A93998E8 624BA958 73B69015 BD2DB1E0
+  B23BD51B F65919E6 698C5A16 E523C071 330EA43D 1B782E75 D9C20924 B8E9D273
+  0DB6D2DD 3DEBE1DC B367F15B CC393D5E CE696E0E D2406BCE 93E9C0F1 5053EA83
+  7D70F849 2C6211CF A5071699 EA63D382 4EC887E9
+        quit
+!
+!
+license udi pid ISR4321/K9 sn FDO20170BWZ
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+!
+!
+redundancy
+ mode none
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0/0
+ no ip address
+ negotiation auto
+!
+interface GigabitEthernet0/0/0.10
+ encapsulation dot1Q 10
+ ip address 192.168.102.1 255.255.255.192
+ ip nat inside
+ ip access-group SALESWWW in
+ ip access-group SALESWWWOUT out
+!
+interface GigabitEthernet0/0/0.20
+ encapsulation dot1Q 20
+ ip address 192.168.102.66 255.255.255.192
+ ip nat inside
+!
+interface GigabitEthernet0/0/0.30
+ encapsulation dot1Q 30
+ ip address 192.168.102.130 255.255.255.192
+ ip nat inside
+ ip access-group FINANCEWWW in
+ ip access-group FINANCEWWWOUT out
+!
+interface GigabitEthernet0/0/0.40
+ encapsulation dot1Q 40
+ ip address 192.168.102.194 255.255.255.192
+ ip nat inside
+ ip access-group ITWWWOUT out
+!
+interface GigabitEthernet0/0/1
+ ip address 10.100.201.112 255.255.254.0
+ ip nat outside
+ negotiation auto
+!
+interface GigabitEthernet0/1/0
+ no ip address
+ negotiation auto
+!
+interface GigabitEthernet0/1/1
+ no ip address
+ negotiation auto
+!
+interface GigabitEthernet0
+ vrf forwarding Mgmt-intf
+ no ip address
+ negotiation auto
+!
+!
+router eigrp 420
+ network 10.100.200.0 0.0.1.255
+ network 192.168.102.0 0.0.0.63
+ network 192.168.102.64 0.0.0.63
+ network 192.168.102.128 0.0.0.63
+ network 192.168.102.192 0.0.0.63
+!
+ip nat inside source list NATLIST interface GigabitEthernet0/0/1 overload
+ip forward-protocol nd
+no ip http server
+ip http secure-server
+ip tftp source-interface GigabitEthernet0
+ip route 0.0.0.0 0.0.0.0 10.100.200.1
+!
+!
+!
+ip access-list extended FINANCEWWW
+ permit tcp 192.168.102.128 0.0.0.63 gt 1023 host 192.168.102.67 eq www
+ permit tcp 192.168.102.128 0.0.0.63 gt 1023 host 192.168.2.67 eq www
+ permit tcp 192.168.102.128 0.0.0.63 eq www 192.168.102.192 0.0.0.63 gt 1023
+ permit tcp 192.168.102.128 0.0.0.63 eq www 192.168.2.192 0.0.0.63 gt 1023
+ip access-list extended FINANCEWWWOUT
+ permit tcp host 192.168.102.67 eq www 192.168.102.128 0.0.0.63 gt 1023
+ permit tcp host 192.168.2.67 eq www 192.168.102.128 0.0.0.63 gt 1023
+ permit tcp 192.168.102.192 0.0.0.63 gt 1023 192.168.102.128 0.0.0.63 eq www
+ permit tcp 192.168.2.192 0.0.0.63 gt 1023 192.168.102.128 0.0.0.63 eq www
+ip access-list extended ITWWW
+ permit tcp 192.168.102.192 0.0.0.63 any eq www
+ permit tcp 192.168.102.192 0.0.0.63 eq www 192.168.2.192 0.0.0.63 gt 1023
+ip access-list extended ITWWWOUT
+ permit tcp any eq www 192.168.102.192 0.0.0.63
+ permit tcp 192.168.2.192 0.0.0.63 gt 1023 192.168.102.192 0.0.0.63 eq www
+ip access-list extended NATLIST
+ deny   ip 192.168.102.0 0.0.0.255 192.168.2.0 0.0.0.255
+ permit ip 192.168.102.0 0.0.0.255 any
+ deny   ip 192.168.2.0 0.0.0.255 192.168.102.0 0.0.0.255
+ip access-list extended SALESWWW
+ remark allow sales dept to access any host on any network except IT
+ deny   tcp 192.168.102.0 0.0.0.63 192.168.102.192 0.0.0.63 eq www
+ deny   tcp 192.168.102.0 0.0.0.63 192.168.2.192 0.0.0.63 eq www
+ permit tcp 192.168.102.0 0.0.0.63 gt 1023 any eq www
+ permit tcp 192.168.102.0 0.0.0.63 gt 1023 any eq 443
+ permit tcp 192.168.102.0 0.0.0.63 eq www 192.168.102.192 0.0.0.63 gt 1023
+ permit tcp 192.168.102.0 0.0.0.63 eq www 192.168.2.192 0.0.0.63 gt 1023
+ip access-list extended SALESWWWOUT
+ permit tcp any eq www 192.168.102.0 0.0.0.63 gt 1023
+ permit tcp any eq 443 192.168.102.0 0.0.0.63 gt 1023
+ remark allow sales dept to access any host on any network except IT
+ permit tcp 192.168.102.192 0.0.0.63 gt 1023 192.168.102.0 0.0.0.63 eq www
+ permit tcp 192.168.2.192 0.0.0.63 gt 1023 192.168.102.0 0.0.0.63 eq www
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ transport input none
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ login
+!
+wsma agent exec
+!
+wsma agent config
+!
+wsma agent filesys
+!
+wsma agent notify
+!
+!
+end
