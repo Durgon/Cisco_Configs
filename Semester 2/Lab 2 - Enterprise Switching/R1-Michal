@@ -1,0 +1,61 @@
+en
+conf t
+hostname R1-Michal
+ipv6 unicast-routing
+logging synch
+no ip domain-lookup
+
+int g0/0/0
+ip address 10.10.10.1 255.255.255.252
+ipv6 address
+no sh
+
+int g0/0/1
+ip address 10.10.10.5 255.255.255.252
+ipv6 address
+no sh
+
+router eigrp DUAL_STACK
+address-family ipv4 uni as 4
+network 10.10.10.0
+exit
+address-family ipv6 uni as 6
+exit
+
+
+ip dhcp excluded-address 172.16.5.1
+ip dhcp excluded-address 172.16.5.253
+ip dhcp excluded-address 172.16.5.254
+
+ip dhcp excluded-address 172.16.210.1
+ip dhcp excluded-address 172.16.10.253
+ip dhcp excluded-address 172.16.10.254
+
+ip dhcp excluded-address 172.16.15.1
+ip dhcp excluded-address 172.16.15.253
+ip dhcp excluded-address 172.16.15.254
+
+ip dhcp excluded-address 172.16.20.1
+ip dhcp excluded-address 172.16.20.253
+ip dhcp excluded-address 172.16.20.254
+
+
+ip dhcp pool VLAN5
+domain-name switch.lab
+network 172.16.5.0 255.255.255.0
+exit
+
+ip dhcp pool VLAN10
+domain-name switch.lab
+network 172.16.10.0 255.255.255.0
+exit
+
+ip dhcp pool VLAN15
+domain-name switch.lab
+network 172.16.15.0 255.255.255.0
+exit
+
+ip dhcp pool VLAN20
+domain-name switch.lab
+network 172.16.20.0 255.255.255.0
+exit
