@@ -79,7 +79,7 @@ router eigrp 1
  passive-interface GigabitEthernet0/0/1.192
 !
 !ip nat inside source static tcp 192.168.12.195 20 interface GigabitEthernet0/0/0 20
-!ip nat inside source static tcp 192.168.12.195 80 interface GigabitEthernet0/0/0 80
+ip nat inside source static tcp 192.168.12.194 80 interface GigabitEthernet0/0/0 80
 !ip nat inside source static tcp 192.168.12.195 21 interface GigabitEthernet0/0/0 21
 ip nat inside source list 101 interface GigabitEthernet0/0/0 overload
 ip forward-protocol nd
