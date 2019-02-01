@@ -1,10 +1,33 @@
+Building configuration...
+
+
+Current configuration : 5648 bytes
+!
+! Last configuration change at 16:33:09 UTC Fri Feb 1 2019
+!
+version 16.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+!
 hostname R1
 !
+boot-start-marker
+boot-end-marker
 !
-enable secret class
 !
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
 !
+enable secret 5 $1$OT6z$Qn5MVDpXS4.6C5KvCTIaQ.
 !
+no aaa new-model
 !
 !
 ip dhcp pool VLAN10
@@ -26,6 +49,63 @@ ip dhcp pool VLAN192
 !
 !
 !
+!
+!
+!
+!
+!
+!
+subscriber templating
+!
+!
+!
+!
+vtp domain cisco
+vtp mode transparent
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+license udi pid ISR4321/K9 sn FDO20080XS4
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+!
+!
+redundancy
+ mode none
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
 interface GigabitEthernet0/0/0
  ip address 10.100.201.112 255.255.254.0
  ip nat outside
@@ -39,21 +119,25 @@ interface GigabitEthernet0/0/1.10
  encapsulation dot1Q 10
  ip address 192.168.12.1 255.255.255.192
  ip nat inside
+ ip access-group SALES-IN in
 !
 interface GigabitEthernet0/0/1.64
  encapsulation dot1Q 64
  ip address 192.168.12.65 255.255.255.192
  ip nat inside
+ ip access-group FINANCE-IN in
 !
 interface GigabitEthernet0/0/1.128
  encapsulation dot1Q 128
  ip address 192.168.12.129 255.255.255.192
  ip nat inside
+ ip access-group IT-IN in
 !
 interface GigabitEthernet0/0/1.192
  encapsulation dot1Q 192
  ip address 192.168.12.193 255.255.255.192
  ip nat inside
+ ip access-group WEB-IN in
 !
 interface GigabitEthernet0/1/0
  no ip address
@@ -78,9 +162,7 @@ router eigrp 1
  passive-interface GigabitEthernet0/0/1.128
  passive-interface GigabitEthernet0/0/1.192
 !
-!ip nat inside source static tcp 192.168.12.195 20 interface GigabitEthernet0/0/0 20
 ip nat inside source static tcp 192.168.12.194 80 interface GigabitEthernet0/0/0 80
-!ip nat inside source static tcp 192.168.12.195 21 interface GigabitEthernet0/0/0 21
 ip nat inside source list 101 interface GigabitEthernet0/0/0 overload
 ip forward-protocol nd
 no ip http server
@@ -88,11 +170,54 @@ ip http secure-server
 ip tftp source-interface GigabitEthernet0
 !
 !
+!
+ip access-list extended FINANCE-IN
+ deny   tcp 192.168.12.64 0.0.0.63 host 192.168.112.194 eq ftp
+ deny   tcp 192.168.12.64 0.0.0.63 host 192.168.112.194 gt 1023
+ deny   tcp 192.168.12.64 0.0.0.63 gt 1023 host 192.168.112.194 eq www
+ deny   icmp 192.168.12.64 0.0.0.63 192.168.12.128 0.0.0.63 echo
+ permit tcp 192.168.12.64 0.0.0.63 gt 1023 host 192.168.12.194 eq www
+ permit icmp 192.168.12.64 0.0.0.63 192.168.12.128 0.0.0.63 echo-reply
+ permit tcp 192.168.12.64 0.0.0.63 any eq ftp
+ permit tcp 192.168.12.64 0.0.0.63 any gt 1023
+ permit icmp 192.168.12.64 0.0.0.63 any echo
+ permit udp any eq bootpc any eq bootps
+ip access-list extended IT-IN
+ deny   tcp 192.168.12.128 0.0.0.63 host 192.168.112.194 eq ftp
+ deny   tcp 192.168.12.128 0.0.0.63 host 192.168.112.194 gt 1023
+ permit tcp 192.168.12.128 0.0.0.63 host 192.168.12.129 eq telnet
+ permit icmp 192.168.12.128 0.0.0.63 192.168.112.128 0.0.0.63 echo-reply
+ permit udp 192.168.12.128 0.0.0.63 eq tftp host 192.168.12.129 eq tftp
+ permit udp 192.168.12.128 0.0.0.63 range 1025 5000 host 192.168.12.129 range 1025 5000
+ permit tcp 192.168.12.128 0.0.0.63 any eq ftp
+ permit tcp 192.168.12.128 0.0.0.63 any gt 1023
+ permit tcp 192.168.12.128 0.0.0.63 gt 1023 any eq www
+ permit icmp 192.168.12.128 0.0.0.63 any echo
+ permit udp any eq bootpc any eq bootps
+ip access-list extended SALES-IN
+ deny   tcp 192.168.12.0 0.0.0.63 gt 1023 192.168.12.128 0.0.0.63 eq www
+ deny   tcp 192.168.12.0 0.0.0.63 gt 1023 192.168.112.128 0.0.0.63 eq www
+ deny   icmp 192.168.12.0 0.0.0.63 192.168.12.128 0.0.0.63 echo
+ permit tcp 192.168.12.0 0.0.0.63 gt 1023 any eq www
+ permit tcp 192.168.12.0 0.0.0.63 any eq ftp
+ permit tcp 192.168.12.0 0.0.0.63 any gt 1023
+ permit icmp 192.168.12.0 0.0.0.63 192.168.12.128 0.0.0.63 echo-reply
+ permit icmp 192.168.12.0 0.0.0.63 any echo
+ permit udp any eq bootpc any eq bootps
+ip access-list extended WEB-IN
+ deny   icmp 192.168.12.192 0.0.0.63 192.168.12.128 0.0.0.63 echo
+ permit icmp 192.168.12.192 0.0.0.63 192.168.12.128 0.0.0.63 echo-reply
+ permit tcp 192.168.12.192 0.0.0.63 any eq ftp
+ permit tcp 192.168.12.192 0.0.0.63 any gt 1023
+ permit tcp 192.168.12.192 0.0.0.63 any eq ftp established
+ permit tcp 192.168.12.192 0.0.0.63 any eq 1023 established
+ permit icmp 192.168.12.192 0.0.0.63 any echo
+ permit udp any eq bootpc any eq bootps
 access-list 1 permit 192.168.12.128 0.0.0.63
 access-list 1 permit 192.168.112.128 0.0.0.63
-!
-access-list 101 deny ip 192.168.12.0 0.0.0.255 192.168.112.0 0.0.0.255
+access-list 101 deny   ip 192.168.12.0 0.0.0.255 192.168.112.0 0.0.0.255
 access-list 101 permit ip 192.168.12.0 0.0.0.255 any
+!
 !
 !
 !
@@ -100,18 +225,19 @@ control-plane
 !
 !
 line con 0
- logging synchronous
  transport input none
  stopbits 1
 line aux 0
  stopbits 1
 line vty 0 4
  access-class 1 in
+ access-class 1 out
  password cisco
  login
  transport input telnet ssh
 line vty 5 15
  access-class 1 in
+ access-class 1 out
  password cisco
  login
  transport input telnet ssh
