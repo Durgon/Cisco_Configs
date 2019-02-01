@@ -1,0 +1,79 @@
+ip access-list extended SALES-IN
+! 1 & 11
+  deny tcp 192.168.12.0 0.0.0.63 host 192.168.112.194 eq ftp
+  deny tcp 192.168.12.0 0.0.0.63 host 192.168.112.194 gt 1023
+  permit tcp 192.168.12.0 0.0.0.63 any eq ftp
+  permit tcp 192.168.12.0 0.0.0.63 any gt 1023
+! 2
+  deny tcp 192.168.12.0 0.0.0.63 gt 1023 192.168.12.128 0.0.0.63 eq 80
+  deny tcp 192.168.12.0 0.0.0.63 gt 1023 192.168.112.128 0.0.0.63 eq 80
+  permit tcp 192.168.12.0 0.0.0.63 gt 1023 any eq 80
+! 4 & 5
+  deny icmp 192.168.12.0 0.0.0.63 192.168.12.128 0.0.0.63 echo
+  permit icmp 192.168.12.0 0.0.0.63 192.168.12.128 0.0.0.63 echo-reply
+  permit icmp 192.168.12.0 0.0.0.63 any echo
+
+  permit udp any eq bootpc any eq bootps
+
+! ----------------------------------------------------------------------------
+
+ip access-list extended FINANCE-IN
+! 1 & 11
+  deny tcp 192.168.12.64 0.0.0.63 host 192.168.112.194 eq ftp
+  deny tcp 192.168.12.64 0.0.0.63 host 192.168.112.194 gt 1023
+  permit tcp 192.168.12.64 0.0.0.63 any eq ftp
+  permit tcp 192.168.12.64 0.0.0.63 any gt 1023
+
+! 3
+  deny tcp 192.168.12.64 0.0.0.63 gt 1023 host 192.168.112.194 eq 80
+  permit tcp 192.168.12.64 0.0.0.63 gt 1023 host 192.168.12.194 eq 80
+! 4 & 5
+  deny icmp 192.168.12.64 0.0.0.63 192.168.12.128 0.0.0.63 echo
+  permit icmp 192.168.12.64 0.0.0.63 192.168.12.128 0.0.0.63 echo-reply
+  permit icmp 192.168.12.64 0.0.0.63 any echo
+
+  permit udp any eq bootpc any eq bootps
+
+! ----------------------------------------------------------------------------
+
+ip access-list extended IT-IN
+! 1 & 11
+  deny tcp 192.168.12.128 0.0.0.63 host 192.168.112.194 eq ftp
+  deny tcp 192.168.12.128 0.0.0.63 host 192.168.112.194 gt 1023
+  permit tcp 192.168.12.128 0.0.0.63 any eq ftp
+  permit tcp 192.168.12.128 0.0.0.63 any gt 1023
+! 4, 5, 6
+  permit icmp 192.168.12.0 0.0.0.63 192.168.12.128 0.0.0.63 echo-reply
+  permit icmp 192.168.12.128 0.0.0.63 any echo
+! 8
+  permit tcp 192.168.12.128 0.0.0.63 gt 1023 any eq 80
+! 10
+  permit udp 192.168.12.128 0.0.0.63 host 192.168.12.129 eq tftp
+  permit udp 192.168.12.128 0.0.0.63 host 192.168.12.129 range 1025 5000
+
+  permit udp any eq bootpc any eq bootps
+
+! ----------------------------------------------------------------------------
+
+ip access-list extended WEB-IN
+! 1
+  permit tcp 192.168.12.192 0.0.0.63 any eq ftp
+  permit tcp 192.168.12.192 0.0.0.63 any gt 1023
+  permit tcp 192.168.12.192 0.0.0.63 any eq ftp established
+  permit tcp 192.168.12.192 0.0.0.63 any eq 1023 established
+! 4 & 5
+  deny icmp 192.168.12.192 0.0.0.63 192.168.12.128 0.0.0.63 echo
+  permit icmp 192.168.12.192 0.0.0.63 192.168.12.128 0.0.0.63 echo-reply
+  permit icmp 192.168.12.192 0.0.0.63 any echo
+
+  permit udp any eq bootpc any eq bootps
+! ----------------------------------------------------------------------------
+
+! 9 - Apply on vty lines
+access-list 1 permit 192.168.12.128 0.0.0.63
+access-list 1 permit 192.168.112.128 0.0.0.63
+
+! NAT access-list
+ip access-lists extended NAT 
+  deny ip 192.168.12.0 0.0.0.255 192.168.112.0 0.0.0.255
+  permit ip 192.168.12.0 0.0.0.255 any

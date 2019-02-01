@@ -13,6 +13,7 @@ enable secret class
 !
 interface GigabitEthernet0/0/0
  ip address 10.100.201.112 255.255.254.0
+ ip nat outside
  negotiation auto
 !
 interface GigabitEthernet0/0/1
@@ -22,18 +23,22 @@ interface GigabitEthernet0/0/1
 interface GigabitEthernet0/0/1.10
  encapsulation dot1Q 10
  ip address 192.168.12.1 255.255.255.192
+ ip nat inside
 !
 interface GigabitEthernet0/0/1.64
  encapsulation dot1Q 64
  ip address 192.168.12.65 255.255.255.192
+ ip nat inside
 !
 interface GigabitEthernet0/0/1.128
  encapsulation dot1Q 128
  ip address 192.168.12.129 255.255.255.192
+ ip nat inside
 !
 interface GigabitEthernet0/0/1.192
  encapsulation dot1Q 192
  ip address 192.168.12.193 255.255.255.192
+ ip nat inside
 !
 interface GigabitEthernet0/1/0
  no ip address
@@ -59,8 +64,9 @@ router eigrp 1
  passive-interface GigabitEthernet0/0/1.192
 !
 !ip nat inside source static tcp 192.168.12.195 20 interface GigabitEthernet0/0/0 20
-ip nat inside source static tcp 192.168.12.195 80 interface GigabitEthernet0/0/0 80
+!ip nat inside source static tcp 192.168.12.195 80 interface GigabitEthernet0/0/0 80
 !ip nat inside source static tcp 192.168.12.195 21 interface GigabitEthernet0/0/0 21
+ip nat inside source list 101 interface GigabitEthernet0/0/0 overload
 ip forward-protocol nd
 no ip http server
 ip http secure-server
@@ -70,6 +76,8 @@ ip tftp source-interface GigabitEthernet0
 access-list 1 permit 192.168.12.128 0.0.0.63
 access-list 1 permit 192.168.112.128 0.0.0.63
 !
+access-list 101 deny ip 192.168.12.0 0.0.0.255 192.168.112.0 0.0.0.255
+access-list 101 permit ip 192.168.12.0 0.0.0.255 any
 !
 !
 !
