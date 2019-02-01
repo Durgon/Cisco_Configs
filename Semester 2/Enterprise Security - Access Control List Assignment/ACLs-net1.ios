@@ -48,8 +48,8 @@ ip access-list extended IT-IN
 ! 8
   permit tcp 192.168.12.128 0.0.0.63 gt 1023 any eq 80
 ! 10
-  permit udp 192.168.12.128 0.0.0.63 host 192.168.12.129 eq tftp
-  permit udp 192.168.12.128 0.0.0.63 host 192.168.12.129 range 1025 5000
+  permit udp 192.168.12.128 0.0.0.63 eq tftp host 192.168.12.129 eq tftp
+  permit udp 192.168.12.128 0.0.0.63 range 1025 5000 host 192.168.12.129 range 1025 5000
 
   permit udp any eq bootpc any eq bootps
 
