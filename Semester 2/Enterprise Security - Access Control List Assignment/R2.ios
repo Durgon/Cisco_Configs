@@ -17,9 +17,6 @@ no aaa new-model
 !
 no ip domain lookup
 !
-!
-!
-!
 ip dhcp pool VLAN10
  network 192.168.112.0 255.255.255.192
  default-router 192.168.112.1
@@ -35,6 +32,10 @@ ip dhcp pool VLAN128
 ip dhcp pool VLAN192
  network 192.168.112.192 255.255.255.192
  default-router 192.168.112.193
+!
+!
+!
+!
 !
 !
 !
@@ -140,21 +141,25 @@ interface GigabitEthernet0/0/1.10
  encapsulation dot1Q 10
  ip address 192.168.112.1 255.255.255.192
  ip nat inside
+ ip access-group SALES-IN in
 !
 interface GigabitEthernet0/0/1.64
  encapsulation dot1Q 64
  ip address 192.168.112.65 255.255.255.192
  ip nat inside
+ ip access-group FINANCE-IN in
 !
 interface GigabitEthernet0/0/1.128
  encapsulation dot1Q 128
  ip address 192.168.112.129 255.255.255.192
  ip nat inside
+ ip access-group IT-IN in
 !
 interface GigabitEthernet0/0/1.192
  encapsulation dot1Q 192
  ip address 192.168.112.193 255.255.255.192
  ip nat inside
+ ip access-group WEB-IN in
 !
 interface GigabitEthernet0/1/0
  no ip address
@@ -176,6 +181,7 @@ router eigrp 1
  redistribute static
  passive-interface GigabitEthernet0/0/1
 !
+ip nat inside source static tcp 192.168.112.194 80 interface GigabitEthernet0/0/0 80
 ip nat inside source list 101 interface GigabitEthernet0/0/0 overload
 ip forward-protocol nd
 no ip http server
@@ -184,6 +190,54 @@ ip tftp source-interface GigabitEthernet0
 ip route 0.0.0.0 0.0.0.0 10.100.200.1
 !
 !
+!
+ip access-list extended FINANCE-IN
+ deny   tcp 192.168.112.64 0.0.0.63 host 192.168.12.194 eq ftp
+ deny   tcp 192.168.112.64 0.0.0.63 host 192.168.12.194 gt 1023
+ deny   tcp 192.168.112.64 0.0.0.63 gt 1023 host 192.168.12.194 eq www
+ deny   icmp 192.168.112.64 0.0.0.63 192.168.112.128 0.0.0.63 echo
+ permit tcp 192.168.112.64 0.0.0.63 any eq ftp
+ permit tcp 192.168.112.64 0.0.0.63 any gt 1023
+ permit tcp 192.168.112.64 0.0.0.63 gt 1023 host 192.168.112.194 eq www
+ permit icmp 192.168.112.64 0.0.0.63 192.168.112.128 0.0.0.63 echo-reply
+ permit icmp 192.168.112.64 0.0.0.63 any echo
+ permit udp any eq bootpc any eq bootps
+ip access-list extended IT-IN
+ deny   tcp 192.168.112.128 0.0.0.63 host 192.168.12.194 eq ftp
+ deny   tcp 192.168.112.128 0.0.0.63 host 192.168.12.194 gt 1023
+ permit tcp 192.168.112.128 0.0.0.63 host 192.168.112.129 eq telnet
+ permit tcp 192.168.112.128 0.0.0.63 any eq ftp
+ permit tcp 192.168.112.128 0.0.0.63 any gt 1023
+ permit icmp 192.168.112.0 0.0.0.63 192.168.12.128 0.0.0.63 echo-reply
+ permit icmp 192.168.112.128 0.0.0.63 any echo
+ permit tcp 192.168.112.128 0.0.0.63 gt 1023 any eq www
+ permit udp host 192.168.112.129 192.168.112.128 0.0.0.63 eq tftp
+ permit udp host 192.168.112.129 192.168.112.128 0.0.0.63 range 1025 5000
+ permit udp any eq bootpc any eq bootps
+ip access-list extended NAT
+ deny   ip 192.168.112.0 0.0.0.255 192.168.12.0 0.0.0.255
+ permit ip 192.168.112.0 0.0.0.255 any
+ip access-list extended SALES-IN
+ deny   tcp 192.168.112.0 0.0.0.63 gt 1023 192.168.112.128 0.0.0.63 eq www
+ deny   tcp 192.168.112.0 0.0.0.63 gt 1023 192.168.12.128 0.0.0.63 eq www
+ deny   icmp 192.168.112.0 0.0.0.63 192.168.112.128 0.0.0.63 echo
+ permit tcp 192.168.112.0 0.0.0.63 any eq ftp
+ permit tcp 192.168.112.0 0.0.0.63 any gt 1023
+ permit tcp 192.168.112.0 0.0.0.63 gt 1023 any eq www
+ permit icmp 192.168.112.0 0.0.0.63 192.168.112.128 0.0.0.63 echo-reply
+ permit icmp 192.168.112.0 0.0.0.63 any echo
+ permit udp any eq bootpc any eq bootps
+ip access-list extended WEB-IN
+ deny   icmp 192.168.112.192 0.0.0.63 192.168.112.128 0.0.0.63 echo
+ permit tcp 192.168.112.192 0.0.0.63 any eq ftp
+ permit tcp 192.168.112.192 0.0.0.63 any gt 1023
+ permit tcp 192.168.112.192 0.0.0.63 any eq ftp established
+ permit tcp 192.168.112.192 0.0.0.63 any eq 1023 established
+ permit icmp 192.168.112.192 0.0.0.63 192.168.112.128 0.0.0.63 echo-reply
+ permit icmp 192.168.112.192 0.0.0.63 any echo
+ permit udp any eq bootpc any eq bootps
+access-list 1 permit 192.168.12.128 0.0.0.63
+access-list 1 permit 192.168.112.128 0.0.0.63
 access-list 101 deny   ip 192.168.112.0 0.0.0.255 192.168.12.0 0.0.0.255
 access-list 101 permit ip 192.168.112.0 0.0.0.255 any
 !
@@ -199,7 +253,17 @@ line con 0
 line aux 0
  stopbits 1
 line vty 0 4
+ access-class 1 in
+ access-class 1 out
+ password cisco
  login
+ transport input telnet ssh
+line vty 5 15
+ access-class 1 in
+ access-class 1 out
+ password cisco
+ login
+ transport input telnet ssh
 !
 wsma agent exec
 !
