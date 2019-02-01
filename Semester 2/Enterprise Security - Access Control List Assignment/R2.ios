@@ -20,6 +20,21 @@ no ip domain lookup
 !
 !
 !
+ip dhcp pool VLAN10
+ network 192.168.112.0 255.255.255.192
+ default-router 192.168.112.1
+!
+ip dhcp pool VLAN64
+ network 192.168.112.64 255.255.255.192
+ default-router 192.168.112.65
+!
+ip dhcp pool VLAN128
+ network 192.168.112.128 255.255.255.192
+ default-router 192.168.112.129
+!
+ip dhcp pool VLAN192
+ network 192.168.112.192 255.255.255.192
+ default-router 192.168.112.193
 !
 !
 !
