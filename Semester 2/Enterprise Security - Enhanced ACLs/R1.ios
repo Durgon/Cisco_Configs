@@ -1,0 +1,185 @@
+Current configuration : 2522 bytes
+!
+! Last configuration change at 22:33:10 UTC Tue Feb 5 2019
+!
+version 16.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+platform qfp utilization monitor load 80
+no platform punt-keepalive disable-kernel-core
+!
+hostname R1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+!
+no aaa new-model
+!
+no ip domain lookup
+!
+ip dhcp pool VLAN197
+ network 142.232.197.0 255.255.255.0
+ default-router 142.232.197.1
+!
+ip dhcp pool VLAN198
+ network 142.232.198.0 255.255.255.0
+ default-router 142.232.198.1
+!
+ip dhcp pool VLAN199
+ network 142.232.199.0 255.255.255.0
+ default-router 142.232.199.1
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+!
+!
+!
+!
+vtp domain cisco
+vtp mode transparent
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+license udi pid ISR4321/K9 sn FDO20080XS4
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+!
+!
+redundancy
+ mode none
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0/0
+ ip address 10.100.201.212 255.255.254.0
+ negotiation auto
+!
+interface GigabitEthernet0/0/1
+ no ip address
+ negotiation auto
+!
+interface GigabitEthernet0/0/1.197
+ encapsulation dot1Q 197
+ ip address 192.168.197.1 255.255.255.0
+!
+interface GigabitEthernet0/0/1.198
+ encapsulation dot1Q 198
+ ip address 142.232.198.1 255.255.255.0
+!
+interface GigabitEthernet0/0/1.199
+ encapsulation dot1Q 199
+ ip address 142.232.199.1 255.255.255.0
+!
+interface GigabitEthernet0/0/1.666
+ encapsulation dot1Q 666 native
+!
+interface GigabitEthernet0/1/0
+ ip address 142.232.200.1 255.255.255.252
+ negotiation auto
+!
+interface GigabitEthernet0/1/1
+ no ip address
+ negotiation auto
+!
+interface GigabitEthernet0
+ vrf forwarding Mgmt-intf
+ no ip address
+ negotiation auto
+!
+!
+router eigrp 1
+ network 10.0.0.0
+ network 142.232.197.0 0.0.0.255
+ network 142.232.198.0 0.0.0.255
+ network 142.232.199.0 0.0.0.255
+ network 142.232.200.0 0.0.0.255
+ passive-interface GigabitEthernet0/0/1.197
+ passive-interface GigabitEthernet0/0/1.198
+ passive-interface GigabitEthernet0/0/1.199
+ passive-interface GigabitEthernet0/1/0
+!
+ip forward-protocol nd
+no ip http server
+ip http secure-server
+!
+!
+!
+ip nat inside source list 101 interface g0/0/0 overload
+!
+ip nat inside source static tcp 142.232.200.2 80 10.100.201.111 80
+!
+access-list 101 permit ip 142.232.197.0 0.0.4.255
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ transport input none
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ login
+!
+wsma agent exec
+!
+wsma agent config
+!
+wsma agent filesys
+!
+wsma agent notify
+!
+!
+end
