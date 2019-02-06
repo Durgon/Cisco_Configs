@@ -1,0 +1,7 @@
+STILL TO DO
+  -IPv6 addressing and Routing
+  -management network
+  -DHCPv6 (stateless and statefull)
+  -HSRP for v6
+  -comparison video (HSRP timers)
+  -GLBP analysis
