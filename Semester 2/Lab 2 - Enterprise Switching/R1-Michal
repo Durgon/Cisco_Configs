@@ -2,8 +2,13 @@ en
 conf t
 hostname R1-Michal
 ipv6 unicast-routing
-logging synch
 no ip domain-lookup
+
+
+
+int lo0
+ip addr 20.18.34.10 255.255.255.255
+no shut
 
 int g0/0/0
 ip address 10.10.10.1 255.255.255.252
@@ -18,6 +23,8 @@ no sh
 router eigrp DUAL_STACK
 address-family ipv4 uni as 4
 network 10.10.10.0
+network 20.18.34.10
+network
 exit
 address-family ipv6 uni as 6
 exit
@@ -27,7 +34,7 @@ ip dhcp excluded-address 172.16.5.1
 ip dhcp excluded-address 172.16.5.253
 ip dhcp excluded-address 172.16.5.254
 
-ip dhcp excluded-address 172.16.210.1
+ip dhcp excluded-address 172.16.10.1
 ip dhcp excluded-address 172.16.10.253
 ip dhcp excluded-address 172.16.10.254
 
