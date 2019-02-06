@@ -1,4 +1,4 @@
-Current configuration : 2223 bytes
+Current configuration : 2288 bytes
 !
 version 12.2
 no service pad
@@ -42,13 +42,10 @@ vlan 15
 vlan 20
  name Finance
 !
-vlan 30
- name IT
-!
-vlan 40
- name wwwFTP
+vlan 64,128,192
 !
 vlan 666
+ name vlan666
 !
 vlan 999
  name NATIVE
@@ -107,6 +104,9 @@ interface FastEthernet0/11
 interface FastEthernet0/12
 !
 interface FastEthernet0/13
+ switchport access vlan 20
+ switchport mode access
+ spanning-tree portfast
 !
 interface FastEthernet0/14
 !
