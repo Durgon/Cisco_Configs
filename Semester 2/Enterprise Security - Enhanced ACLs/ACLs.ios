@@ -28,12 +28,15 @@ ip access-list extended IT-OUT
 
 ip access-list extended DMZ-IN
   evaluate FIN-WWW
+  permit icmp host 142.232.200.2 142.232.197.0 0.0.2.255 echo-reply
+  permit tcp host 142.232.200.2 eq 80 any established
 ip access-list extended DMZ-OUT
 
 ip access-list extended GLOBAL-IN
   evaluate FTP-OUT
   evaluate WEB-OUT
   evaluate SWEB-OUT
+  permit eigrp any any
 ip access-list extended GLOBAL-OUT
 
 
