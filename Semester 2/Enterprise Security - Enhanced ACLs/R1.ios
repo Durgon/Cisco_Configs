@@ -99,30 +99,30 @@ redundancy
 !
 !
 !
-interface GigabitEthernet0/0/0
+interface GigabitEthernet0/0
  ip address 10.100.201.212 255.255.254.0
  negotiation auto
 !
-interface GigabitEthernet0/0/1
+interface GigabitEthernet0/1
  no ip address
  negotiation auto
 !
-interface GigabitEthernet0/0/1.197
+interface GigabitEthernet0/1.197
  encapsulation dot1Q 197
  ip address 192.168.197.1 255.255.255.0
 !
-interface GigabitEthernet0/0/1.198
+interface GigabitEthernet0/1.198
  encapsulation dot1Q 198
  ip address 142.232.198.1 255.255.255.0
 !
-interface GigabitEthernet0/0/1.199
+interface GigabitEthernet0/1.199
  encapsulation dot1Q 199
  ip address 142.232.199.1 255.255.255.0
 !
-interface GigabitEthernet0/0/1.666
+interface GigabitEtherne0/1.666
  encapsulation dot1Q 666 native
 !
-interface GigabitEthernet0/1/0
+interface GigabitEthernet0/2
  ip address 142.232.200.1 255.255.255.252
  negotiation auto
 !
@@ -142,10 +142,10 @@ router eigrp 1
  network 142.232.198.0 0.0.0.255
  network 142.232.199.0 0.0.0.255
  network 142.232.200.0 0.0.0.255
- passive-interface GigabitEthernet0/0/1.197
- passive-interface GigabitEthernet0/0/1.198
- passive-interface GigabitEthernet0/0/1.199
- passive-interface GigabitEthernet0/1/0
+ passive-interface GigabitEthernet0/1.197
+ passive-interface GigabitEthernet0/1.198
+ passive-interface GigabitEthernet0/1.199
+ passive-interface GigabitEthernet0/2
 !
 ip forward-protocol nd
 no ip http server
@@ -153,7 +153,7 @@ ip http secure-server
 !
 !
 !
-ip nat inside source list 101 interface g0/0/0 overload
+ip nat inside source list 101 interface g0/0 overload
 !
 ip nat inside source static tcp 142.232.200.2 80 10.100.201.111 80
 !
