@@ -1,0 +1,32 @@
+ip access-list extended SALES-IN
+
+  permit tcp 142.232.197.0 0.0.0.255 gt 1023 any eq ftp
+  permit tcp 142.232.197.0 0.0.0.255 gt 1023 any eq 80
+  permit udp 142.232.197.0 0.0.0.255 any eq domain
+  permit udp 142.232.197.0 0.0.0.255 eq domain any
+  permit tcp 142.232.197.0 0.0.0.255 any eq domain
+  permit tcp 142.232.197.0 0.0.0.255 eq domain any
+
+ip access-list extended FINANCE-IN
+  deny ip 142.232.198.0 0.0.0.255 any time-range FINANCE
+  permit tcp 142.232.198.0 0.0.0.255 gt 1023 host 142.232.200.2 eq 80
+  permit tcp 142.232.198.0 0.0.0.255 gt 1023 any eq ftp
+
+ip access-list extended IT-IN
+  permit tcp 142.232.199.0 0.0.0.255 gt 1023 any eq ftp
+  permit tcp 142.232.199.0 0.0.0.255 gt 1023 any eq 80
+  permit udp 142.232.199.0 0.0.0.255 any eq domain
+  permit udp 142.232.199.0 0.0.0.255 eq domain any
+  permit tcp 142.232.199.0 0.0.0.255 any eq domain
+  permit tcp 142.232.199.0 0.0.0.255 eq domain any
+
+ip access-list extended DMZ-IN
+!
+time-range SALES
+  periodic weekdays 07:30 to 17:30
+!
+time-range FINANCE
+  periodic weekdays 20:00 to 06:00
+
+
+permit ip 142.232.197.0 0.0.0.255 any time-range SALES
