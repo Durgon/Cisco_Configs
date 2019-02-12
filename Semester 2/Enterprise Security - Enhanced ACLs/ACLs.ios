@@ -1,32 +1,55 @@
 ip access-list extended SALES-IN
+  permit tcp 142.232.197.0 0.0.0.255 gt 1023 142.232.197.0 0.0.3.255 eq ftp
+  permit tcp 142.232.197.0 0.0.0.255 gt 1023 142.232.197.0 0.0.3.255 eq 80
+  permit tcp 142.232.197.0 0.0.0.255 gt 1023 142.232.197.0 0.0.3.255 eq 443
+  deny ip 142.232.197.0 0.0.0.255 any time-range SALES-WEEKDAYS
+  deny ip 142.232.197.0 0.0.0.255 any time-range WEEKEND
+  permit tcp 142.232.197.0 0.0.0.255 gt 1023 any eq ftp reflect FTP-OUT
+  permit tcp 142.232.197.0 0.0.0.255 gt 1023 any eq 80 reflect WEB-OUT
+  permit tcp 142.232.197.0 0.0.0.255 gt 1023 any eq 443 reflect SWEB-OUT
+  permit icmp 142.232.197.0 0.0.0.255 any echo
 
-  permit tcp 142.232.197.0 0.0.0.255 gt 1023 any eq ftp
-  permit tcp 142.232.197.0 0.0.0.255 gt 1023 any eq 80
-  permit udp 142.232.197.0 0.0.0.255 any eq domain
-  permit udp 142.232.197.0 0.0.0.255 eq domain any
-  permit tcp 142.232.197.0 0.0.0.255 any eq domain
-  permit tcp 142.232.197.0 0.0.0.255 eq domain any
+ip access-list extended SALES-OUT
 
 ip access-list extended FINANCE-IN
+  permit tcp 142.232.198.0 0.0.0.255 gt 1023 142.232.197.0 0.0.3.255 eq ftp
+  permit tcp 142.232.198.0 0.0.0.255 gt 1023 host 142.232.200.2 eq ftp reflect FIN-WWW
   deny ip 142.232.198.0 0.0.0.255 any time-range FINANCE
-  permit tcp 142.232.198.0 0.0.0.255 gt 1023 host 142.232.200.2 eq 80
-  permit tcp 142.232.198.0 0.0.0.255 gt 1023 any eq ftp
+  permit tcp 142.232.198.0 0.0.0.255 gt 1023 any eq ftp reflect FTP-OUT
+  permit icmp 142.232.198.0 0.0.0.255 any echo
+ip access-list extended FINANCE-OUT
 
 ip access-list extended IT-IN
-  permit tcp 142.232.199.0 0.0.0.255 gt 1023 any eq ftp
-  permit tcp 142.232.199.0 0.0.0.255 gt 1023 any eq 80
-  permit udp 142.232.199.0 0.0.0.255 any eq domain
-  permit udp 142.232.199.0 0.0.0.255 eq domain any
-  permit tcp 142.232.199.0 0.0.0.255 any eq domain
-  permit tcp 142.232.199.0 0.0.0.255 eq domain any
+  permit tcp 142.232.199.0 0.0.0.255 gt 1023 any eq ftp reflect FTP-OUT
+  permit tcp 142.232.199.0 0.0.0.255 gt 1023 any eq 80 reflect WEB-OUT
+  permit tcp 142.232.199.0 0.0.0.255 gt 1023 any eq 443 reflect SWEB-OUT
+  permit icmp 142.232.199.0 0.0.0.255 any echo
+ip access-list extended IT-OUT
 
 ip access-list extended DMZ-IN
+  evaluate FIN-WWW
+ip access-list extended DMZ-OUT
+
+ip access-list extended GLOBAL-IN
+  evaluate FTP-OUT
+  evaluate WEB-OUT
+  evaluate SWEB-OUT
+ip access-list extended GLOBAL-OUT
+
+
+
+! time ranges
+time-range SALES-WEEKDAYS
+  periodic weekdays 17:30 to 07:30
 !
-time-range SALES
-  periodic weekdays 07:30 to 17:30
+time-range WEEKEND
+  periodic weekend 00:00 to 23:59
 !
 time-range FINANCE
   periodic weekdays 20:00 to 06:00
 
-
+!NAT ACL
 permit ip 142.232.197.0 0.0.0.255 any time-range SALES
+
+!apply to vty lines
+permit 142.232.199.0 0.0.0.255
