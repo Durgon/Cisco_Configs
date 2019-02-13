@@ -178,12 +178,14 @@ interface GigabitEthernet0/0/0
  ip address 10.10.10.1 255.255.255.252
  ipv6 address 10:10:10::1/126
  negotiation auto
+ ipv6 enable
  no sh
 !
 interface GigabitEthernet0/0/1
  ip address 10.10.10.5 255.255.255.252
  ipv6 address 10:10:10::1/126
  negotiation auto
+ ipv6 enable
  no sh
 !
 interface GigabitEthernet0/1/0
