@@ -237,3 +237,208 @@ line vty 5 15
  login
 
 end
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+hostname R1-Michal
+!
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+!
+no aaa new-model
+!
+no ip domain lookup
+ip dhcp excluded-address 172.16.5.1
+ip dhcp excluded-address 172.16.5.253
+ip dhcp excluded-address 172.16.5.254
+ip dhcp excluded-address 172.16.10.253
+ip dhcp excluded-address 172.16.10.254
+ip dhcp excluded-address 172.16.15.1
+ip dhcp excluded-address 172.16.15.253
+ip dhcp excluded-address 172.16.15.254
+ip dhcp excluded-address 172.16.20.1
+ip dhcp excluded-address 172.16.20.253
+ip dhcp excluded-address 172.16.20.254
+ip dhcp excluded-address 172.16.10.1
+!
+ip dhcp pool VLAN5
+ network 172.16.5.0 255.255.255.0
+ domain-name switch.lab
+!
+ip dhcp pool VLAN10
+ network 172.16.10.0 255.255.255.0
+ domain-name switch.lab
+!
+ip dhcp pool VLAN15
+ network 172.16.15.0 255.255.255.0
+ domain-name switch.lab
+!
+ip dhcp pool VLAN20
+ network 172.16.20.0 255.255.255.0
+ domain-name switch.lab
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+!
+!
+!
+!
+vtp domain cisco
+vtp mode transparent
+!
+ipv6 unicast-routing
+ipv6 dhcp pool VLAN20-STATEFULL
+ address prefix 2018:BA15:3410:B306:20::/80
+ dns-server 2018:BA15:3410::1
+ domain-name switch.lab
+!
+ipv6 dhcp pool VLAN10-STATEFULL
+ address prefix 2018:BA15:3410:B306:10::/80
+ dns-server 2018:BA15:3410::1
+ domain-name switch.lab
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+license udi pid ISR4321/K9 sn FDO20080XS4
+no license smart enable
+diagnostic bootup level minimal
+!
+spanning-tree extend system-id
+!
+!
+!
+!
+redundancy
+ mode none
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 20.18.34.10 255.255.255.255
+ ipv6 address 2018:BA15:3410::1/64
+ ipv6 nd managed-config-flag
+ ipv6 dhcp server VLAN20-STATEFULL
+!
+interface GigabitEthernet0/0/0
+ ip address 10.10.10.1 255.255.255.252
+ negotiation auto
+ ipv6 address 10:10:10::1/126
+ ipv6 enable
+ ipv6 nd managed-config-flag
+ ipv6 dhcp server VLAN10-STATEFULL
+!
+interface GigabitEthernet0/0/1
+ ip address 10.10.10.5 255.255.255.252
+ negotiation auto
+ ipv6 address 10:10:10::5/126
+ ipv6 enable
+ ipv6 nd managed-config-flag
+ ipv6 dhcp server VLAN20-STATEFULL
+!
+interface GigabitEthernet0/1/0
+ no ip address
+ negotiation auto
+!
+interface GigabitEthernet0/1/1
+ no ip address
+ negotiation auto
+!
+interface GigabitEthernet0
+ vrf forwarding Mgmt-intf
+ no ip address
+ negotiation auto
+!
+!
+router eigrp DUAL_STACK
+ !
+ address-family ipv4 unicast autonomous-system 4
+  !
+  topology base
+  exit-af-topology
+  network 10.0.0.0
+  network 20.0.0.0
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 6
+  !
+  topology base
+  exit-af-topology
+ exit-address-family
+!
+ip forward-protocol nd
+no ip http server
+ip http secure-server
+ip tftp source-interface GigabitEthernet0
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ transport input none
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ login
+!
+wsma agent exec
+!
+wsma agent config
+!
+wsma agent filesys
+!
+wsma agent notify
+!
+!
+end
