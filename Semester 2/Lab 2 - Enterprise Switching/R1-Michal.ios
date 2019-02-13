@@ -120,7 +120,15 @@ ip dhcp pool VLAN20
  network 172.16.20.0 255.255.255.0
  domain-name switch.lab
 !
+ipv6 dhcp pool VLAN15-STATEFULL
+  address prefix 2018:BA15:3410:B306:15::/80
+  dns-server 2018:BA15:2410::1
+  domain-name switch.lab
 !
+ipv6 dhcp pool VLAN20-STATEFULL
+  address prefix 2018:BA15:3410:B306:20::/80
+  dns-server 2018:BA15:2410::1
+  domain-name switch.lab
 !
 !
 !
@@ -184,6 +192,9 @@ redundancy
 interface Loopback0
  ip address 20.18.34.10 255.255.255.255
  ipv6 address 2018:BA15:3410::1/64
+ ipv6 nd managed-config-flag
+ ipv6 dhcp server VLAN15-STATEFULL
+ ipv6 dhcp server VLAN20-STATEFULL 
 !
 interface GigabitEthernet0/0/0
  ip address 10.10.10.1 255.255.255.252

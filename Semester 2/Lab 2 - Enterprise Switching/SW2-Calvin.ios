@@ -152,6 +152,9 @@ policy-map system-cpp-policy
 !
 !
 !
+ipv6 dhcp-pool IPv6-STATELESS
+  dns-server 2018:BA15:2410::1
+  domain-name switching.lab
 !
 !
 !
@@ -263,28 +266,35 @@ interface Vlan5
  ip address 172.16.5.253 255.255.255.0
  ip helper-address 20.18.34.10
  standby 5 ip 172.16.5.1
+ standby 5 track GigabitEthernet1/0/1
  standby 5 authentication md5 key-string cisco
 !
 interface Vlan10
  ip address 172.16.10.253 255.255.255.0
  ip helper-address 20.18.34.10
+ ipv6 nd other-config-flag
  standby 10 ip 172.16.10.1
+ standby 10 track GigabitEthernet1/0/1
  standby 10 authentication md5 key-string cisco
 !
 interface Vlan15
  ip address 172.16.15.254 255.255.255.0
  ip helper-address 20.18.34.10
+ ipv6 enable
  standby 15 ip 172.16.15.1
  standby 15 priority 254
  standby 15 preempt
+ standby 15 track GigabitEthernet1/0/1
  standby 15 authentication md5 key-string cisco
 !
 interface Vlan20
  ip address 172.16.20.254 255.255.255.0
  ip helper-address 20.18.34.10
+ ipv6 enable
  standby 20 ip 172.16.20.1
  standby 20 priority 254
  standby 20 preempt
+ standby 20 track GigabitEthernet1/0/1
  standby 20 authentication md5 key-string cisco
 !
 !

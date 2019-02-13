@@ -32,23 +32,7 @@ spanning-tree extend system-id
 !
 vlan internal allocation policy ascending
 !
-vlan 5
-!
-vlan 10
- name Sales
-!
-vlan 15
-!
-vlan 20
- name Finance
-!
-vlan 64,128,192
-!
-vlan 666
- name vlan666
-!
-vlan 999
- name NATIVE
+vlan 5,10,15,20,666,999
 !
 !
 !

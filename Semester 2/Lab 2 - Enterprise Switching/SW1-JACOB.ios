@@ -27,56 +27,9 @@ switch 1 provision ws-c3650-24ps
 !
 !
 ip routing
+ipv6 unicast routing
 !
 !
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-crypto pki trustpoint TP-self-signed-2244595236
- enrollment selfsigned
- subject-name cn=IOS-Self-Signed-Certificate-2244595236
- revocation-check none
- rsakeypair TP-self-signed-2244595236
-!
-!
-crypto pki certificate chain TP-self-signed-2244595236
- certificate self-signed 01
-  30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 05050030
-  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274
-  69666963 6174652D 32323434 35393532 3336301E 170D3139 30323036 32303037
-  35315A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649
-  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D32 32343435
-  39353233 36308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
-  0A028201 0100BE7C 3A57EBF1 F8BEAF0F 3865EB21 17D9F1B7 C85AD91A B1574648
-  A48FD37B 0FC2C97E 1307E881 41EDD435 A3F40B6B 62072784 DA667972 EFE5A3F8
-  10817067 22FF1686 2ED100AF D73766AE 295EFBAF 5DB3E193 BE86F0D5 873F2428
-  9C7E9465 4691D63C 5D0FBB0D ACE49216 46F30440 43337684 7223FFF8 2B6BFF90
-  B2A209F0 3F0F108A F1AF43E1 59046DB4 14669268 D8CFD5AE F85430A4 8C64E13C
-  69F85982 8F29816C 1B4CABBB DD73EE64 634C4D29 A35EF829 7CC3E5B4 2E05155E
-  2B5E847E 18F3AD69 386D4309 DD76AFBF FE4D5655 5C96707B BFECFB3F 7E48F3A4
-  9771ED3C BF4328BB 58517A6F F39F4BE3 4A0F1104 21BFD3CE 3327CC49 BEDF582C
-  A2F6CDFC 44810203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF
-  301F0603 551D2304 18301680 14A54B39 569F9D41 128DD781 90C7DC7B 46615036
-  BD301D06 03551D0E 04160414 A54B3956 9F9D4112 8DD78190 C7DC7B46 615036BD
-  300D0609 2A864886 F70D0101 05050003 82010100 58AC97BE 4A15D011 69979A95
-  5D93B4D8 75444CAA DE3E57AB 6EE58F2A 44173681 A79DA3CB 1AC01288 DFD0F062
-  3E7FF924 B4D41DE5 1315638F B2516DA0 EF55C2D6 B7B5EFDE 767E6256 2C5A134C
-  AEE4DC9E BDDE4A26 9B1D5328 2476AFE6 10BF817A E62DDADB 608AB79B 2B754A56
-  8D7AC4DC 4E039E12 5AAA7643 98C648B1 FE262623 C0E4D21A 88A72196 7EE5C583
-  C388E67D BEECD241 F18CFCC0 031C2A90 DB217213 19B333FA 6AE18F86 696EB40C
-  9D707729 E95309BE 75471FF4 82C77C07 25458F74 D490B273 7CF0B936 0C3458D9
-  16ACB24F 60617077 4F181727 81A1D9E1 9474BB57 CC0D98F4 DDFDFFCE D5C3497D
-  0CBB6894 9CC3B540 1FB6A11F 7842373F B09DCD72
-        quit
 !
 license boot level ipservicesk9
 diagnostic bootup level minimal
@@ -93,73 +46,12 @@ redundancy
 !
 !
 !
-class-map match-any system-cpp-police-topology-control
-  description Topology control
-class-map match-any system-cpp-police-sw-forward
-  description Sw forwarding, SGT Cache Full, LOGGING
-class-map match-any system-cpp-default
-  description DHCP snooping, show forward and rest of traffic
-class-map match-any system-cpp-police-sys-data
-  description Learning cache ovfl, Crypto Control, Exception, EGR Exception, NFL SAMPLED DATA, Gold Pkt, RPF Failed
-class-map match-any system-cpp-police-punt-webauth
-  description Punt Webauth
-class-map match-any system-cpp-police-forus
-  description Forus Address resolution and Forus traffic
-class-map match-any system-cpp-police-multicast-end-station
-  description MCAST END STATION
-class-map match-any system-cpp-police-multicast
-  description Transit Traffic and MCAST Data
-class-map match-any system-cpp-police-l2-control
-  description L2 control
-class-map match-any system-cpp-police-dot1x-auth
-  description DOT1X Auth
-class-map match-any system-cpp-police-data
-  description ICMP_GEN and BROADCAST
-class-map match-any system-cpp-police-control-low-priority
-  description ICMP redirect and general punt
-class-map match-any system-cpp-police-wireless-priority1
-  description Wireless priority 1
-class-map match-any system-cpp-police-wireless-priority2
-  description Wireless priority 2
-class-map match-any system-cpp-police-wireless-priority3-4-5
-  description Wireless priority 3,4 and 5
-class-map match-any non-client-nrt-class
-class-map match-any system-cpp-police-routing-control
-  description Routing control
-class-map match-any system-cpp-police-protocol-snooping
-  description Protocol snooping
-!
-policy-map port_child_policy
- class non-client-nrt-class
-  bandwidth remaining ratio 10
-policy-map system-cpp-policy
- class system-cpp-police-data
-  police rate 200 pps
- class system-cpp-police-sys-data
-  police rate 100 pps
- class system-cpp-police-sw-forward
-  police rate 1000 pps
- class system-cpp-police-multicast
-  police rate 500 pps
- class system-cpp-police-multicast-end-station
-  police rate 2000 pps
- class system-cpp-police-punt-webauth
- class system-cpp-police-l2-control
- class system-cpp-police-routing-control
-  police rate 1800 pps
- class system-cpp-police-control-low-priority
- class system-cpp-police-wireless-priority1
- class system-cpp-police-wireless-priority2
- class system-cpp-police-wireless-priority3-4-5
- class system-cpp-police-topology-control
- class system-cpp-police-dot1x-auth
- class system-cpp-police-protocol-snooping
- class system-cpp-police-forus
- class system-cpp-default
 !
 !
 !
-!
+ipv6 dhcp-pool IPv6-STATELESS
+  dns-server 2018:BA15:2410::1
+  domain-name switching.lab
 !
 !
 !
@@ -270,30 +162,39 @@ interface Vlan1
 interface Vlan5
  ip address 172.16.5.254 255.255.255.0
  ip helper-address 20.18.34.10
+ ipv6 nd other-config-flag
+ standby version 2
  standby 5 ip 172.16.5.1
  standby 5 priority 254
  standby 5 preempt
+ standby 5 track GigabitEthernet1/0/1
  standby 5 authentication md5 key-string cisco
 !
 interface Vlan10
  ip address 172.16.10.254 255.255.255.0
  ip helper-address 20.18.34.10
- standby 5 preempt
+ standby version 2
+ standby 10 preempt
  standby 10 ip 172.16.10.1
  standby 10 priority 254
  standby 10 preempt
+ standby 10 track GigabitEthernet1/0/1
  standby 10 authentication md5 key-string cisco
 !
 interface Vlan15
  ip address 172.16.15.253 255.255.255.0
  ip helper-address 20.18.34.10
+ standby version 2
  standby 15 ip 172.16.15.1
+ standby 15 track GigabitEthernet1/0/1
  standby 15 authentication md5 key-string cisco
 !
 interface Vlan20
  ip address 172.16.20.253 255.255.255.0
  ip helper-address 20.18.34.10
+ standby version 2
  standby 20 ip 172.16.20.1
+ standby 20 track GigabitEthernet1/0/1
  standby 20 authentication md5 key-string cisco
 !
 !
