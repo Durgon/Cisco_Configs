@@ -13,12 +13,12 @@ no shut
 
 int g0/0/0
 ip address 10.10.10.1 255.255.255.252
-ipv6 address
+ipv6 address 10:10:10::1/126
 no sh
 
 int g0/0/1
 ip address 10.10.10.5 255.255.255.252
-ipv6 address
+ipv6 address 10:10:10::5/126
 no sh
 
 router eigrp DUAL_STACK
@@ -166,43 +166,25 @@ spanning-tree extend system-id
 !
 redundancy
  mode none
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
+
 interface Loopback0
  ip address 20.18.34.10 255.255.255.255
  ipv6 address 2018:BA15:3410::1/64
  ipv6 nd managed-config-flag
  ipv6 dhcp server VLAN15-STATEFULL
- ipv6 dhcp server VLAN20-STATEFULL 
+ ipv6 dhcp server VLAN20-STATEFULL
 !
 interface GigabitEthernet0/0/0
  ip address 10.10.10.1 255.255.255.252
+ ipv6 address 10:10:10::1/126
  negotiation auto
+ no sh
 !
 interface GigabitEthernet0/0/1
  ip address 10.10.10.5 255.255.255.252
+ ipv6 address 10:10:10::1/126
  negotiation auto
+ no sh
 !
 interface GigabitEthernet0/1/0
  no ip address
