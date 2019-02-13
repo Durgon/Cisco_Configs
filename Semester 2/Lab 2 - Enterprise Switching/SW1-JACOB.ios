@@ -1,6 +1,9 @@
-Current configuration : 10526 bytes
+Building configuration...
+
+*Feb 13 22:56:39.831: %SYS-5-CONFIG_I: Configured from console by console
+Current configuration : 12024 bytes
 !
-! Last configuration change at 21:07:23 UTC Wed Feb 6 2019
+! Last configuration change at 22:56:39 UTC Wed Feb 13 2019
 !
 version 16.3
 no service pad
@@ -27,9 +30,61 @@ switch 1 provision ws-c3650-24ps
 !
 !
 ip routing
-ipv6 unicast routing
 !
 !
+!
+!
+!
+!
+ipv6 unicast-routing
+ipv6 dhcp pool VLAN-5-STATELESS
+ dns-server 2018:BA15:2410::1
+ domain-name switching.lab
+!
+!
+!
+!
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-2244595236
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-2244595236
+ revocation-check none
+ rsakeypair TP-self-signed-2244595236
+!
+!
+crypto pki certificate chain TP-self-signed-2244595236
+ certificate self-signed 01
+  30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 05050030
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274
+  69666963 6174652D 32323434 35393532 3336301E 170D3139 30323133 32313030
+  32355A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D32 32343435
+  39353233 36308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
+  0A028201 0100AE75 8235E09E 498FD0D2 4AA13A0E 42A3D773 D3E55CF1 FBF2DEB6
+  43D37D3F E494ABBD 7C443D1F 2A221C24 317D1F8D A5C17713 8DF755A2 714FDA0B
+  EA71F04A 58F37960 99FEB89A 8F95D963 0B829158 A7BE96B7 BB966A48 E1058A7F
+  BA38C7D8 B72B0605 FE1B59D7 57C193FA 67B515B7 A7A1F3F9 F89D0291 83DA1AD8
+  2B6193FA B097FF95 1EFA5CDA B53172AD 61D62B9F FF49B66B 64AAB5CC 5D03855D
+  2A784DFB A5D9A6AC 9EA65B4F 85180E7F 3972F8A8 CDE37887 363507CC 386D3910
+  E6DC3848 36E179DB B9BA128D 1B3A516B 7CEA01E1 2F4CF1E2 353B0682 F14CB5F7
+  558C3191 2B8EC767 9F6CDD4E 2F936233 5D6D3C05 5314B347 025514CE B6B9DBFF
+  91951D7A A6590203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF
+  301F0603 551D2304 18301680 1487ABB8 4F357FDF C22533F9 994A2EF1 74478602
+  63301D06 03551D0E 04160414 87ABB84F 357FDFC2 2533F999 4A2EF174 47860263
+  300D0609 2A864886 F70D0101 05050003 82010100 06E9F6C7 6468BF3F 3424DE6D
+  09CF716E D39F56E4 DA7026F0 35E6FBC5 369D44F1 9DBAD9AC 248BD1E8 BEBF9250
+  3C353FC6 F541FF6B CED7BE06 218A35AF 069933D0 B0CCA40F 11FD8DAC C33AA57C
+  B302981F 6AC9E0D0 BC5DA1FC 07BEAC75 26BF314B 275D59F6 275C473B C8237DC9
+  2A2F4040 DC37F81D 3F813F8B 65CB6C1D 3ED4D3DA 91395331 275D2B07 53B0A96F
+  2DFDBAD0 BECF85D9 17D5259B 13334268 0F34E32B D1ED517A B66A33AF 26A76E60
+  9AA1DFED DC2F941A CA3FCDA7 D71C86E0 3925565D D5700A22 43EBA095 14231290
+  F79F9210 727F1904 F11A5C59 F74DDCC2 4EB39D3C 88CDC91B B4F1B73E 579A40DE
+  2013BCE0 D241B98F 401ACC56 D6A60D22 F244041B
+        quit
 !
 license boot level ipservicesk9
 diagnostic bootup level minimal
@@ -37,7 +92,6 @@ diagnostic bootup level minimal
 spanning-tree mode rapid-pvst
 spanning-tree extend system-id
 spanning-tree vlan 5,10 priority 24576
-spanning-tree vlan 15,20 priority 28672
 !
 !
 !
@@ -45,13 +99,76 @@ redundancy
  mode sso
 !
 !
+track 1 interface GigabitEthernet1/0/1 ip routing
+!
+!
+class-map match-any system-cpp-police-topology-control
+  description Topology control
+class-map match-any system-cpp-police-sw-forward
+  description Sw forwarding, SGT Cache Full, LOGGING
+class-map match-any system-cpp-default
+  description DHCP snooping, show forward and rest of traffic
+class-map match-any system-cpp-police-sys-data
+  description Learning cache ovfl, Crypto Control, Exception, EGR Exception, NFL SAMPLED DATA, Gold Pkt, RPF Failed
+class-map match-any system-cpp-police-punt-webauth
+  description Punt Webauth
+class-map match-any system-cpp-police-forus
+  description Forus Address resolution and Forus traffic
+class-map match-any system-cpp-police-multicast-end-station
+  description MCAST END STATION
+class-map match-any system-cpp-police-multicast
+  description Transit Traffic and MCAST Data
+class-map match-any system-cpp-police-l2-control
+  description L2 control
+class-map match-any system-cpp-police-dot1x-auth
+  description DOT1X Auth
+class-map match-any system-cpp-police-data
+  description ICMP_GEN and BROADCAST
+class-map match-any system-cpp-police-control-low-priority
+  description ICMP redirect and general punt
+class-map match-any system-cpp-police-wireless-priority1
+  description Wireless priority 1
+class-map match-any system-cpp-police-wireless-priority2
+  description Wireless priority 2
+class-map match-any system-cpp-police-wireless-priority3-4-5
+  description Wireless priority 3,4 and 5
+class-map match-any non-client-nrt-class
+class-map match-any system-cpp-police-routing-control
+  description Routing control
+class-map match-any system-cpp-police-protocol-snooping
+  description Protocol snooping
+!
+policy-map port_child_policy
+ class non-client-nrt-class
+  bandwidth remaining ratio 10
+policy-map system-cpp-policy
+ class system-cpp-police-data
+  police rate 200 pps
+ class system-cpp-police-sys-data
+  police rate 100 pps
+ class system-cpp-police-sw-forward
+  police rate 1000 pps
+ class system-cpp-police-multicast
+  police rate 500 pps
+ class system-cpp-police-multicast-end-station
+  police rate 2000 pps
+ class system-cpp-police-punt-webauth
+ class system-cpp-police-l2-control
+ class system-cpp-police-routing-control
+  police rate 1800 pps
+ class system-cpp-police-control-low-priority
+ class system-cpp-police-wireless-priority1
+ class system-cpp-police-wireless-priority2
+ class system-cpp-police-wireless-priority3-4-5
+ class system-cpp-police-topology-control
+ class system-cpp-police-dot1x-auth
+ class system-cpp-police-protocol-snooping
+ class system-cpp-police-forus
+ class system-cpp-default
 !
 !
 !
 !
-ipv6 dhcp-pool IPv6-STATELESS
-  dns-server 2018:BA15:2410::1
-  domain-name switching.lab
 !
 !
 !
@@ -65,6 +182,8 @@ ipv6 dhcp-pool IPv6-STATELESS
 interface Port-channel1
  no switchport
  ip address 10.10.10.9 255.255.255.252
+ ipv6 address 10:10:10::9/126
+ ipv6 enable
 !
 interface Port-channel2
  switchport trunk native vlan 999
@@ -82,6 +201,7 @@ interface GigabitEthernet0/0
 interface GigabitEthernet1/0/1
  no switchport
  ip address 10.10.10.2 255.255.255.252
+ ipv6 address 10:10:10::2/126
 !
 interface GigabitEthernet1/0/2
 !
@@ -162,40 +282,59 @@ interface Vlan1
 interface Vlan5
  ip address 172.16.5.254 255.255.255.0
  ip helper-address 20.18.34.10
- ipv6 nd other-config-flag
  standby version 2
  standby 5 ip 172.16.5.1
  standby 5 priority 254
  standby 5 preempt
- standby 5 track GigabitEthernet1/0/1
  standby 5 authentication md5 key-string cisco
+ standby 5 track 1 shutdown
+ standby 56 ipv6 autoconfig
+ standby 56 priority 254
+ standby 56 preempt
+ standby 56 authentication md5 key-string cisco
+ ipv6 address 2018:BA15:3410:5::1/64
+ ipv6 nd other-config-flag
+ ipv6 dhcp server VLAN-5-STATELESS
 !
 interface Vlan10
  ip address 172.16.10.254 255.255.255.0
  ip helper-address 20.18.34.10
  standby version 2
- standby 10 preempt
  standby 10 ip 172.16.10.1
  standby 10 priority 254
  standby 10 preempt
- standby 10 track GigabitEthernet1/0/1
  standby 10 authentication md5 key-string cisco
+ standby 10 track 1 shutdown
+ standby 106 ipv6 autoconfig
+ standby 106 priority 254
+ standby 106 preempt
+ standby 106 authentication md5 key-string cisco
+ ipv6 address 2018:BA15:3410:B306:10::1/80
+ ipv6 enable
+ ipv6 dhcp relay destination 10:10:10::1
 !
 interface Vlan15
  ip address 172.16.15.253 255.255.255.0
  ip helper-address 20.18.34.10
  standby version 2
  standby 15 ip 172.16.15.1
- standby 15 track GigabitEthernet1/0/1
  standby 15 authentication md5 key-string cisco
+ standby 15 track 1 shutdown
+ standby 156 ipv6 autoconfig
+ standby 156 authentication md5 key-string cisco
+ ipv6 address 2018:BA15:3410:15::2/64
 !
 interface Vlan20
  ip address 172.16.20.253 255.255.255.0
  ip helper-address 20.18.34.10
  standby version 2
  standby 20 ip 172.16.20.1
- standby 20 track GigabitEthernet1/0/1
  standby 20 authentication md5 key-string cisco
+ standby 20 track 1 shutdown
+ standby 206 ipv6 autoconfig
+ standby 206 authentication md5 key-string cisco
+ ipv6 address 2018:BA15:3410:B306:20::2/80
+ ipv6 dhcp relay destination 10:10:10::5
 !
 !
 router eigrp DUAL_STACK
@@ -222,6 +361,29 @@ router eigrp DUAL_STACK
   exit-af-topology
   network 10.0.0.0
   network 172.16.0.0
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 6
+  !
+  af-interface Vlan5
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Vlan10
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Vlan15
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Vlan20
+   passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  eigrp router-id 10.10.10.2
  exit-address-family
 !
 ip forward-protocol nd

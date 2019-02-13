@@ -1,4 +1,4 @@
-Current configuration : 2288 bytes
+Current configuration : 2128 bytes
 !
 version 12.2
 no service pad
@@ -14,8 +14,8 @@ boot-end-marker
 !
 no aaa new-model
 system mtu routing 1500
-vtp mode transparent
 ip subnet-zero
+ip routing
 !
 !
 !
@@ -31,8 +31,6 @@ spanning-tree mode rapid-pvst
 spanning-tree extend system-id
 !
 vlan internal allocation policy ascending
-!
-vlan 5,10,15,20,666,999
 !
 !
 !
@@ -122,6 +120,9 @@ interface Vlan1
  no ip address
  shutdown
 !
+interface Vlan5
+ no ip address
+!
 ip classless
 ip http server
 ip http secure-server
@@ -132,10 +133,6 @@ control-plane
 !
 !
 line con 0
- logging synchronous
-line vty 0 4
- login
 line vty 5 15
- login
 !
 end
