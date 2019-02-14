@@ -1,4 +1,4 @@
-Current configuration : 2128 bytes
+Current configuration : 3810 bytes
 !
 version 12.2
 no service pad
@@ -18,6 +18,10 @@ ip subnet-zero
 ip routing
 !
 !
+ip dhcp snooping vlan 5
+ip dhcp snooping information option allow-untrusted
+no ip dhcp snooping information option
+ip dhcp snooping
 !
 !
 !
@@ -39,82 +43,151 @@ interface Port-channel2
  switchport trunk encapsulation dot1q
  switchport trunk native vlan 999
  switchport mode trunk
+ ip dhcp snooping trust
 !
 interface Port-channel3
  switchport trunk encapsulation dot1q
  switchport trunk native vlan 999
  switchport mode trunk
+ ip dhcp snooping trust
 !
 interface FastEthernet0/1
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/2
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/3
  switchport trunk encapsulation dot1q
  switchport trunk native vlan 999
  switchport mode trunk
  channel-group 2 mode on
+ ip dhcp snooping trust
 !
 interface FastEthernet0/4
  switchport trunk encapsulation dot1q
  switchport trunk native vlan 999
  switchport mode trunk
  channel-group 2 mode on
+ ip dhcp snooping trust
 !
 interface FastEthernet0/5
  switchport trunk encapsulation dot1q
  switchport trunk native vlan 999
  switchport mode trunk
  channel-group 3 mode on
+ ip dhcp snooping trust
 !
 interface FastEthernet0/6
  switchport trunk encapsulation dot1q
  switchport trunk native vlan 999
  switchport mode trunk
  channel-group 3 mode on
+ ip dhcp snooping trust
 !
 interface FastEthernet0/7
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface FastEthernet0/8
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface FastEthernet0/9
+ switchport access vlan 5
+ switchport mode access
+ spanning-tree portfast
 !
 interface FastEthernet0/10
+ switchport access vlan 5
+ switchport mode access
+ spanning-tree portfast
 !
 interface FastEthernet0/11
+ switchport access vlan 5
+ switchport mode access
+ spanning-tree portfast
 !
 interface FastEthernet0/12
+ switchport access vlan 5
+ switchport mode access
+ spanning-tree portfast
 !
 interface FastEthernet0/13
- switchport access vlan 20
+ switchport access vlan 10
  switchport mode access
  spanning-tree portfast
 !
 interface FastEthernet0/14
+ switchport access vlan 5
+ switchport mode access
+ spanning-tree portfast
 !
 interface FastEthernet0/15
+ switchport access vlan 10
+ switchport mode access
+ shutdown
+ spanning-tree portfast
 !
 interface FastEthernet0/16
+ switchport access vlan 10
+ switchport mode access
+ shutdown
+ spanning-tree portfast
 !
 interface FastEthernet0/17
+ switchport access vlan 10
+ switchport mode access
+ shutdown
+ spanning-tree portfast
 !
 interface FastEthernet0/18
+ switchport access vlan 10
+ switchport mode access
+ shutdown
+ spanning-tree portfast
 !
 interface FastEthernet0/19
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface FastEthernet0/20
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface FastEthernet0/21
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface FastEthernet0/22
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface FastEthernet0/23
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface FastEthernet0/24
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface GigabitEthernet0/1
+ switchport access vlan 666
+ shutdown
 !
 interface GigabitEthernet0/2
+ switchport access vlan 666
+ shutdown
 !
 interface Vlan1
  no ip address
@@ -133,6 +206,10 @@ control-plane
 !
 !
 line con 0
+ logging synchronous
+line vty 0 4
+ login
 line vty 5 15
+ login
 !
 end

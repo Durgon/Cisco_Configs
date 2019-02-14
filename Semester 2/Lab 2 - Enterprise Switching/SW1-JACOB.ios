@@ -1,9 +1,6 @@
-Building configuration...
-
-*Feb 13 22:56:39.831: %SYS-5-CONFIG_I: Configured from console by console
-Current configuration : 12024 bytes
+Current configuration : 13311 bytes
 !
-! Last configuration change at 22:56:39 UTC Wed Feb 13 2019
+! Last configuration change at 02:36:10 UTC Thu Feb 14 2019
 !
 version 16.3
 no service pad
@@ -36,9 +33,10 @@ ip routing
 !
 !
 !
+no ip dhcp snooping verify no-relay-agent-address
 ipv6 unicast-routing
 ipv6 dhcp pool VLAN-5-STATELESS
- dns-server 2018:BA15:2410::1
+ dns-server 2018:BA15:3410::1
  domain-name switching.lab
 !
 !
@@ -204,6 +202,8 @@ interface GigabitEthernet1/0/1
  ipv6 address 10:10:10::2/126
 !
 interface GigabitEthernet1/0/2
+ switchport access vlan 666
+ shutdown
 !
 interface GigabitEthernet1/0/3
  switchport trunk native vlan 999
@@ -236,54 +236,114 @@ interface GigabitEthernet1/0/8
  channel-group 1 mode on
 !
 interface GigabitEthernet1/0/9
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface GigabitEthernet1/0/10
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface GigabitEthernet1/0/11
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface GigabitEthernet1/0/12
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface GigabitEthernet1/0/13
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface GigabitEthernet1/0/14
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface GigabitEthernet1/0/15
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface GigabitEthernet1/0/16
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface GigabitEthernet1/0/17
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface GigabitEthernet1/0/18
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface GigabitEthernet1/0/19
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface GigabitEthernet1/0/20
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface GigabitEthernet1/0/21
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface GigabitEthernet1/0/22
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface GigabitEthernet1/0/23
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface GigabitEthernet1/0/24
+ switchport access vlan 666
+ switchport mode access
+ shutdown
 !
 interface GigabitEthernet1/1/1
+ switchport access vlan 666
+ shutdown
 !
 interface GigabitEthernet1/1/2
+ switchport access vlan 666
+ shutdown
 !
 interface GigabitEthernet1/1/3
+ switchport access vlan 666
+ shutdown
 !
 interface GigabitEthernet1/1/4
+ switchport access vlan 666
+ shutdown
 !
 interface Vlan1
  no ip address
  shutdown
+!
+interface Vlan4
+ no ip address
 !
 interface Vlan5
  ip address 172.16.5.254 255.255.255.0
  ip helper-address 20.18.34.10
  standby version 2
  standby 5 ip 172.16.5.1
+ standby 5 timers 1 3
  standby 5 priority 254
  standby 5 preempt
  standby 5 authentication md5 key-string cisco
