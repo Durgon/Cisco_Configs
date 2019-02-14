@@ -274,18 +274,22 @@ ip dhcp excluded-address 172.16.10.1
 !
 ip dhcp pool VLAN5
  network 172.16.5.0 255.255.255.0
+ default-router 172.16.5.1
  domain-name switch.lab
 !
 ip dhcp pool VLAN10
  network 172.16.10.0 255.255.255.0
+  default-router 172.16.10.1
  domain-name switch.lab
 !
 ip dhcp pool VLAN15
  network 172.16.15.0 255.255.255.0
+  default-router 172.16.15.1
  domain-name switch.lab
 !
 ip dhcp pool VLAN20
  network 172.16.20.0 255.255.255.0
+  default-router 172.16.20.1
  domain-name switch.lab
 !
 !
