@@ -61,7 +61,7 @@ ip access-list extended GLOBAL-IN
 time-range SALES-WEEKDAYS-1
   periodic weekdays 00:00 to 07:30
 !
-time-range SALES-WEEKDAYS-1
+time-range SALES-WEEKDAYS-2
   periodic weekdays 17:30 to 23:59
 !
 time-range WEEKEND
