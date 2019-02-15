@@ -3,7 +3,8 @@ ip access-list extended SALES-IN
   permit tcp 142.232.197.0 0.0.0.255 gt 1023 142.232.197.0 0.0.3.255 eq 80
   permit tcp 142.232.197.0 0.0.0.255 gt 1023 142.232.197.0 0.0.3.255 eq 443
   deny ip 142.232.197.0 0.0.0.255 host 142.232.200.2 time-range maintenance
-  permit ip 142.232.197.0 0.0.0.255 any time-range SALES-WEEKDAYS
+  deny ip 142.232.197.0 0.0.0.255 any time-range SALES-WEEKDAYS-1
+  deny ip 142.232.197.0 0.0.0.255 any time-range SALES-WEEKDAYS-2
   deny ip 142.232.197.0 0.0.0.255 any time-range WEEKEND
   permit udp 142.232.197.0 0.0.0.255 any eq domain reflect DNS-OUT
   permit tcp 142.232.197.0 0.0.0.255 gt 1023 any eq domain reflect DNS-OUT
@@ -57,8 +58,11 @@ ip access-list extended GLOBAL-IN
 
 
 ! time ranges
-time-range SALES-WEEKDAYS
-  periodic weekdays 17:30 to 07:30
+time-range SALES-WEEKDAYS-1
+  periodic weekdays 00:00 to 07:30
+!
+time-range SALES-WEEKDAYS-1
+  periodic weekdays 17:30 to 23:59
 !
 time-range WEEKEND
   periodic weekend 00:00 to 23:59

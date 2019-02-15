@@ -112,7 +112,7 @@ interface GigabitEthernet0/1
 !
 interface GigabitEthernet0/1.197
  encapsulation dot1Q 197
- ip address 192.168.197.1 255.255.255.0
+ ip address 142.232.197.1 255.255.255.0
 !
 interface GigabitEthernet0/1.198
  encapsulation dot1Q 198
@@ -160,7 +160,7 @@ ip nat inside source list 101 interface g0/0 overload
 !
 ip nat inside source static tcp 142.232.200.2 80 10.100.201.111 80
 !
-access-list 101 permit ip 142.232.197.0 0.0.3.255 any 
+access-list 101 permit ip 142.232.197.0 0.0.3.255 any
 !
 !
 !
