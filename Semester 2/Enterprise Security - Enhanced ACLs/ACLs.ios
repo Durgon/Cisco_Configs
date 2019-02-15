@@ -3,25 +3,27 @@ ip access-list extended SALES-IN
   permit tcp 142.232.197.0 0.0.0.255 gt 1023 142.232.197.0 0.0.3.255 eq 80
   permit tcp 142.232.197.0 0.0.0.255 gt 1023 142.232.197.0 0.0.3.255 eq 443
   deny ip 142.232.197.0 0.0.0.255 host 142.232.200.2 time-range maintenance
-  deny ip 142.232.197.0 0.0.0.255 any time-range SALES-WEEKDAYS
+  permit ip 142.232.197.0 0.0.0.255 any time-range SALES-WEEKDAYS
   deny ip 142.232.197.0 0.0.0.255 any time-range WEEKEND
   permit udp 142.232.197.0 0.0.0.255 any eq domain reflect DNS-OUT
   permit tcp 142.232.197.0 0.0.0.255 gt 1023 any eq domain reflect DNS-OUT
   permit tcp 142.232.197.0 0.0.0.255 gt 1023 any eq ftp reflect FTP-OUT
   permit tcp 142.232.197.0 0.0.0.255 gt 1023 any eq 80 reflect WEB-OUT
   permit tcp 142.232.197.0 0.0.0.255 gt 1023 any eq 443 reflect SWEB-OUT
+  permit udp any eq bootpc any eq bootps
   permit icmp 142.232.197.0 0.0.0.255 any echo
 
-ip access-list extended SALES-OUT
 
 ip access-list extended FINANCE-IN
   permit tcp 142.232.198.0 0.0.0.255 gt 1023 142.232.197.0 0.0.3.255 eq ftp
   permit tcp 142.232.198.0 0.0.0.255 gt 1023 host 142.232.200.2 eq ftp reflect FIN-WWW
   deny ip 142.232.198.0 0.0.0.255 host 142.232.200.2 time-range maintenance
-  deny ip 142.232.198.0 0.0.0.255 any time-range FINANCE
+  deny ip 142.232.198.0 0.0.0.255 any time-range FIN-1
+  deny ip 142.232.198.0 0.0.0.255 any time-range FIN-2
   permit tcp 142.232.198.0 0.0.0.255 gt 1023 any eq ftp reflect FTP-OUT
+  permit udp any eq bootpc any eq bootps
   permit icmp 142.232.198.0 0.0.0.255 any echo
-ip access-list extended FINANCE-OUT
+
 
 ip access-list extended IT-IN
   permit tcp 142.232.199.0 0.0.0.255 gt 1023 any eq ftp reflect FTP-OUT
@@ -29,15 +31,16 @@ ip access-list extended IT-IN
   permit tcp 142.232.199.0 0.0.0.255 gt 1023 any eq 443 reflect SWEB-OUT
   permit udp 142.232.199.0 0.0.0.255 any eq domain reflect DNS-OUT
   permit tcp 142.232.199.0 0.0.0.255 gt 1023 any eq domain reflect DNS-OUT
+  permit udp any eq bootpc any eq bootps
   permit icmp 142.232.199.0 0.0.0.255 any echo
-ip access-list extended IT-OUT
+
 
 ip access-list extended DMZ-IN
   evaluate FIN-WWW
   permit icmp host 142.232.200.2 142.232.197.0 0.0.2.255 echo-reply
   permit tcp host 142.232.200.2 eq tfp 142.232.197.0 0.0.2.255 established
   permit tcp host 142.232.200.2 eq 80 any established
-ip access-list extended DMZ-OUT
+
 
 ip access-list extended GLOBAL-IN
   evaluate DNS-OUT
@@ -45,7 +48,11 @@ ip access-list extended GLOBAL-IN
   evaluate WEB-OUT
   evaluate SWEB-OUT
   permit eigrp any any
-ip access-list extended GLOBAL-OUT
+  permit tcp any gt 1023 host 10.100.201.111 eq 80
+
+
+
+
 
 
 
@@ -56,8 +63,11 @@ time-range SALES-WEEKDAYS
 time-range WEEKEND
   periodic weekend 00:00 to 23:59
 !
-time-range FINANCE
-  periodic weekdays 20:00 to 06:00
+time-range FIN-1
+  periodic weekdays 00:00 to 06:00
+!
+time-range FIN-2
+  periodic weekdays 20:00 to 23:59
 !
 time-range MAINTENANCE
   periodic Sunday 06:00 to 07:00

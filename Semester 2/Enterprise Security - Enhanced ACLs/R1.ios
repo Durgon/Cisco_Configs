@@ -30,14 +30,17 @@ no ip domain lookup
 ip dhcp pool VLAN197
  network 142.232.197.0 255.255.255.0
  default-router 142.232.197.1
+ dns-server 10.100.200.1
 !
 ip dhcp pool VLAN198
  network 142.232.198.0 255.255.255.0
  default-router 142.232.198.1
+ dns-server 10.100.200.1
 !
 ip dhcp pool VLAN199
  network 142.232.199.0 255.255.255.0
  default-router 142.232.199.1
+ dns-server 10.100.200.1
 !
 !
 !
@@ -157,7 +160,7 @@ ip nat inside source list 101 interface g0/0 overload
 !
 ip nat inside source static tcp 142.232.200.2 80 10.100.201.111 80
 !
-access-list 101 permit ip 142.232.197.0 0.0.4.255
+access-list 101 permit ip 142.232.197.0 0.0.3.255 any 
 !
 !
 !
