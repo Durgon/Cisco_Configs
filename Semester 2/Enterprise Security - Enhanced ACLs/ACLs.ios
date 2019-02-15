@@ -2,7 +2,7 @@ ip access-list extended SALES-IN
   permit tcp 142.232.197.0 0.0.0.255 gt 1023 142.232.197.0 0.0.3.255 eq ftp
   permit tcp 142.232.197.0 0.0.0.255 gt 1023 142.232.197.0 0.0.3.255 eq 80
   permit tcp 142.232.197.0 0.0.0.255 gt 1023 142.232.197.0 0.0.3.255 eq 443
-  deny ip 142.232.197.0 0.0.0.255 host 142.232.200.2 time-range maintenance
+  deny ip 142.232.197.0 0.0.0.255 host 142.232.200.2 time-range MAINTENANCE
   deny ip 142.232.197.0 0.0.0.255 any time-range SALES-WEEKDAYS-1
   deny ip 142.232.197.0 0.0.0.255 any time-range SALES-WEEKDAYS-2
   deny ip 142.232.197.0 0.0.0.255 any time-range WEEKEND
@@ -18,7 +18,7 @@ ip access-list extended SALES-IN
 ip access-list extended FINANCE-IN
   permit tcp 142.232.198.0 0.0.0.255 gt 1023 142.232.197.0 0.0.3.255 eq ftp
   permit tcp 142.232.198.0 0.0.0.255 gt 1023 host 142.232.200.2 eq ftp reflect FIN-WWW
-  deny ip 142.232.198.0 0.0.0.255 host 142.232.200.2 time-range maintenance
+  deny ip 142.232.198.0 0.0.0.255 host 142.232.200.2 time-range MAINTENANCE
   deny ip 142.232.198.0 0.0.0.255 any time-range FIN-1
   deny ip 142.232.198.0 0.0.0.255 any time-range FIN-2
   permit tcp 142.232.198.0 0.0.0.255 gt 1023 any eq ftp reflect FTP-OUT
@@ -39,7 +39,7 @@ ip access-list extended IT-IN
 ip access-list extended DMZ-IN
   evaluate FIN-WWW
   permit icmp host 142.232.200.2 142.232.197.0 0.0.2.255 echo-reply
-  permit tcp host 142.232.200.2 eq tfp 142.232.197.0 0.0.2.255 established
+  permit tcp host 142.232.200.2 eq ftp 142.232.197.0 0.0.2.255 established
   permit tcp host 142.232.200.2 eq 80 any established
 
 
