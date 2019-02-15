@@ -54,11 +54,14 @@ vlan internal allocation policy ascending
 !
 vlan 5,10,15,20
 !
+vlan 100
+ name Management
+!
 vlan 666
- name vlan666
+ name BlackHole
 !
 vlan 999
- name vlan999
+ name Native
 !
 !
 !
@@ -74,8 +77,12 @@ interface Port-channel3
  switchport mode trunk
 !
 interface FastEthernet0/1
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/2
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/3
  switchport trunk encapsulation dot1q
@@ -102,44 +109,73 @@ interface FastEthernet0/6
  channel-group 3 mode on
 !
 interface FastEthernet0/7
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/8
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/9
+ switchport access vlan 15
 !
 interface FastEthernet0/10
+ switchport access vlan 15
 !
 interface FastEthernet0/11
+ switchport access vlan 15
 !
 interface FastEthernet0/12
+ switchport access vlan 15
 !
 interface FastEthernet0/13
+ switchport access vlan 15
+ spanning-tree portfast
 !
 interface FastEthernet0/14
+ switchport access vlan 20
+ spanning-tree portfast
 !
 interface FastEthernet0/15
+ switchport access vlan 20
 !
 interface FastEthernet0/16
+ switchport access vlan 20
 !
 interface FastEthernet0/17
+ switchport access vlan 20
 !
 interface FastEthernet0/18
+ switchport access vlan 20
 !
 interface FastEthernet0/19
+ switchport access vlan 20
 !
 interface FastEthernet0/20
+ switchport access vlan 20
 !
 interface FastEthernet0/21
+ switchport access vlan 20
 !
 interface FastEthernet0/22
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/23
+ switchport access vlan 666
+ shutdown
 !
 interface FastEthernet0/24
+ switchport access vlan 666
+ shutdown
 !
 interface GigabitEthernet0/1
+ switchport access vlan 666
+ shutdown
 !
 interface GigabitEthernet0/2
+ switchport access vlan 666
+ shutdown
 !
 interface Vlan1
  no ip address

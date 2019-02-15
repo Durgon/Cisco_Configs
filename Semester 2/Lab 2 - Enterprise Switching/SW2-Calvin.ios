@@ -302,7 +302,9 @@ interface Vlan5
  ip address 172.16.5.253 255.255.255.0
  ip helper-address 20.18.34.10
  standby version 2
+ standby 0 timers 1 3
  standby 5 ip 172.16.5.1
+ standby 5 timers 1 3
  standby 5 authentication md5 key-string cisco
  standby 5 track 1 shutdown
  standby 56 ipv6 autoconfig

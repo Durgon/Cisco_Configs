@@ -2,8 +2,11 @@ ip access-list extended SALES-IN
   permit tcp 142.232.197.0 0.0.0.255 gt 1023 142.232.197.0 0.0.3.255 eq ftp
   permit tcp 142.232.197.0 0.0.0.255 gt 1023 142.232.197.0 0.0.3.255 eq 80
   permit tcp 142.232.197.0 0.0.0.255 gt 1023 142.232.197.0 0.0.3.255 eq 443
+  deny ip 142.232.197.0 0.0.0.255 host 142.232.200.2 time-range maintenance
   deny ip 142.232.197.0 0.0.0.255 any time-range SALES-WEEKDAYS
   deny ip 142.232.197.0 0.0.0.255 any time-range WEEKEND
+  permit udp 142.232.197.0 0.0.0.255 any eq domain reflect DNS-OUT
+  permit tcp 142.232.197.0 0.0.0.255 gt 1023 any eq domain reflect DNS-OUT
   permit tcp 142.232.197.0 0.0.0.255 gt 1023 any eq ftp reflect FTP-OUT
   permit tcp 142.232.197.0 0.0.0.255 gt 1023 any eq 80 reflect WEB-OUT
   permit tcp 142.232.197.0 0.0.0.255 gt 1023 any eq 443 reflect SWEB-OUT
@@ -14,6 +17,7 @@ ip access-list extended SALES-OUT
 ip access-list extended FINANCE-IN
   permit tcp 142.232.198.0 0.0.0.255 gt 1023 142.232.197.0 0.0.3.255 eq ftp
   permit tcp 142.232.198.0 0.0.0.255 gt 1023 host 142.232.200.2 eq ftp reflect FIN-WWW
+  deny ip 142.232.198.0 0.0.0.255 host 142.232.200.2 time-range maintenance
   deny ip 142.232.198.0 0.0.0.255 any time-range FINANCE
   permit tcp 142.232.198.0 0.0.0.255 gt 1023 any eq ftp reflect FTP-OUT
   permit icmp 142.232.198.0 0.0.0.255 any echo
@@ -23,16 +27,20 @@ ip access-list extended IT-IN
   permit tcp 142.232.199.0 0.0.0.255 gt 1023 any eq ftp reflect FTP-OUT
   permit tcp 142.232.199.0 0.0.0.255 gt 1023 any eq 80 reflect WEB-OUT
   permit tcp 142.232.199.0 0.0.0.255 gt 1023 any eq 443 reflect SWEB-OUT
+  permit udp 142.232.199.0 0.0.0.255 any eq domain reflect DNS-OUT
+  permit tcp 142.232.199.0 0.0.0.255 gt 1023 any eq domain reflect DNS-OUT
   permit icmp 142.232.199.0 0.0.0.255 any echo
 ip access-list extended IT-OUT
 
 ip access-list extended DMZ-IN
   evaluate FIN-WWW
   permit icmp host 142.232.200.2 142.232.197.0 0.0.2.255 echo-reply
+  permit tcp host 142.232.200.2 eq tfp 142.232.197.0 0.0.2.255 established
   permit tcp host 142.232.200.2 eq 80 any established
 ip access-list extended DMZ-OUT
 
 ip access-list extended GLOBAL-IN
+  evaluate DNS-OUT
   evaluate FTP-OUT
   evaluate WEB-OUT
   evaluate SWEB-OUT
@@ -50,6 +58,9 @@ time-range WEEKEND
 !
 time-range FINANCE
   periodic weekdays 20:00 to 06:00
+!
+time-range MAINTENANCE
+  periodic Sunday 06:00 to 07:00
 
 !NAT ACL
 permit ip 142.232.197.0 0.0.0.255 any time-range SALES
