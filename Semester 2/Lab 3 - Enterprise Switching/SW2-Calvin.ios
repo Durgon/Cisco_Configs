@@ -1,0 +1,478 @@
+hostname SW2-Calvin
+!
+!
+vrf definition Mgmt-vrf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+!
+no aaa new-model
+switch 1 provision ws-c3650-24ps
+!
+!
+!
+!
+ip routing
+!
+!
+!
+!
+!
+!
+ipv6 unicast-routing
+ipv6 dhcp pool VLAN15
+ dns-server 2018:BA15:3410::1
+ domain-name switch.lab
+!
+!
+!
+!
+!
+!
+!
+!
+!
+crypto pki trustpoint TP-self-signed-3961223456
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-3961223456
+ revocation-check none
+ rsakeypair TP-self-signed-3961223456
+!
+!
+crypto pki certificate chain TP-self-signed-3961223456
+ certificate self-signed 01
+  30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 05050030
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274
+  69666963 6174652D 33393631 32323334 3536301E 170D3139 30323133 32303032
+  30365A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D33 39363132
+  32333435 36308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
+  0A028201 01008D49 18590B0D 082C773D F0C2DDC5 971FD642 0E0CF069 760C685E
+  78376120 60D7EBEA BB5C3C95 D0F8FAD7 3E7E6150 5F94C86D 16C942AE 4B1FFE6A
+  30DE8DB4 79C0C5EE D3AE8D1D C866EC9A BD73C6A9 172FF5C4 B2911A3F 42644019
+  D8EDFA1C 874C36AD 4F897FFC 4AE30C1A 5EFE222D B6073C5D BB595F4E 5A692606
+  D463CFEA DFF96446 BA7AF420 F8B15F69 C46DD565 1CDA61D2 7A2053E3 078CAFEC
+  EB0FD477 A3938ACB 9E2C48B8 88193F79 130FD741 B6062DAA 5C083A10 2D08AA13
+  865CFF44 90002128 D128ED27 FFAFA0BF 791AAFD5 FB14FBCB 77D851F8 C2E43850
+  70AF1203 6680014E 6347FF38 FA0FB6C1 12C94BD1 E6F678A1 E8199EAB 3BD63E62
+  0606D36A A82B0203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF
+  301F0603 551D2304 18301680 14ADB4AA C8A34441 807A07AC 35DCB83E 6787CD41
+  68301D06 03551D0E 04160414 ADB4AAC8 A3444180 7A07AC35 DCB83E67 87CD4168
+  300D0609 2A864886 F70D0101 05050003 82010100 347CE887 A13A49C3 FBA99816
+  3D514011 2D4D2A28 70207DB8 325195CF F9C85593 98FBA2D2 5E9C7C76 D2585934
+  7D9BBB08 EDD0356F F9A89DFE 50593F52 B920EE0A 648D60B7 68FC1883 C48479CE
+  85F95E92 49391BB0 053EFAD7 F7794C7B 7E162F05 FD7BF269 5494E413 AC8CA049
+  AEEF503B F4DCF1BE EB09A692 F2BAF3B0 5029FAC6 852A98B5 567D1368 0E0D8551
+  988BA3F7 FD47B42A 9A011796 67E27FC8 0D9372F6 E09D6C0F 9DAF3C5E 4B6C1B22
+  987C20F0 0CAC333F A6D59D0C 4F73CA63 BB676ADA 56BD000C 5C8B8FBF E9A38CEA
+  2F85E682 DA60311C B7EE8811 3C0F09C7 52609CE6 2BEC0B17 1EC5CB6D 2AF88F02
+  AC085F93 BA338F3A DC207422 B0C3AD02 91E50ACF
+        quit
+!
+license boot level ipservicesk9
+diagnostic bootup level minimal
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+spanning-tree vlan 5,10 priority 28672
+spanning-tree vlan 15,20 priority 24576
+!
+!
+!
+redundancy
+ mode sso
+!
+!
+track 1 interface GigabitEthernet1/0/1 ip routing
+!
+!
+class-map match-any system-cpp-police-topology-control
+  description Topology control
+class-map match-any system-cpp-police-sw-forward
+  description Sw forwarding, SGT Cache Full, LOGGING
+class-map match-any system-cpp-default
+  description DHCP snooping, show forward and rest of traffic
+class-map match-any system-cpp-police-sys-data
+  description Learning cache ovfl, Crypto Control, Exception, EGR Exception, NFL SAMPLED DATA, Gold Pkt, RPF Failed
+class-map match-any system-cpp-police-punt-webauth
+  description Punt Webauth
+class-map match-any system-cpp-police-forus
+  description Forus Address resolution and Forus traffic
+class-map match-any system-cpp-police-multicast-end-station
+  description MCAST END STATION
+class-map match-any system-cpp-police-multicast
+  description Transit Traffic and MCAST Data
+class-map match-any system-cpp-police-l2-control
+  description L2 control
+class-map match-any system-cpp-police-dot1x-auth
+  description DOT1X Auth
+class-map match-any system-cpp-police-data
+  description ICMP_GEN and BROADCAST
+class-map match-any system-cpp-police-control-low-priority
+  description ICMP redirect and general punt
+class-map match-any system-cpp-police-wireless-priority1
+  description Wireless priority 1
+class-map match-any system-cpp-police-wireless-priority2
+  description description Routing control
+class-map match-any system-cpp-police-wireless-priority3-4-5
+  description Wireless priority 3,4 and 5
+class-map match-any non-client-nrt-class
+class-map match-any system-cpp-police-routing-control
+  description Routing control
+class-map match-any system-cpp-police-protocol-snooping
+  description Protocol snooping
+!
+policy-map port_child_policy
+ class non-client-nrt-class
+  bandwidth remaining ratio 10
+policy-map system-cpp-policy
+ class system-cpp-police-data
+  police rate 200 pps
+ class system-cpp-police-sys-data
+  police rate 100 pps
+ class system-cpp-police-sw-forward
+  police rate 1000 pps
+ class system-cpp-police-multicast
+  police rate 500 pps
+ class system-cpp-police-multicast-end-station
+  police rate 2000 pps
+ class system-cpp-police-punt-webauth
+ class system-cpp-police-l2-control
+ class system-cpp-police-routing-control
+  police rate 1800 pps
+ class system-cpp-police-control-low-priority
+ class system-cpp-police-wireless-priority1
+ class system-cpp-police-wireless-priority2
+ class system-cpp-police-wireless-priority3-4-5
+ class system-cpp-police-topology-control
+ class system-cpp-police-dot1x-auth
+ class system-cpp-police-protocol-snooping
+ class system-cpp-police-forus
+ class system-cpp-default
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Port-channel1
+ no switchport
+ ip address 10.10.10.10 255.255.255.252
+ ipv6 enable
+!
+interface Port-channel2
+ switchport trunk native vlan 999
+ switchport mode trunk
+!
+interface Port-channel3
+ switchport trunk native vlan 999
+ switchport mode trunk
+!
+interface GigabitEthernet0/0
+ vrf forwarding Mgmt-vrf
+ no ip address
+ negotiation auto
+!
+interface GigabitEthernet1/0/1
+ no switchport
+ ip address 10.10.10.6 255.255.255.252
+ ipv6 address 10:10:10::6/126
+!
+interface GigabitEthernet1/0/2
+!
+interface GigabitEthernet1/0/3
+ switchport trunk native vlan 999
+ switchport mode trunk
+ channel-group 2 mode on
+!
+interface GigabitEthernet1/0/4
+ switchport trunk native vlan 999
+ switchport mode trunk
+ channel-group 2 mode on
+!
+interface GigabitEthernet1/0/5
+ switchport trunk native vlan 999
+ switchport mode trunk
+ channel-group 3 mode on
+!
+interface GigabitEthernet1/0/6
+ switchport trunk native vlan 999
+ switchport mode trunk
+ channel-group 3 mode on
+!
+interface GigabitEthernet1/0/7
+ no switchport
+ no ip address
+ channel-group 1 mode on
+!
+interface GigabitEthernet1/0/8
+ no switchport
+ no ip address
+ channel-group 1 mode on
+!
+interface GigabitEthernet1/0/9
+ switchport access vlan 666
+ shutdown
+!
+interface GigabitEthernet1/0/10
+ switchport access vlan 666
+ shutdown
+!
+interface GigabitEthernet1/0/11
+ switchport access vlan 666
+ shutdown
+!
+interface GigabitEthernet1/0/12
+ switchport access vlan 666
+ shutdown
+!
+interface GigabitEthernet1/0/13
+ switchport access vlan 666
+ shutdown
+!
+interface GigabitEthernet1/0/14
+ switchport access vlan 666
+ shutdown
+!
+interface GigabitEthernet1/0/15
+ switchport access vlan 666
+ shutdown
+!
+interface GigabitEthernet1/0/16
+ switchport access vlan 666
+ shutdown
+!
+interface GigabitEthernet1/0/17
+ switchport access vlan 666
+ shutdown
+!
+interface GigabitEthernet1/0/18
+ switchport access vlan 666
+ shutdown
+!
+interface GigabitEthernet1/0/19
+ switchport access vlan 666
+ shutdown
+!
+interface GigabitEthernet1/0/20
+ switchport access vlan 666
+ shutdown
+!
+interface GigabitEthernet1/0/21
+ switchport access vlan 666
+ shutdown
+!
+interface GigabitEthernet1/0/22
+ switchport access vlan 666
+ shutdown
+!
+interface GigabitEthernet1/0/23
+ switchport access vlan 666
+ shutdown
+!
+interface GigabitEthernet1/0/24
+ switchport access vlan 666
+ shutdown
+!
+interface GigabitEthernet1/1/1
+!
+interface GigabitEthernet1/1/2
+!
+interface GigabitEthernet1/1/3
+!
+interface GigabitEthernet1/1/4
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan5
+ ip address 172.16.5.253 255.255.255.0
+ ip helper-address 20.18.34.10
+ standby version 2
+ standby 0 timers 1 3
+ standby 5 ip 172.16.5.1
+ standby 5 timers 1 3
+ standby 5 authentication md5 key-string cisco
+ standby 5 track 1 shutdown
+ standby 56 ipv6 autoconfig
+ standby 56 authentication md5 key-string cisco
+ ipv6 address 2018:BA15:3410:5::2/64
+!
+interface Vlan10
+ ip address 172.16.10.253 255.255.255.0
+ ip helper-address 20.18.34.10
+ standby version 2
+ standby 10 ip 172.16.10.1
+ standby 10 authentication md5 key-string cisco
+ standby 106 ipv6 autoconfig
+ standby 106 authentication md5 key-string cisco
+ ipv6 address 2018:BA15:3410:B306:10::2/80
+ ipv6 nd other-config-flag
+ ipv6 dhcp relay destination 10:10:10::1
+!
+interface Vlan15
+ ip address 172.16.15.254 255.255.255.0
+ ip helper-address 20.18.34.10
+ standby version 2
+ standby 15 ip 172.16.15.1
+ standby 15 priority 254
+ standby 15 preempt
+ standby 15 authentication md5 key-string cisco
+ standby 156 ipv6 autoconfig
+ standby 156 priority 254
+ standby 156 authentication md5 key-string cisco
+ ipv6 address 2018:BA15:3410:15::1/64
+ ipv6 enable
+ ipv6 dhcp server VLAN15
+!
+interface Vlan20
+ ip address 172.16.20.254 255.255.255.0
+ ip helper-address 20.18.34.10
+ standby version 2
+ standby 20 ip 172.16.20.1
+ standby 20 priority 254
+ standby 20 preempt
+ standby 20 authentication md5 key-string cisco
+ standby 206 ipv6 autoconfig
+ standby 206 priority 254
+ standby 206 authentication md5 key-string cisco
+ ipv6 address 2018:BA15:3410:B306:20::1/80
+ ipv6 enable
+ ipv6 dhcp relay destination 10:10:10::5
+!
+interface Vlan106
+ no ip address
+!
+!
+router eigrp DUAL_STACK
+ !
+ address-family ipv4 unicast autonomous-system 4
+  !
+  af-interface Vlan5
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Vlan10
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Vlan15
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Vlan20
+   passive-interface
+  exit-af-interface
+  !
+  topology base
+  exit-af-topology
+  network 10.0.0.0
+  network 172.16.0.0
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 6
+  !
+  topology base
+  exit-af-topology
+  eigrp router-id 10.10.10.6
+ exit-address-family
+!
+ip forward-protocol nd
+ip http server
+ip http authentication local
+ip http secure-server
+!
+!
+ip access-list extended AutoQos-4.0-wlan-Acl-Bulk-Data
+ permit tcp any any eq 22
+ permit tcp any any eq 465
+ permit tcp any any eq 143
+ permit tcp any any eq 993
+ permit tcp any any eq 995
+ permit tcp any any eq 1914
+ permit tcp any any eq ftp
+ permit tcp any any eq ftp-data
+ permit tcp any any eq smtp
+ permit tcp any any eq pop3
+ip access-list extended AutoQos-4.0-wlan-Acl-MultiEnhanced-Conf
+ permit udp any any range 16384 32767
+ permit tcp any any range 50000 59999
+ip access-list extended AutoQos-4.0-wlan-Acl-Scavanger
+ permit tcp any any range 2300 2400
+ permit udp any any range 2300 2400
+ permit tcp any any range 6881 6999
+ permit tcp any any range 28800 29100
+ permit tcp any any eq 1214
+ permit udp any any eq 1214
+ permit tcp any any eq 3689
+ permit udp any any eq 3689
+ permit tcp any any eq 11999
+ip access-list extended AutoQos-4.0-wlan-Acl-Signaling
+ permit tcp any any range 2000 2002
+ permit tcp any any range 5060 5061
+ permit udp any any range 5060 5061
+ip access-list extended AutoQos-4.0-wlan-Acl-Transactional-Data
+ permit tcp any any eq 443
+ permit tcp any any eq 1521
+ permit udp any any eq 1521
+ permit tcp any any eq 1526
+ permit udp any any eq 1526
+ permit tcp any any eq 1575
+ permit udp any any eq 1575
+ permit tcp any any eq 1630
+ permit udp any any eq 1630
+ permit tcp any any eq 1527
+ permit tcp any any eq 6200
+ permit tcp any any eq 3389
+ permit tcp any any eq 5985
+ permit tcp any any eq 8080
+!
+!
+!
+!
+control-plane
+ service-policy input system-cpp-policy
+!
+!
+no vstack
+!
+line con 0
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ login
+line vty 5 15
+ login
+!
+!
+wsma agent exec
+!
+wsma agent config
+!
+wsma agent filesys
+!
+wsma agent notify
+!
+!
+ap dot11 airtime-fairness policy-name Default 0
+ap group default-group
+ap hyperlocation ble-beacon 0
+ap hyperlocation ble-beacon 1
+ap hyperlocation ble-beacon 2
+ap hyperlocation ble-beacon 3
+ap hyperlocation ble-beacon 4
+end

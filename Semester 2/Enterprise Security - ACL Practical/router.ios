@@ -1,0 +1,144 @@
+! Last configuration change at 03:57:16 UTC Tue Mar 5 2019
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+!
+hostname R1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+no ip icmp rate-limit unreachable
+!
+!
+!
+ip dhcp excluded-address 192.168.1.1
+ip dhcp excluded-address 192.168.1.129
+!
+ip dhcp pool SALES
+ network 192.168.1.0 255.255.255.128
+ default-router 192.168.1.1
+ dns-server 1.1.1.1 1.0.0.1
+!
+ip dhcp pool HR
+ network 192.168.1.128 255.255.255.128
+ default-router 192.168.1.129
+ dns-server 1.1.1.1 1.0.0.1
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip tcp synwait-time 5
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no ip address
+ shutdown
+ duplex auto
+!
+interface GigabitEthernet0/0
+ ip address 10.100.201.10 255.255.254.0
+ ip nat outside
+ media-type gbic
+ speed 1000
+ duplex full
+ negotiation auto
+!
+interface GigabitEthernet1/0
+ no ip address
+ negotiation auto
+!
+interface GigabitEthernet1/0.2
+ encapsulation dot1Q 2
+ ip address 192.168.1.1 255.255.255.128
+ ip access-group SALES in
+ ip nat inside
+!
+interface GigabitEthernet1/0.3
+ encapsulation dot1Q 3
+ ip address 192.168.1.129 255.255.255.128
+ ip access-group HR in
+ ip nat outside
+!
+interface GigabitEthernet2/0
+ no ip address
+ shutdown
+ negotiation auto
+!
+!
+router eigrp 1
+ network 192.168.1.0
+ passive-interface GigabitEthernet1/0.2
+ passive-interface GigabitEthernet1/0.3
+!
+ip nat inside source list NAT interface GigabitEthernet0/0 overload
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 10.100.200.2
+!
+ip access-list extended HR
+ deny   tcp 192.168.1.0 0.0.0.255 gt 1023 66.211.0.0 0.0.255.255 eq 443
+ deny   tcp 192.168.1.0 0.0.0.255 gt 1023 144.2.0.0 0.0.255.255 eq 443
+ permit ip any any
+ip access-list extended NAT
+ permit ip 192.168.1.0 0.0.0.255 any
+ip access-list extended SALES
+ deny   tcp 192.168.1.0 0.0.0.255 gt 1023 157.240.0.0 0.0.255.255 eq 443
+ permit ip any any
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+ stopbits 1
+line vty 0 4
+ login
+!
+time-range SALES
+ periodic daily 0:00 to 7:30
+ periodic daily 18:00 to 11:59
+!
+!
+end

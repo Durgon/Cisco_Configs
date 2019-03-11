@@ -1,0 +1,14 @@
+! Sales ACL
+ip access-list extended SALES
+  deny tcp 192.168.1.0 0.0.0.255 gt 1023 157.240.0.0 0.0.255.255 eq 443
+  permit ip any any
+
+! HR ACL
+ip access-list extended HR
+  deny tcp 192.168.1.0 0.0.0.255 gt 1023 66.211.0.0 0.0.255.255 eq 443
+  deny tcp 192.168.1.0 0.0.0.255 gt 1023 144.2.0.0 0.0.255.255 eq 443
+  permit ip any any
+! Sales time range
+time-range sales
+  periodic daily 00:00 to 07:30
+  periodic daily 18:00 to 11:59
