@@ -1,0 +1,21 @@
+! Define and start the IP SLA probe
+!
+ip sla 53
+ icmp-echo 20.18.34.10
+ threshold 400
+ timeout 500
+ frequency 3
+ip sla schedule 53 life forever start-time now
+!
+! Define an object that tracks the SLA probe
+!
+track 13 ip sla 53 reachability
+!
+! reverse output of track 13
+!
+track 14 list boolean and
+ object 13 not
+!
+! Insert a static route if the second object is UP (confusing, I know)
+!
+ip route 0.0.0.0 0.0.0.0 Null0 track 14
