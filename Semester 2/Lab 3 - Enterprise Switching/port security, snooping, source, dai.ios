@@ -17,10 +17,11 @@ ip arp inspection vlan 5,10,15,20
   ip dhcp snooping trust
 !on the host interfaces
   ip dhcp snooping limit rate 25
-  ip verify source port-security
+  ip verify source
 
 !DAI
 ip arp inspection vlan 5,10,15,20
+ip arp inspection validate src-mac dst-mac
 !apply DAI trusting on portchannels
 ip arp inspection trust
 !apply ARP packet rate limiting on host interface

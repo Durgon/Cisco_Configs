@@ -1,4 +1,4 @@
-Current configuration : 3810 bytes
+Current configuration : 9483 bytes
 !
 version 12.2
 no service pad
@@ -15,23 +15,49 @@ boot-end-marker
 no aaa new-model
 system mtu routing 1500
 ip subnet-zero
-ip routing
 !
 !
-ip dhcp snooping vlan 5
+ip dhcp snooping vlan 5,10,15,20
 ip dhcp snooping information option allow-untrusted
-no ip dhcp snooping information option
 ip dhcp snooping
+ip arp inspection vlan 5,10,15,20
+ip arp inspection validate src-mac dst-mac
+!
+!
+crypto pki trustpoint TP-self-signed-230644224
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-230644224
+ revocation-check none
+ rsakeypair TP-self-signed-230644224
+!
+!
+crypto pki certificate chain TP-self-signed-230644224
+ certificate self-signed 01
+  3082023D 308201A6 A0030201 02020101 300D0609 2A864886 F70D0101 04050030
+  30312E30 2C060355 04031325 494F532D 53656C66 2D536967 6E65642D 43657274
+  69666963 6174652D 32333036 34343232 34301E17 0D393330 33303130 30303035
+  305A170D 32303031 30313030 30303030 5A303031 2E302C06 03550403 1325494F
+  532D5365 6C662D53 69676E65 642D4365 72746966 69636174 652D3233 30363434
+  32323430 819F300D 06092A86 4886F70D 01010105 0003818D 00308189 02818100
+  A4AC1C70 0E9AC234 F0156C0D 4E1BCFAB D7AEDBEE 43725912 7F7FB75F B7B6C94B
+  E4516BD0 8D45AB8B 95FDD32F D03EC7ED 7E2C2FED 014967E3 301404C2 FE8FA7C8
+  3B192C35 6D999584 DB0B45BA FA3A82A6 3CA3E7A8 BE68F562 FF0F919F 13B4DCBC
+  41EA78D5 B56F0E0F ED37AA2C D61ECC98 963DBDD1 26F087AB 0E0B36F1 656E578D
+  02030100 01A36730 65300F06 03551D13 0101FF04 05300301 01FF3012 0603551D
+  11040B30 09820753 77697463 682E301F 0603551D 23041830 16801408 03764590
+  980BC222 7070FD18 01A8B17E FC55EC30 1D060355 1D0E0416 04140803 76459098
+  0BC22270 70FD1801 A8B17EFC 55EC300D 06092A86 4886F70D 01010405 00038181
+  00A48447 B56598DF 96277391 79E9A6C3 B4D5ABC3 8D5A7CE2 C3CC3AFF E2C3E3FC
+  2E423E1A 338CAAF2 855745FD 464161F2 2F405839 97DA12A3 20C87FBE 2208DEBC
+  0C6A8B0C B3283298 2926D34F 4512A452 A2E83108 9F633FFF 78805718 5356FB93
+  B0725B59 19E359F4 F9D3D118 084B1057 EAF914BB 5380A1B6 6A4DBA98 FC566844 8B
+  quit
 !
 !
 !
 !
 !
-!
-!
-!
-!
-spanning-tree mode rapid-pvst
+spanning-tree mode pvst
 spanning-tree extend system-id
 !
 vlan internal allocation policy ascending
@@ -42,11 +68,13 @@ vlan internal allocation policy ascending
 interface Port-channel2
  switchport trunk encapsulation dot1q
  switchport mode trunk
+ ip arp inspection trust
  ip dhcp snooping trust
 !
 interface Port-channel3
  switchport trunk encapsulation dot1q
  switchport mode trunk
+ ip arp inspection trust
  ip dhcp snooping trust
 !
 interface FastEthernet0/1
@@ -60,24 +88,28 @@ interface FastEthernet0/2
 interface FastEthernet0/3
  switchport trunk encapsulation dot1q
  switchport mode trunk
+ ip arp inspection trust
  channel-group 2 mode on
  ip dhcp snooping trust
 !
 interface FastEthernet0/4
  switchport trunk encapsulation dot1q
  switchport mode trunk
+ ip arp inspection trust
  channel-group 2 mode on
  ip dhcp snooping trust
 !
 interface FastEthernet0/5
  switchport trunk encapsulation dot1q
  switchport mode trunk
+ ip arp inspection trust
  channel-group 3 mode on
  ip dhcp snooping trust
 !
 interface FastEthernet0/6
  switchport trunk encapsulation dot1q
  switchport mode trunk
+ ip arp inspection trust
  channel-group 3 mode on
  ip dhcp snooping trust
 !
@@ -94,86 +126,196 @@ interface FastEthernet0/8
 interface FastEthernet0/9
  switchport access vlan 5
  switchport mode access
+ switchport port-security maximum 2
+ switchport port-security
+ switchport port-security aging time 120
+ switchport port-security aging type inactivity
+ switchport port-security mac-address sticky
  spanning-tree portfast
+ ip verify source
+ ip dhcp snooping limit rate 25
 !
 interface FastEthernet0/10
  switchport access vlan 5
  switchport mode access
+ switchport port-security maximum 2
+ switchport port-security
+ switchport port-security aging time 120
+ switchport port-security aging type inactivity
+ switchport port-security mac-address sticky
  spanning-tree portfast
+ ip verify source
+ ip dhcp snooping limit rate 25
 !
 interface FastEthernet0/11
  switchport access vlan 5
  switchport mode access
+ switchport port-security maximum 2
+ switchport port-security
+ switchport port-security aging time 120
+ switchport port-security aging type inactivity
+ switchport port-security mac-address sticky
  spanning-tree portfast
+ ip verify source
+ ip dhcp snooping limit rate 25
 !
 interface FastEthernet0/12
  switchport access vlan 5
  switchport mode access
+ switchport port-security maximum 2
+ switchport port-security
+ switchport port-security aging time 120
+ switchport port-security aging type inactivity
+ switchport port-security mac-address sticky
  spanning-tree portfast
+ ip verify source
+ ip dhcp snooping limit rate 25
 !
 interface FastEthernet0/13
  switchport access vlan 10
  switchport mode access
+ switchport port-security maximum 2
+ switchport port-security
+ switchport port-security aging time 120
+ switchport port-security aging type inactivity
+ switchport port-security mac-address sticky
  spanning-tree portfast
+ ip verify source
+ ip dhcp snooping limit rate 25
 !
 interface FastEthernet0/14
  switchport access vlan 5
  switchport mode access
+ switchport port-security maximum 2
+ switchport port-security
+ switchport port-security aging time 120
+ switchport port-security aging type inactivity
+ switchport port-security mac-address sticky
  spanning-tree portfast
+ ip verify source
+ ip dhcp snooping limit rate 25
 !
 interface FastEthernet0/15
  switchport access vlan 10
  switchport mode access
+ switchport port-security maximum 2
+ switchport port-security
+ switchport port-security aging time 120
+ switchport port-security aging type inactivity
+ switchport port-security mac-address sticky
  shutdown
  spanning-tree portfast
+ ip verify source
+ ip dhcp snooping limit rate 25
 !
 interface FastEthernet0/16
  switchport access vlan 10
  switchport mode access
+ switchport port-security maximum 2
+ switchport port-security
+ switchport port-security aging time 120
+ switchport port-security aging type inactivity
+ switchport port-security mac-address sticky
  shutdown
  spanning-tree portfast
+ ip verify source
+ ip dhcp snooping limit rate 25
 !
 interface FastEthernet0/17
  switchport access vlan 10
  switchport mode access
+ switchport port-security maximum 2
+ switchport port-security
+ switchport port-security aging time 120
+ switchport port-security aging type inactivity
+ switchport port-security mac-address sticky
  shutdown
  spanning-tree portfast
+ ip verify source
+ ip dhcp snooping limit rate 25
 !
 interface FastEthernet0/18
  switchport access vlan 10
  switchport mode access
+ switchport port-security maximum 2
+ switchport port-security
+ switchport port-security aging time 120
+ switchport port-security aging type inactivity
+ switchport port-security mac-address sticky
  shutdown
  spanning-tree portfast
+ ip verify source
+ ip dhcp snooping limit rate 25
 !
 interface FastEthernet0/19
  switchport access vlan 666
  switchport mode access
+ switchport port-security maximum 2
+ switchport port-security
+ switchport port-security aging time 120
+ switchport port-security aging type inactivity
+ switchport port-security mac-address sticky
  shutdown
+ ip verify source
 !
 interface FastEthernet0/20
  switchport access vlan 666
  switchport mode access
+ switchport port-security maximum 2
+ switchport port-security
+ switchport port-security aging time 120
+ switchport port-security aging type inactivity
+ switchport port-security mac-address sticky
  shutdown
+ ip verify source
 !
 interface FastEthernet0/21
  switchport access vlan 666
  switchport mode access
+ switchport port-security maximum 2
+ switchport port-security
+ switchport port-security aging time 120
+ switchport port-security aging type inactivity
+ switchport port-security mac-address sticky
  shutdown
+ ip verify source
 !
 interface FastEthernet0/22
  switchport access vlan 666
  switchport mode access
+ switchport port-security maximum 2
+ switchport port-security
+ switchport port-security aging time 120
+ switchport port-security aging type inactivity
+ switchport port-security mac-address sticky
  shutdown
+ ip verify source
 !
 interface FastEthernet0/23
- switchport access vlan 666
+ switchport access vlan 5
  switchport mode access
- shutdown
+ switchport port-security maximum 2
+ switchport port-security
+ switchport port-security aging time 120
+ switchport port-security aging type inactivity
+ switchport port-security mac-address sticky
+ switchport port-security mac-address sticky 000a.cd2a.4950
+ switchport port-security mac-address sticky 000c.29d1.add1
+ ip verify source
+ ip dhcp snooping limit rate 25
 !
 interface FastEthernet0/24
- switchport access vlan 666
+ switchport access vlan 5
  switchport mode access
- shutdown
+ switchport port-security maximum 2
+ switchport port-security
+ switchport port-security aging time 120
+ switchport port-security aging type inactivity
+ switchport port-security mac-address sticky
+ switchport port-security mac-address sticky 000c.2904.d76a
+ switchport port-security mac-address sticky 000c.2954.16fd
+ ip verify source
+ ip dhcp snooping limit rate 25
 !
 interface GigabitEthernet0/1
  switchport access vlan 666
@@ -184,10 +326,6 @@ interface GigabitEthernet0/2
  shutdown
 !
 interface Vlan1
- no ip address
- shutdown
-!
-interface Vlan5
  no ip address
 !
 ip classless
@@ -206,4 +344,7 @@ line vty 0 4
 line vty 5 15
  login
 !
+!
+monitor session 1 source interface Fa0/2
+monitor session 1 destination interface Fa0/3
 end

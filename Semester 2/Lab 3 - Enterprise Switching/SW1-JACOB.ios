@@ -1,6 +1,6 @@
-Current configuration : 13311 bytes
+Current configuration : 13857 bytes
 !
-! Last configuration change at 02:36:10 UTC Thu Feb 14 2019
+! Last configuration change at 22:17:05 UTC Fri Mar 22 2019
 !
 version 16.3
 no service pad
@@ -23,16 +23,21 @@ vrf definition Mgmt-vrf
 no aaa new-model
 switch 1 provision ws-c3650-24ps
 !
-!!
+!
+!
 !
 ip routing
 !
 !
 !
+no ip domain lookup
 !
 !
 !
+ip dhcp snooping vlan 5,10,15,20
+no ip dhcp snooping information option
 no ip dhcp snooping verify no-relay-agent-address
+ip dhcp snooping
 ipv6 unicast-routing
 ipv6 dhcp pool VLAN-5-STATELESS
  dns-server 2018:BA15:3410::1
@@ -46,20 +51,47 @@ ipv6 dhcp pool VLAN-5-STATELESS
 !
 !
 !
-crypto pki trustpoint TP-self-signed-2244595236
+crypto pki trustpoint TP-self-signed-1570802023
  enrollment selfsigned
- subject-name cn=IOS-Self-Signed-Certificate-2244595236
+ subject-name cn=IOS-Self-Signed-Certificate-1570802023
  revocation-check none
- rsakeypair TP-self-signed-2244595236
+ rsakeypair TP-self-signed-1570802023
 !
 !
+crypto pki certificate chain TP-self-signed-1570802023
+ certificate self-signed 01
+  30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 05050030
+  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274
+  69666963 6174652D 31353730 38303230 3233301E 170D3139 30333232 31383531
+  34335A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649
+  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D31 35373038
+  30323032 33308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
+  0A028201 0100C171 48468430 80629ADE 8A5421A0 0330F3B0 11EF3069 ACF77BC9
+  0DDE1E3C C06FA2E1 239D09C2 43178D09 5A159505 7EB37E31 1202054D 48D76686
+  3F57D1C0 B834CA17 E882790C 0609FAF1 7C92E1E1 AD24A219 9170E159 D055E1B1
+  6224B771 EAB4C07D 80D071B4 F9088917 B9823804 9C8269DC F6FFA0CC 96F7C4D1
+  1E63DBB3 70C4C603 790F4687 479EC701 95AB5213 4AA95746 2C018071 C4CFA109
+  80B280DF D56BA5CA 2FB033FD B7B4E4D6 93D6BC5A FBDF24B0 753CB475 5FBF3749
+  EAE9274F 8F2494F2 B7698AC5 1DB27889 87C7647B 9B27AE92 F06D714F C2E8944C
+  1D6D9B33 9D6B9BF3 D4714521 CA4A44FC 02C74254 DBEDA63F 65B95B82 0E480B1F
+  9F390BAD 493D0203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF
+  301F0603 551D2304 18301680 1470F1EF B3D502F2 0B1BE2AD 707C8EA0 588B8957
+  E1301D06 03551D0E 04160414 70F1EFB3 D502F20B 1BE2AD70 7C8EA058 8B8957E1
+  300D0609 2A864886 F70D0101 05050003 82010100 83FBB91E 43459DDA 8EC657A4
+  6331F2F5 9A3BFFBA FE387784 AC6F0CCA 8960E1F7 53E494AD 909CAF37 8AD1BF07
+  71323093 9444748F 773EAE03 04C55DFC DB1291AA 2001E18B 682B7366 640ACEF7
+  4BEE05EB 5DEC8513 83F0999E 8DC55ABE 7F5D9B9C 07C50054 660FEC2B E838A49C
+  A5A44672 304CE3D9 E796D7B4 82EB2C5F FDB23C8A 0CC2275E 74F16BCB 8B9CA889
+  E7E8DDEF 447AADB1 6CF43AAA 11FFFACA C5D1EC75 F23F0FDB A8AD7FC9 D6D6EC9E
+  0968AA01 D8E13C09 A43E2C86 D45D3D56 36E0AFEE D543B3A5 428FE33A EF92A85D
+  24226B99 AF5E0A1F E627BFA9 96176EC1 117AD3E7 BFC248F1 78AB5447 4762AEA3
+  50635286 DFF5FD7B 9C9F4581 A9ACD2B8 537DE919
+        quit
 !
 license boot level ipservicesk9
 diagnostic bootup level minimal
-!
 spanning-tree mode rapid-pvst
 spanning-tree extend system-id
-spanning-tree vlan 5,10 priority 24576
 !
 !
 !
@@ -67,9 +99,80 @@ redundancy
  mode sso
 !
 !
-track 1 interface GigabitEthernet1/0/1 ip routing
+track 13 ip sla 53 reachability
+!
+track 14 list boolean and
+ object 13 not
+!
+track 15 ip sla 54 reachability
+!
+track 16 list boolean and
+ object 15 not
 !
 !
+class-map match-any system-cpp-police-topology-control
+  description Topology control
+class-map match-any system-cpp-police-sw-forward
+  description Sw forwarding, SGT Cache Full, LOGGING
+class-map match-any system-cpp-default
+  description DHCP snooping, show forward and rest of traffic
+class-map match-any system-cpp-police-sys-data
+  description Learning cache ovfl, Crypto Control, Exception, EGR Exception, NFL SAMPLED DATA, Gold Pkt, RPF Failed
+class-map match-any system-cpp-police-punt-webauth
+  description Punt Webauth
+class-map match-any system-cpp-police-forus
+  description Forus Address resolution and Forus traffic
+class-map match-any system-cpp-police-multicast-end-station
+  description MCAST END STATION
+class-map match-any system-cpp-police-multicast
+  description Transit Traffic and MCAST Data
+class-map match-any system-cpp-police-l2-control
+  description L2 control
+class-map match-any system-cpp-police-dot1x-auth
+  description DOT1X Auth
+class-map match-any system-cpp-police-data
+  description ICMP_GEN and BROADCAST
+class-map match-any system-cpp-police-control-low-priority
+  description ICMP redirect and general punt
+class-map match-any system-cpp-police-wireless-priority1
+  description Wireless priority 1
+class-map match-any system-cpp-police-wireless-priority2
+  description Wireless priority 2
+class-map match-any system-cpp-police-wireless-priority3-4-5
+  description Wireless priority 3,4 and 5
+class-map match-any non-client-nrt-class
+class-map match-any system-cpp-police-routing-control
+  description Routing control
+class-map match-any system-cpp-police-protocol-snooping
+  description Protocol snooping
+!
+policy-map port_child_policy
+ class non-client-nrt-class
+  bandwidth remaining ratio 10
+policy-map system-cpp-policy
+ class system-cpp-police-data
+  police rate 200 pps
+ class system-cpp-police-sys-data
+  police rate 100 pps
+ class system-cpp-police-sw-forward
+  police rate 1000 pps
+ class system-cpp-police-multicast
+  police rate 500 pps
+ class system-cpp-police-multicast-end-station
+  police rate 2000 pps
+ class system-cpp-police-punt-webauth
+ class system-cpp-police-l2-control
+ class system-cpp-police-routing-control
+  police rate 1800 pps
+ class system-cpp-police-control-low-priority
+ class system-cpp-police-wireless-priority1
+ class system-cpp-police-wireless-priority2
+ class system-cpp-police-wireless-priority3-4-5
+ class system-cpp-police-topology-control
+ class system-cpp-police-dot1x-auth
+ class system-cpp-police-protocol-snooping
+ class system-cpp-police-forus
+ class system-cpp-default
 !
 !
 !
@@ -92,9 +195,13 @@ interface Port-channel1
 !
 interface Port-channel2
  switchport mode trunk
+ ip arp inspection trust
+ ip dhcp snooping trust
 !
 interface Port-channel3
  switchport mode trunk
+ ip arp inspection trust
+ ip dhcp snooping trust
 !
 interface GigabitEthernet0/0
  vrf forwarding Mgmt-vrf
@@ -112,19 +219,27 @@ interface GigabitEthernet1/0/2
 !
 interface GigabitEthernet1/0/3
  switchport mode trunk
+ ip arp inspection trust
  channel-group 2 mode on
+ ip dhcp snooping trust
 !
 interface GigabitEthernet1/0/4
  switchport mode trunk
+ ip arp inspection trust
  channel-group 2 mode on
+ ip dhcp snooping trust
 !
 interface GigabitEthernet1/0/5
  switchport mode trunk
+ ip arp inspection trust
  channel-group 3 mode on
+ ip dhcp snooping trust
 !
 interface GigabitEthernet1/0/6
  switchport mode trunk
+ ip arp inspection trust
  channel-group 3 mode on
+ ip dhcp snooping trust
 !
 interface GigabitEthernet1/0/7
  no switchport
@@ -235,9 +350,6 @@ interface GigabitEthernet1/1/4
 interface Vlan1
  no ip address
  shutdown
-!
-interface Vlan4
- no ip address
 !
 interface Vlan5
  ip address 172.16.5.254 255.255.255.0
@@ -351,9 +463,66 @@ ip forward-protocol nd
 ip http server
 ip http authentication local
 ip http secure-server
+ip route 0.0.0.0 0.0.0.0 Null0 track 14
 !
 !
+ip access-list extended AutoQos-4.0-wlan-Acl-Bulk-Data
+ permit tcp any any eq 22
+ permit tcp any any eq 465
+ permit tcp any any eq 143
+ permit tcp any any eq 993
+ permit tcp any any eq 995
+ permit tcp any any eq 1914
+ permit tcp any any eq ftp
+ permit tcp any any eq ftp-data
+ permit tcp any any eq smtp
+ permit tcp any any eq pop3
+ip access-list extended AutoQos-4.0-wlan-Acl-MultiEnhanced-Conf
+ permit udp any any range 16384 32767
+ permit tcp any any range 50000 59999
+ip access-list extended AutoQos-4.0-wlan-Acl-Scavanger
+ permit tcp any any range 2300 2400
+ permit udp any any range 2300 2400
+ permit tcp any any range 6881 6999
+ permit tcp any any range 28800 29100
+ permit tcp any any eq 1214
+ permit udp any any eq 1214
+ permit tcp any any eq 3689
+ permit udp any any eq 3689
+ permit tcp any any eq 11999
+ip access-list extended AutoQos-4.0-wlan-Acl-Signaling
+ permit tcp any any range 2000 2002
+ permit tcp any any range 5060 5061
+ permit udp any any range 5060 5061
+ip access-list extended AutoQos-4.0-wlan-Acl-Transactional-Data
+ permit tcp any any eq 443
+ permit tcp any any eq 1521
+ permit udp any any eq 1521
+ permit tcp any any eq 1526
+ permit udp any any eq 1526
+ permit tcp any any eq 1575
+ permit udp any any eq 1575
+ permit tcp any any eq 1630
+ permit udp any any eq 1630
+ permit tcp any any eq 1527
+ permit tcp any any eq 6200
+ permit tcp any any eq 3389
+ permit tcp any any eq 5985
+ permit tcp any any eq 8080
 !
+ip sla 53
+ icmp-echo 20.18.34.10
+ threshold 400
+ timeout 500
+ frequency 3
+ip sla schedule 53 life forever start-time now
+ip sla 54
+ icmp-echo 2018:BA15:3410::1
+ threshold 400
+ timeout 500
+ frequency 3
+ip sla schedule 54 life forever start-time now
+ipv6 route ::/0 Null0 track 14
 !
 !
 !
