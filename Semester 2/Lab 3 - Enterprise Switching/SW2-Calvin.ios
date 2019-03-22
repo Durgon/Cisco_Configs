@@ -36,42 +36,17 @@ ipv6 dhcp pool VLAN15
 !
 !
 !
+crypto pki trustpoint TP-self-signed-3190147223
+ enrollment selfsigned
+ subject-name cn=IOS-Self-Signed-Certificate-3190147223
+ revocation-check none
+ rsakeypair TP-self-signed-3190147223
+!
 crypto pki trustpoint TP-self-signed-3961223456
  enrollment selfsigned
  subject-name cn=IOS-Self-Signed-Certificate-3961223456
  revocation-check none
  rsakeypair TP-self-signed-3961223456
-!
-!
-crypto pki certificate chain TP-self-signed-3961223456
- certificate self-signed 01
-  30820330 30820218 A0030201 02020101 300D0609 2A864886 F70D0101 05050030
-  31312F30 2D060355 04031326 494F532D 53656C66 2D536967 6E65642D 43657274
-  69666963 6174652D 33393631 32323334 3536301E 170D3139 30323133 32303032
-  30365A17 0D323030 31303130 30303030 305A3031 312F302D 06035504 03132649
-  4F532D53 656C662D 5369676E 65642D43 65727469 66696361 74652D33 39363132
-  32333435 36308201 22300D06 092A8648 86F70D01 01010500 0382010F 00308201
-  0A028201 01008D49 18590B0D 082C773D F0C2DDC5 971FD642 0E0CF069 760C685E
-  78376120 60D7EBEA BB5C3C95 D0F8FAD7 3E7E6150 5F94C86D 16C942AE 4B1FFE6A
-  30DE8DB4 79C0C5EE D3AE8D1D C866EC9A BD73C6A9 172FF5C4 B2911A3F 42644019
-  D8EDFA1C 874C36AD 4F897FFC 4AE30C1A 5EFE222D B6073C5D BB595F4E 5A692606
-  D463CFEA DFF96446 BA7AF420 F8B15F69 C46DD565 1CDA61D2 7A2053E3 078CAFEC
-  EB0FD477 A3938ACB 9E2C48B8 88193F79 130FD741 B6062DAA 5C083A10 2D08AA13
-  865CFF44 90002128 D128ED27 FFAFA0BF 791AAFD5 FB14FBCB 77D851F8 C2E43850
-  70AF1203 6680014E 6347FF38 FA0FB6C1 12C94BD1 E6F678A1 E8199EAB 3BD63E62
-  0606D36A A82B0203 010001A3 53305130 0F060355 1D130101 FF040530 030101FF
-  301F0603 551D2304 18301680 14ADB4AA C8A34441 807A07AC 35DCB83E 6787CD41
-  68301D06 03551D0E 04160414 ADB4AAC8 A3444180 7A07AC35 DCB83E67 87CD4168
-  300D0609 2A864886 F70D0101 05050003 82010100 347CE887 A13A49C3 FBA99816
-  3D514011 2D4D2A28 70207DB8 325195CF F9C85593 98FBA2D2 5E9C7C76 D2585934
-  7D9BBB08 EDD0356F F9A89DFE 50593F52 B920EE0A 648D60B7 68FC1883 C48479CE
-  85F95E92 49391BB0 053EFAD7 F7794C7B 7E162F05 FD7BF269 5494E413 AC8CA049
-  AEEF503B F4DCF1BE EB09A692 F2BAF3B0 5029FAC6 852A98B5 567D1368 0E0D8551
-  988BA3F7 FD47B42A 9A011796 67E27FC8 0D9372F6 E09D6C0F 9DAF3C5E 4B6C1B22
-  987C20F0 0CAC333F A6D59D0C 4F73CA63 BB676ADA 56BD000C 5C8B8FBF E9A38CEA
-  2F85E682 DA60311C B7EE8811 3C0F09C7 52609CE6 2BEC0B17 1EC5CB6D 2AF88F02
-  AC085F93 BA338F3A DC207422 B0C3AD02 91E50ACF
-        quit
 !
 license boot level ipservicesk9
 diagnostic bootup level minimal
@@ -88,6 +63,16 @@ redundancy
 !
 !
 track 1 interface GigabitEthernet1/0/1 ip routing
+!
+track 13 ip sla 53 reachability
+!
+track 14 list boolean and
+ object 13 not
+!
+track 15 ip sla 54 reachability
+!
+track 16 list boolean and
+ object 15 not
 !
 !
 class-map match-any system-cpp-police-topology-control
@@ -113,11 +98,11 @@ class-map match-any system-cpp-police-dot1x-auth
 class-map match-any system-cpp-police-data
   description ICMP_GEN and BROADCAST
 class-map match-any system-cpp-police-control-low-priority
-  description ICMP redirect and general punt
+  description 1
 class-map match-any system-cpp-police-wireless-priority1
   description Wireless priority 1
 class-map match-any system-cpp-police-wireless-priority2
-  description description Routing control
+  description class-map match-any non-client-nrt-class
 class-map match-any system-cpp-police-wireless-priority3-4-5
   description Wireless priority 3,4 and 5
 class-map match-any non-client-nrt-class
@@ -173,11 +158,9 @@ interface Port-channel1
  ipv6 enable
 !
 interface Port-channel2
- switchport trunk native vlan 999
  switchport mode trunk
 !
 interface Port-channel3
- switchport trunk native vlan 999
  switchport mode trunk
 !
 interface GigabitEthernet0/0
@@ -193,22 +176,18 @@ interface GigabitEthernet1/0/1
 interface GigabitEthernet1/0/2
 !
 interface GigabitEthernet1/0/3
- switchport trunk native vlan 999
  switchport mode trunk
  channel-group 2 mode on
 !
 interface GigabitEthernet1/0/4
- switchport trunk native vlan 999
  switchport mode trunk
  channel-group 2 mode on
 !
 interface GigabitEthernet1/0/5
- switchport trunk native vlan 999
  switchport mode trunk
  channel-group 3 mode on
 !
 interface GigabitEthernet1/0/6
- switchport trunk native vlan 999
  switchport mode trunk
  channel-group 3 mode on
 !
@@ -394,6 +373,7 @@ ip forward-protocol nd
 ip http server
 ip http authentication local
 ip http secure-server
+ip route 0.0.0.0 0.0.0.0 Null0 track 14
 !
 !
 ip access-list extended AutoQos-4.0-wlan-Acl-Bulk-Data
@@ -440,6 +420,19 @@ ip access-list extended AutoQos-4.0-wlan-Acl-Transactional-Data
  permit tcp any any eq 5985
  permit tcp any any eq 8080
 !
+ip sla 53
+ icmp-echo 20.18.34.10
+ threshold 400
+ timeout 500
+ frequency 3
+ip sla schedule 53 life forever start-time now
+ip sla 54
+ icmp-echo 2018:BA15:3410::1
+ threshold 400
+ timeout 500
+ frequency 3
+ip sla schedule 54 life forever start-time now
+ipv6 route ::/0 Null0 track 14
 !
 !
 !
