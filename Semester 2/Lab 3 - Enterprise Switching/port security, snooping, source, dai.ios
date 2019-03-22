@@ -10,7 +10,6 @@ switchport port-security aging type inactive
 !dhcp snooping
 ip dhcp snooping
 ip dhcp snooping vlan 5,10,15,20
-ip dhcp snooping track host
 ip dhcp snooping verify mac-address
 ip dhcp snooping information option
 !apply dhcp snooping to physical interfaces
@@ -18,12 +17,11 @@ ip dhcp snooping information option
   ip dhcp snooping trust
 !on the host interfaces
   ip dhcp snooping limit rate 25
-  ip verify source vlan dhcp-snooping
+  ip verify source port-security
 
 !DAI
 ip arp inspection vlan 5,10,15,20
 !apply DAI trusting on portchannels
 ip arp inspection trust
 !apply ARP packet rate limiting on host interface
-no ip arp inspection trust
 ip arp inspection limit rate 20 burst interval 2
