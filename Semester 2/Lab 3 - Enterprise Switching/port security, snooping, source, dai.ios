@@ -7,13 +7,13 @@ switchport port-security mac-address sticky
 switchport port-security aging time 120
 switchport port-security aging type inactive
 
-!dhcp snooping
+!dhcp snooping (access switches)
 ip dhcp snooping
 ip dhcp snooping vlan 5,10,15,20
-ip dhcp snooping verify mac-address
-ip dhcp snooping information option
+ip dhcp snooping information option allow-untrusted
+ip arp inspection vlan 5,10,15,20
 !apply dhcp snooping to physical interfaces
-!on the server-side interfaces
+!on the server-side interfaces on all switches
   ip dhcp snooping trust
 !on the host interfaces
   ip dhcp snooping limit rate 25
