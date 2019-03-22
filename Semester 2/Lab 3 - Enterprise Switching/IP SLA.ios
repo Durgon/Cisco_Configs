@@ -19,3 +19,24 @@ track 14 list boolean and
 ! Insert a static route if the second object is UP (confusing, I know)
 !
 ip route 0.0.0.0 0.0.0.0 Null0 track 14
+
+
+ip sla 54
+ icmp-echo 2018:ba15:3410::1
+ threshold 400
+ timeout 500
+ frequency 3
+ip sla schedule 54 life forever start-time now
+!
+! Define an object that tracks the SLA probe
+!
+track 15 ip sla 54 reachability
+!
+! reverse output of track 13
+!
+track 16 list boolean and
+ object 15 not
+!
+! Insert a static route if the second object is UP (confusing, I know)
+!
+ipv route ::/0 Null0 track 14
